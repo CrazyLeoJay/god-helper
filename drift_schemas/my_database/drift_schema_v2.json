@@ -1,0 +1,225 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.2.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "game_data",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "config_template_id",
+            "getter_name": "configTemplateId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "is_default_config",
+            "getter_name": "isDefaultConfig",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"is_default_config\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"is_default_config\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "extra_rule",
+            "getter_name": "extraRule",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const TempExtraRuleDriftConverter()",
+              "dart_type_name": "TempExtraRule"
+            }
+          },
+          {
+            "name": "save_rule",
+            "getter_name": "saveRule",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const PlayersSaveRuleDriftConverter()",
+              "dart_type_name": "PlayersSaveRule"
+            }
+          },
+          {
+            "name": "is_begin_game",
+            "getter_name": "isBeginGame",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"is_begin_game\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"is_begin_game\" IN (0, 1))"
+            },
+            "default_dart": "const Constant(false)",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "create_time",
+            "getter_name": "createTime",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "Constant(DateTime.now())",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 1,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "game_template_config",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "player_count",
+            "getter_name": "playerCount",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "role_config",
+            "getter_name": "roleConfig",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const TemplateRoleConfigDriftConverter()",
+              "dart_type_name": "TemplateRoleConfig"
+            }
+          },
+          {
+            "name": "extra_rule",
+            "getter_name": "extraRule",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const TempExtraRuleDriftConverter()",
+              "dart_type_name": "TempExtraRule"
+            }
+          },
+          {
+            "name": "weight",
+            "getter_name": "weight",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "create_time",
+            "getter_name": "createTime",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "Constant(DateTime.now())",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    }
+  ]
+}

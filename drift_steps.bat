@@ -1,0 +1,1 @@
+dart run drift_dev schema steps

@@ -1,0 +1,26 @@
+builders:
+  gen_plugin:
+    import: "package:gen_plugin/AppCodeGenerator.dart"
+    builder_factories: [ "appCodeGenerator" ]
+#    builder_factories: [ "appCodeGeneratorPart" ]
+#    builder_factories: [ "appCodeGeneratorLibrary" ]
+    build_extensions: { ".dart": [ ".g.dart" ] }
+    auto_apply: dependents
+    build_to: cache
+#    applies_builders: [ "source_gen|combining_builder" ]
+    applies_builders: ["source_gen|source_gen"]
+    runs_before: ["json_serializable"]
+    defaults:
+      generate_for:
+        - lib/**
+        - web/**
+
+#targets:
+#  $default:
+#    sources:
+#      - my_custom_sources/**
+#      - lib/**
+#      - web/**
+#      # Note that it is important to include these in the default target.
+#      - pubspec.*
+#      - $package$
