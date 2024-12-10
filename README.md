@@ -1,20 +1,22 @@
-# god_helper
+# 上帝（GM）笔记本
 
 狼人杀上帝助手项目
 
-- 帮助玩家成为一个合格的上帝
+> 目标：让每一个玩家都可以完美主持一场线下狼人杀的对局
 
 
 
-## Flutter Getting Started
+# 快速文档
 
-This project is a starting point for a Flutter application.
+- [如何使用App]
+- [设计师共享计划]
+- 
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+# 建议与反馈
+
+- 提交`isssues`
+- 邮件到 crazyleojay@163.com
