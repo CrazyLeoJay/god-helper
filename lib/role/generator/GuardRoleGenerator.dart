@@ -13,13 +13,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'GuardRoleGenerator.g.dart';
 
+/// 守卫
 var _role = Role.GUARD;
 
 class GuardRoleGenerator extends RoleGenerator<GuardNightAction, EmptyAction, EmptyRoleTempConfig> {
   GuardRoleGenerator({required super.factory}) : super(role: _role);
 
   @override
-  RoleRoundGenerator<GuardNightAction>? getNightRoundGenerator(NightFactory nightFactory) {
+  RoleNightGenerator<GuardNightAction>? getNightRoundGenerator(NightFactory nightFactory) {
     return _GuardRoleRoundGenerator(nightFactory: nightFactory);
   }
 }
@@ -53,6 +54,7 @@ class GuardNightAction extends RoleAction {
 
   /// 放弃使用技能
   void abandonUseSkill() {
+    protectedPlayer = null;
     isAbandonUseSkill = true;
     isYes = true;
   }
@@ -65,7 +67,7 @@ class GuardNightAction extends RoleAction {
   }
 }
 
-class _GuardRoleRoundGenerator extends RoleRoundGenerator<GuardNightAction> with _GuardHelper {
+class _GuardRoleRoundGenerator extends RoleNightGenerator<GuardNightAction> with _GuardHelper {
   final NightFactory nightFactory;
 
   _GuardRoleRoundGenerator({required this.nightFactory}) : super(roundFactory: nightFactory, role: _role);
@@ -95,7 +97,7 @@ class _GuardRoleRoundGenerator extends RoleRoundGenerator<GuardNightAction> with
   }
 }
 
-mixin _GuardHelper on RoleRoundGenerator<GuardNightAction> {
+mixin _GuardHelper on RoleNightGenerator<GuardNightAction> {
   /// 获取上一晚上守护的玩家Id
   int? _lastRoundProtectPlayer() {
     if (roundFactory.round < 3) return null;
@@ -198,7 +200,11 @@ class _GuardNightWidgetState extends State<_GuardNightWidget> {
 
   Widget _button() {
     if (_action.isYes) {
-      return Text("守卫选择保护$_protectPlayer号玩家");
+      if (_action.isAbandonUseSkill) {
+        return const Text("守卫没有守护任何人");
+      } else {
+        return Text("守卫选择保护$_protectPlayer号玩家");
+      }
     } else {
       return Row(
         children: [

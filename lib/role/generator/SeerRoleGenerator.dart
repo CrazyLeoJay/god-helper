@@ -19,7 +19,7 @@ class SeerRoleGenerator extends RoleGenerator<SeerAction, SeerAction, EmptyRoleT
   SeerRoleGenerator({required super.factory}) : super(role: Role.SEER);
 
   @override
-  RoleRoundGenerator<SeerAction>? getNightRoundGenerator(NightFactory nightFactory) {
+  RoleNightGenerator<SeerAction>? getNightRoundGenerator(NightFactory nightFactory) {
     return _SeerRoleRoundGenerator(nightFactory);
   }
 }
@@ -46,7 +46,7 @@ class SeerAction extends RoleAction {
   }
 }
 
-class _SeerRoleRoundGenerator extends RoleRoundGenerator<SeerAction> {
+class _SeerRoleRoundGenerator extends RoleNightGenerator<SeerAction> {
   final NightFactory nightFactory;
 
   _SeerRoleRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.SEER);

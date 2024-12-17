@@ -21,24 +21,3 @@ class EmptyAction extends RoleAction {
   @override
   Map<String, dynamic> toJson() => _$EmptyActionToJson(this);
 }
-
-@JsonSerializable()
-class EmptyJsonEntity extends JsonEntityData<EmptyJsonEntity> {
-  EmptyJsonEntity();
-
-  factory EmptyJsonEntity.fromJson(Map<String, dynamic> json) => _$EmptyJsonEntityFromJson(json);
-
-  Map<String, dynamic> toJson() => _$EmptyJsonEntityToJson(this);
-
-  @override
-  EmptyJsonEntity createForMap(Map<String, dynamic> map) {
-    // TODO: implement createForMap
-    throw UnimplementedError();
-  }
-
-  @override
-  EmptyJsonEntity emptyReturn() {
-    // TODO: implement emptyReturn
-    throw UnimplementedError();
-  }
-}

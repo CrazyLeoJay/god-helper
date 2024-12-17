@@ -55,6 +55,14 @@ class _AppHomeState extends State<AppHome> {
           ],
         ),
       ),
+      drawer: Drawer(
+        width: 150,
+        child: MenuDrawerChildren(
+          menus: [
+            MenuItem("查看角色", (route) => route.toRoleDetailsView().push()),
+          ],
+        ),
+      ),
     );
   }
 }

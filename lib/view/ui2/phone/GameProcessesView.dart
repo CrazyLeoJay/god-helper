@@ -218,7 +218,7 @@ class _GameProcessesViewState extends State<GameProcessesView> {
           // }
           return Column(
             children: [
-              Row(children: [Text("玩家 P$number")]),
+              Row(children: [Text("玩家 P$number (角色：${_playerDetail.get(number).role.name})")]),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8 * 2),
                 child: ListView.separated(

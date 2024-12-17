@@ -14,13 +14,22 @@ import 'package:god_helper/framework/DefaultFactoryConfig.dart';
 import 'package:god_helper/framework/impl/DayFactory.dart';
 import 'package:god_helper/framework/impl/FrameworkEntity.dart';
 import 'package:god_helper/framework/impl/NightFactory.dart';
+import 'package:god_helper/role/generator/BarbarianChildRoleGenerator.dart';
+import 'package:god_helper/role/generator/BearRoleGenerator.dart';
+import 'package:god_helper/role/generator/BloodMoonApostlesRoleGenerator.dart';
 import 'package:god_helper/role/generator/BombRoleGenerator.dart';
 import 'package:god_helper/role/generator/FoolRoleGenerator.dart';
+import 'package:god_helper/role/generator/ForbiddenElderRoleGenerator.dart';
+import 'package:god_helper/role/generator/FoxRoleGenerator.dart';
 import 'package:god_helper/role/generator/GuardRoleGenerator.dart';
 import 'package:god_helper/role/generator/HunterRoleGenerator.dart';
+import 'package:god_helper/role/generator/KnightRoleGenerator.dart';
+import 'package:god_helper/role/generator/MachineWolfRoleGenerator.dart';
 import 'package:god_helper/role/generator/SeerRoleGenerator.dart';
 import 'package:god_helper/role/generator/WhiteWolfRoleGenerator.dart';
 import 'package:god_helper/role/generator/WitchRoleGenerator.dart';
+import 'package:god_helper/role/generator/WitcherRoleGenerator.dart';
+import 'package:god_helper/role/generator/WolfBeautyRoleGenerator.dart';
 import 'package:god_helper/role/generator/WolfKingRoleGenerator.dart';
 import 'package:god_helper/role/generator/WolfRoleGenerator.dart';
 import 'package:god_helper/tools/AppData.dart';
@@ -46,6 +55,16 @@ part 'GameFactory.g.dart';
   BombRoleGenerator,
   WhiteWolfKingRoleGenerator,
   FoolRoleGenerator,
+  WolfBeautyRoleGenerator,
+  FoxRoleGenerator,
+  BearRoleGenerator,
+  BloodMoonApostlesRoleGenerator,
+  MachineWolfRoleGenerator,
+  // RobbersRoleGenerator,
+  ForbiddenElderRoleGenerator,
+  BarbarianChildRoleGenerator,
+  KnightRoleGenerator,
+  WitcherRoleGenerator,
 ])
 class GameFactory {
   /// 游戏详情
@@ -178,6 +197,32 @@ class GameFactory {
     players.cache.clear();
     players.details.clear();
   }
+
+  /// 最后一个白天的回合
+  DayFactory getLastDayRoundFactory() {
+    DayFactory lastDayRound;
+    var lastRound = getRoundFactory(other.maxRound);
+    if (lastRound.isNight) {
+      lastDayRound = getDay(other.maxRound - 1);
+    } else {
+      lastDayRound = lastRound as DayFactory;
+    }
+    return lastDayRound;
+  }
+
+  /// 最后一晚
+  NightFactory getLastNightRoundFactory() {
+    NightFactory lastDayRound;
+    var lastRound = getRoundFactory(other.maxRound);
+    if (lastRound.isNight) {
+      lastDayRound = lastRound as NightFactory;
+    } else {
+      lastDayRound = getNight(other.maxRound - 1);
+    }
+    return lastDayRound;
+  }
+
+  RoundFactory getLastRoundFactory() => getRoundFactory(other.maxRound);
 }
 
 /// 其他游戏数据
@@ -290,6 +335,29 @@ class PlayerFactory {
   void detailsUpdate() {
     details = PlayerDetail(factory.entity.id).loadDb();
   }
+
+  /// 为模板初始化
+  void initDetailsForTemp() {
+    details.init(factory);
+    // 还需要把角色分配给玩家
+    var roles = factory.entity.tempConfig.roleConfig.all;
+    var wolfs = factory.entity.tempConfig.roleConfig.wolfCount;
+    for (int i = 0; i < roles.length; i++) {
+      details.players[i].role = roles[i];
+      details.players[i].roleType = roles[i].type;
+      details.players[i].identity = roles[i].defaultIdentity;
+      cache.setRoleIdentity(roles[i], details.players[i].number);
+      cache.setRolePlayerRecordFinish(roles[i]);
+    }
+    for (int j = roles.length; j < (roles.length + wolfs); j++) {
+      details.players[j].role = Role.WOLF;
+      details.players[j].roleType = Role.WOLF.type;
+      details.players[j].identity = Role.WOLF.defaultIdentity;
+    }
+
+    cache.setRolePlayerRecordFinish(Role.WOLF);
+    cache.setWolfsNumber(details.getWolfNumbers());
+  }
 }
 
 abstract class RoundFactory {
@@ -299,10 +367,18 @@ abstract class RoundFactory {
   late Map<Role, JsonEntityData<RoleAction>> actionJsonEntityData;
   late RoundActions actions;
 
+  /// 获取当前回合配置
+  RoundExtraConfig get config => round == 1 ? RoundExtraConfig(factory) : getLastRoundFactory().nextRoundConfig;
+
+  /// 设置下一回合配置
+  late RoundExtraConfig nextRoundConfig;
+
   RoundFactory(this.round, this.factory) {
     actionJsonEntityData = initActionJsonEntityData();
     actions = RoundActions(factory.entity.id, round);
     if (round != 0) actions = actions.loadDb();
+    // 配置下一回合的设置
+    nextRoundConfig = RoundExtraConfig(factory);
   }
 
   GameDetailEntity get entity => factory.entity;
@@ -316,6 +392,8 @@ abstract class RoundFactory {
 
   RoundProcess get process => RoundProcess(factory.entity.id, round).loadDb();
 
+  bool get isNight => roundHelper.isNight;
+
   WidgetFactory getWidgetHelper(Role role) => WidgetFactory(this, role);
 
   /// 获取上一回合数据
@@ -323,7 +401,16 @@ abstract class RoundFactory {
     return RoundProcess(entity.id, round - 1).loadDb();
   }
 
-  RoleRoundGenerator<RoleAction>? getRoleGenerator(Role role);
+  /// 获取上一回合数据
+  RoundFactory getLastRoundFactory() {
+    return factory.getRoundFactory(round - 1);
+  }
+
+  AbstractRoleRoundGenerator<RoleAction>? getRoleGenerator(Role role);
+
+  SecondSkillCheck? _getSummarySecondSkillCheck(Role role) {
+    return factory.generator.get(role)?.summarySecondSkillCheck(this);
+  }
 
   /// 初始化RoleJson的转换器
   Map<Role, JsonEntityData<RoleAction>> initActionJsonEntityData();
@@ -340,25 +427,28 @@ abstract class RoundFactory {
   }
 
   /// 本回合玩家状态转换
-  void thisRoundPlayerStateTransition(
-    PlayerDetail details,
-    PlayerStateMap playerStates,
-  ) {
-    for (var entity in actions.roleActionMap.entries) {
-      var action = getRoleAction(entity.key);
-      if (action == null) continue;
-      try {
-        var player = details.getForRole(entity.key);
-        // 如果玩家已经阵亡，则无需处理他的行为
-        if (!player.live) continue;
-        action.setToPlayerDetail(details, playerStates);
-      } on AppException catch (e, stackTrace) {
-        e.message = "role:${action.role}";
-        if (kDebugMode) print('Stack Trace:\n$stackTrace');
-        throw e
-          ..obj = action.role
-          ..printMessage();
-      }
+  /// 这个方法是当每回合结算时，已经检查过所有玩家都已经结算后，调用。
+  /// 主要讲本回合玩家行动做一个汇总，得到每一个玩家在回合结束后被赋予的状态
+  /// 并设置其是否出局
+  ///
+  /// 晚上和白天的规则各有差别，需要分开实现。
+  /// 晚上：等到晚上回合结束统一结算
+  /// 白天：每个玩家行为结束后，立即结算。所以白天仅需要把结算结果添加入playerStates即可
+  void thisRoundPlayerStateTransition(PlayerDetail details, PlayerStateMap playerStates);
+
+  /// 玩家出局后技能被动发动情况
+  /// 由于有些玩家的技能具有滞后性，比如自己阵亡后才会触发，这里需要做一个二次检查
+  /// 比如狼美人，在阵亡时，会带走被她魅惑的玩家
+  /// 比如野孩子，在榜样阵亡时，会变成狼人
+  /// 所以有被动的，有主动的，这里做一个全检查
+  void secondSkillCheckForSummary(PlayerDetail details, PlayerStateMap states) {
+    for (var player in details.players) {
+      var role = player.role;
+      // 如果是普通村民或者狼人，则直接跳过，没有技能操作
+      if (role.isOrdinaryIdentity) continue;
+      var skillCheck = _getSummarySecondSkillCheck(role);
+      if (skillCheck == null) continue;
+      skillCheck.check(details, states);
     }
   }
 
@@ -394,6 +484,7 @@ abstract class RoundFactory {
     /// 否则会导致白天的玩家状态和buff不一致的情况
     // 将当前回合的玩家状态设置到玩家数据中
     thisRoundPlayerStateTransition(details, playerStates);
+
     // 记录本回合淘汰玩家
     process.outPlayerNumbers = playerStates.outPlayerIds();
 
@@ -402,6 +493,7 @@ abstract class RoundFactory {
     //
     // 也可以先不结算，将设置参数放入保存数据前，保存本回合数据后，再进行结算计算，如果判断为游戏结束，则直接跳转详情界面
     details.addNewBuff(playerStates.buffs);
+
     details.checkLive(playerStates);
 
     if (kDebugMode) print("playerStates: ${jsonEncode(playerStates)}");
@@ -411,6 +503,9 @@ abstract class RoundFactory {
     process.isFinish = true;
     process.save();
     details.save();
+
+    /// 表示这一回合的操作结束
+    actions.isYes = true;
     actions.save();
     factory.players.detailsUpdate();
 
@@ -609,12 +704,12 @@ abstract class RoleGenerator<Night extends RoleAction, Day extends RoleAction,
   }
 
   /// 晚上回合生成器
-  RoleRoundGenerator<Night>? getNightRoundGenerator(NightFactory nightFactory) {
+  RoleNightGenerator<Night>? getNightRoundGenerator(NightFactory nightFactory) {
     return null;
   }
 
   /// 白天回合生成器
-  RoleRoundGenerator<Day>? getDayRoundGenerator(DayFactory dayFactory) {
+  RoleDayRoundGenerator<Day>? getDayRoundGenerator(DayFactory dayFactory) {
     return null;
   }
 
@@ -622,14 +717,17 @@ abstract class RoleGenerator<Night extends RoleAction, Day extends RoleAction,
   /// 默认是null，则没有配置胜利条件
   /// 如果有值，则该角色有单独的胜利规则
   AbstractWinRule? checkWinRule() => null;
+
+  /// 结算时二次技能检查
+  SecondSkillCheck? summarySecondSkillCheck(RoundFactory factory) => null;
 }
 
-abstract class RoleRoundGenerator<Action extends RoleAction> {
+abstract class AbstractRoleRoundGenerator<Action extends RoleAction> {
   final Role role;
   final RoundFactory roundFactory;
   late Action action;
 
-  RoleRoundGenerator({required this.roundFactory, required this.role}) {
+  AbstractRoleRoundGenerator({required this.roundFactory, required this.role}) {
     action = _getAction();
   }
 
@@ -639,18 +737,8 @@ abstract class RoleRoundGenerator<Action extends RoleAction> {
 
   Player get player => this.factory.players.details.getForRole(role);
 
-  /// 这里对行为处理后需看需求保存  saveAction()  方法
-  Future<void> preAction() async {
-    action.checkLive(roundFactory);
-  }
-
-  /// 活动行为
-  ///
-  /// @param updateCallback 通知更新上级视图
-  Widget actionWidget(Function() updateCallback);
-
-  /// 当玩家在上一回合阵亡后，无法执行Action的界面
-  Widget? playerLastKillNoActionWidget() => null;
+  /// action 的 json 实体转换器
+  JsonEntityData<Action> actionJsonConvertor();
 
   /// 返回一个白天的Action，应该也是个泛型才对
   Action _getAction() {
@@ -672,9 +760,55 @@ abstract class RoleRoundGenerator<Action extends RoleAction> {
       }
     }
   }
+}
 
-  /// action 的 json 实体转换器
-  JsonEntityData<Action> actionJsonConvertor();
+abstract class RoleNightGenerator<Action extends RoleAction> extends AbstractRoleRoundGenerator<Action> {
+  RoleNightGenerator({required super.roundFactory, required super.role});
+
+  /// 这里对行为处理后需看需求保存  saveAction()  方法
+  Future<void> preAction() async {
+    action.checkLive(roundFactory);
+  }
+
+  /// 活动行为
+  ///
+  /// @param updateCallback 通知更新上级视图
+  Widget actionWidget(Function() updateCallback);
+
+  /// 当玩家在上一回合阵亡后，无法执行Action的界面
+  Widget? playerLastKillNoActionWidget() => null;
+
+  /// 封印技能
+  /// 表示这个action被封印，无法执行
+  void sealingSkill() {
+    action.sealing = true;
+    saveAction();
+  }
+}
+
+abstract class RoleDayRoundGenerator<Action extends RoleAction> extends AbstractRoleRoundGenerator<Action> {
+  RoleDayRoundGenerator({required super.roundFactory, required super.role});
+
+  /// 这里对行为处理后需看需求保存  saveAction()  方法
+  Future<void> preAction() async {
+    action.checkLive(roundFactory);
+  }
+
+  // /// 活动行为
+  // ///
+  // /// @param updateCallback 通知更新上级视图
+  // Widget actionWidget(Function() updateCallback);
+
+  /// 出局画面
+  Widget? outWidget(Function() updateCallback) => null;
+
+  /// 主动技能界面
+  /// 比如狼自爆、骑士决斗
+  Widget? activeSkillWidget(Function() updateCallback) => null;
+
+  /// 获取因为这个角色主动技能出局的玩家
+  /// 如果白天技能发动后，有玩家阵亡，需要设置这个方法去获取，否则会缺失玩家行为
+  List<int> dieForDayActiveSkill() => [];
 }
 
 abstract class RoleAction {
@@ -687,10 +821,13 @@ abstract class RoleAction {
   bool _isYes;
 
   /// 是否完成并确认该行为
-  bool get isYes => _isYes || isKillNotUseSkill;
+  bool get isYes => _isYes || isKillNotUseSkill || sealing;
 
   /// 是否完成并确认该行为
   set isYes(bool value) => _isYes = value;
+
+  /// 是否被封印
+  bool sealing;
 
   final bool canSkip;
 
@@ -699,6 +836,7 @@ abstract class RoleAction {
     bool isYes = false,
     this.canSkip = false,
     this.isKillNotUseSkill = false,
+    this.sealing = false,
   }) : _isYes = isYes;
 
   Map<String, dynamic> toJson();
@@ -827,3 +965,30 @@ abstract class AbstractWinRule {
 }
 
 abstract class RoleTempConfig<T> extends JsonEntityData<T> with ToJsonInvoke {}
+
+abstract class SecondSkillCheck {
+  void check(PlayerDetail details, PlayerStateMap states);
+}
+
+/// 回合的额外限制
+class RoundExtraConfig {
+  GameFactory _factory;
+
+  /// 不能发动技能的角色
+  List<Role> notActionRole = [];
+
+  RoundExtraConfig(this._factory);
+
+  /// 封印非狼人玩家的技能发动
+  void sealingSkillForNoWolf() {
+    var players = _factory.players.details.players;
+    for (var player in players) {
+      var role = player.role;
+      if (player.roleType != RoleType.WOLF) continue;
+      if (!role.isSkill) continue;
+      notActionRole.add(role);
+    }
+  }
+
+  bool isCanAction(Role role) => !notActionRole.contains(role);
+}

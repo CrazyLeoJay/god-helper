@@ -31,7 +31,7 @@ class WitchRoleGenerator extends RoleGenerator<WitchAction, WitchAction, WitchEx
   }
 
   @override
-  RoleRoundGenerator<WitchAction>? getNightRoundGenerator(NightFactory nightFactory) {
+  RoleNightGenerator<WitchAction>? getNightRoundGenerator(NightFactory nightFactory) {
     return _WitchNightRoleRoundGenerator(nightFactory);
   }
 }
@@ -240,11 +240,13 @@ class WitchAction extends RoleAction {
         states.set(target!, PlayerStateType.isSaveWithMedicine);
         // 女巫用了解药
         states.set(player.number, PlayerStateType.isUsedAntidote);
+        player.putBuff(PlayerBuffType.witchUsedAntidote);
       } else {
         states.set(target!, PlayerStateType.isKillWithPoison);
         // 女巫用了毒药
         states.set(player.number, PlayerStateType.isUsedPoison);
         states.setKillPlayer(player.number, [target!]);
+        player.putBuff(PlayerBuffType.witchUsedPoison);
       }
     }
   }
@@ -260,7 +262,7 @@ enum WitchActionSelect {
   const WitchActionSelect(this.desc);
 }
 
-class _WitchNightRoleRoundGenerator extends RoleRoundGenerator<WitchAction> {
+class _WitchNightRoleRoundGenerator extends RoleNightGenerator<WitchAction> {
   final NightFactory nightFactory;
 
   _WitchNightRoleRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.WITCH);

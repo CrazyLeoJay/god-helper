@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:god_helper/entity/RuleConfig.dart';
 import 'package:god_helper/extend.dart';
+import 'package:god_helper/framework/AppFactory.dart';
 import 'package:god_helper/res/app.dart';
 
 class CardButton extends StatefulWidget {
@@ -219,7 +220,7 @@ class SelectConfig<T> {
   /// 如果是多选的情况下，设置最多选择多少个选项
   final int maxSelect;
 
-  /// 多选时，是否显示结果
+  final ValueNotifier<T>? updateDataToUiListener;
 
   SelectConfig({
     required this.selectableList,
@@ -229,6 +230,7 @@ class SelectConfig<T> {
     this.selectableListEmptyTip = "可选择列表为空。",
     this.selectable = true,
     this.maxSelect = 0,
+    this.updateDataToUiListener,
   });
 
   factory SelectConfig.forCount({
@@ -253,15 +255,18 @@ class SelectConfig<T> {
   }
 }
 
+class SelectButtonUiUpdateNotify extends Notification {
+  int id;
+
+  SelectButtonUiUpdateNotify(this.id);
+}
+
 /// 玩家选择按钮
 /// 带弹窗
 class PlayerSingleSelectButton extends StatefulWidget {
   final SelectConfig<int> selectConfig;
 
-  const PlayerSingleSelectButton({
-    super.key,
-    required this.selectConfig,
-  });
+  PlayerSingleSelectButton({super.key, required this.selectConfig});
 
   factory PlayerSingleSelectButton.forPlayerCount({
     required int count,
@@ -281,14 +286,16 @@ class PlayerSingleSelectButton extends StatefulWidget {
     );
   }
 
-  factory PlayerSingleSelectButton.initConfig({required SelectConfig<int> config}) {
-    return PlayerSingleSelectButton(
-      selectConfig: config,
-    );
+  factory PlayerSingleSelectButton.initConfig({
+    required SelectConfig<int> config,
+  }) {
+    return PlayerSingleSelectButton(selectConfig: config);
   }
 
+  final state = PlayerSingleSelectButtonState();
+
   @override
-  State<PlayerSingleSelectButton> createState() => PlayerSingleSelectButtonState();
+  State<PlayerSingleSelectButton> createState() => state;
 }
 
 class PlayerSingleSelectButtonState extends State<PlayerSingleSelectButton> {
@@ -305,6 +312,16 @@ class PlayerSingleSelectButtonState extends State<PlayerSingleSelectButton> {
   void initState() {
     super.initState();
     selectIndex = widget.selectConfig.defaultSelect;
+    ValueNotifier<int>? listener = widget.selectConfig.updateDataToUiListener;
+    if (null != listener) {
+      print("register");
+      listener.addListener(() {
+        print("test ${listener.value}");
+        setState(() {
+          selectIndex = widget.selectConfig.defaultSelect;
+        });
+      });
+    }
   }
 
   @override
@@ -378,6 +395,11 @@ class PlayerSingleSelectButtonState extends State<PlayerSingleSelectButton> {
             style: app.baseFont.copyWith(fontSize: _circleSize * 2 / 5),
           )
         : Icon(Icons.add, size: _circleSize / 2);
+  }
+
+  void updateDataTo(int selectPlayer) {
+    selectIndex = selectPlayer;
+    setState(() {});
   }
 }
 
@@ -1411,3 +1433,75 @@ class _RadioGroupState<T> extends State<RadioGroup<T>> {
 //   }
 //
 // }
+
+/// 左侧弹出菜单栏
+class MenuDrawerChildren extends StatelessWidget {
+  final List<MenuItem> menus;
+
+  const MenuDrawerChildren({super.key, required this.menus});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListView.separated(
+        itemBuilder: (context, index) => TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              AppRoute route = AppFactory().getRoute(context);
+              menus[index].routeClickListener(route);
+            },
+            child: Text(menus[index].name)),
+        separatorBuilder: (context, index) => const SizedBox(),
+        itemCount: menus.length,
+      ),
+    );
+  }
+}
+
+class MenuItem {
+  final String name;
+  final void Function(AppRoute route) routeClickListener;
+
+  MenuItem(this.name, this.routeClickListener);
+}
+
+class AutoGridView<T> extends StatelessWidget {
+  final List<T> data;
+  final double circleSize;
+
+  /// 宽比高 w/h
+  final double childAspectRatio;
+  final Widget Function(T t) itemBuilder;
+  final double padding;
+
+  const AutoGridView({
+    super.key,
+    required this.data,
+    required this.itemBuilder,
+    this.circleSize = 45,
+    this.childAspectRatio = 1,
+    this.padding = 0.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        int row = (constraints.maxWidth / circleSize).toInt();
+        print("width constraints.maxWidth= ${constraints.maxWidth}");
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: row,
+            crossAxisSpacing: padding,
+            mainAxisSpacing: padding,
+            childAspectRatio: childAspectRatio,
+          ),
+          itemBuilder: (context, index) => Center(child: itemBuilder(data[index])),
+          itemCount: data.length,
+        );
+      },
+    );
+  }
+}

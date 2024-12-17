@@ -11,6 +11,7 @@ import 'package:god_helper/view/ui2/phone/GameDayView.dart';
 import 'package:god_helper/view/ui2/phone/GameNightView.dart';
 import 'package:god_helper/view/ui2/phone/GameProcessesView.dart';
 import 'package:god_helper/view/ui2/phone/GameTemplateListView.dart';
+import 'package:god_helper/view/ui2/phone/RoleDetailsView.dart';
 
 class Ui2RouteFactory extends AppRoute {
   Ui2RouteFactory(super.context);
@@ -87,6 +88,11 @@ class Ui2RouteFactory extends AppRoute {
   @override
   RouteHelper toTempDetail(GameTemplateConfigEntity temp, bool isSystemConfig) {
     return toHelper(GameTempPreview.toLookAndToNewGame(temp, isSystemConfig));
+  }
+
+  @override
+  RouteHelper toRoleDetailsView() {
+    return toHelper(RowDetailsView());
   }
 
 //

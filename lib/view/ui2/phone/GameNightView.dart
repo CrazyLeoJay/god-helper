@@ -136,7 +136,6 @@ class NightEntity {
 
   GeneratorFactory get generator => factory.factory.generator;
 
-// GamePlayerIdentityRecord get playerRecord => dayRecord.playerStateNote;
 }
 
 /// 游戏角色当晚进程操作列表
@@ -206,6 +205,8 @@ class _GameRoleProcessListWidgetState extends State<_GameRoleProcessListWidget> 
                     if (player != null) TextSpan(text: "(玩家P${player.number}) "),
                     TextSpan(text: _roleList[index].roleName),
                     if (isSkipMsg) TextSpan(text: "\t\t\t 无行为，可跳过", style: app.baseFont.copyWith(color: Colors.green)),
+                    if (!_nightFactory.config.isCanAction(role))
+                      TextSpan(text: "\t\t\t (被封印)", style: app.baseFont.copyWith(color: Colors.yellow)),
                   ],
                 ),
               ),
@@ -278,9 +279,9 @@ class _GameRoleProcessListWidgetState extends State<_GameRoleProcessListWidget> 
   Widget _firstNightRecordPlayer(Role role, Widget actionWidget) {
     var widgetHelper = _nightFactory.getWidgetHelper(role);
     var player = _nightFactory.playerDetails.getForRoleNullable(role);
-    var action = widgetHelper.getAction(isLive: player?.live ?? true) ?? const SizedBox();
+    var action = widgetHelper.getNightAction(isLive: player?.live ?? true) ?? const SizedBox();
 
-    if (_round == 1) {
+    if (_round == 1 && role.isSingleYesPlayerIdentity) {
       var identity = widgetHelper.getIdentityWidget();
 
       /// 第一晚需要记录玩家信息

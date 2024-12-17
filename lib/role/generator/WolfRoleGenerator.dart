@@ -10,6 +10,7 @@ import 'package:god_helper/entity/Role.dart';
 import 'package:god_helper/exceptions.dart';
 import 'package:god_helper/extend.dart';
 import 'package:god_helper/framework/GameFactory.dart';
+import 'package:god_helper/framework/impl/DayFactory.dart';
 import 'package:god_helper/framework/impl/FrameworkEntity.dart';
 import 'package:god_helper/framework/impl/NightFactory.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -17,8 +18,12 @@ import 'package:json_annotation/json_annotation.dart';
 part 'WolfRoleGenerator.g.dart';
 
 /// 狼人相生成器
-class WolfRoleGenerator extends RoleGenerator<WolfAction, WolfAction, EmptyRoleTempConfig> {
+class WolfRoleGenerator extends RoleGenerator<WolfAction, WolfDayAction, EmptyRoleTempConfig> {
   WolfRoleGenerator({required super.factory}) : super(role: Role.WOLF);
+
+  static WolfAction getRoleNightAction(RoundActions actions) {
+    return actions.getRoleAction(Role.WOLF, WolfActionJsonData());
+  }
 
   @override
   PlayerIdentityGenerator playerIdentityGenerator() {
@@ -26,12 +31,13 @@ class WolfRoleGenerator extends RoleGenerator<WolfAction, WolfAction, EmptyRoleT
   }
 
   @override
-  RoleRoundGenerator<WolfAction>? getNightRoundGenerator(NightFactory nightFactory) {
+  RoleNightGenerator<WolfAction>? getNightRoundGenerator(NightFactory nightFactory) {
     return _WolfRoleNightRoundGenerator(nightFactory);
   }
 
-  static WolfAction getRoleNightAction(RoundActions actions) {
-    return actions.getRoleAction(Role.WOLF, WolfActionJsonData());
+  @override
+  RoleDayRoundGenerator<WolfDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
+    return _WolfDayGenerator(dayFactory);
   }
 }
 
@@ -285,7 +291,7 @@ class _WolfPlayerNumberRecordWidgetState extends State<_WolfPlayerNumberRecordWi
 }
 
 /// 狼人晚上回合的生成器
-class _WolfRoleNightRoundGenerator extends RoleRoundGenerator<WolfAction> {
+class _WolfRoleNightRoundGenerator extends RoleNightGenerator<WolfAction> {
   final NightFactory nightFactory;
 
   _WolfRoleNightRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.WOLF);
@@ -299,9 +305,7 @@ class _WolfRoleNightRoundGenerator extends RoleRoundGenerator<WolfAction> {
   }
 
   @override
-  JsonEntityData<WolfAction> actionJsonConvertor() {
-    return WolfActionJsonData();
-  }
+  JsonEntityData<WolfAction> actionJsonConvertor() => WolfActionJsonData();
 }
 
 @ToJsonEntity()
@@ -354,14 +358,24 @@ class _WolfActionComponentState extends State<_WolfActionComponent> {
 
   final _isShow = IsShowState();
 
+  List<Player> get _wolfPlayer => widget.nightFactory.playerDetails.getWolfKillActionPlayer();
+
+  List<Player> get _wolfNoActionPlayer => widget.nightFactory.playerDetails.getWolfKillNoActionPlayer();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(
-          width: double.maxFinite,
-          child: Text("狼人请选择今晚要刀的对象"),
-        ),
+        const Row(children: [Text("以下玩家为狼人玩家")]),
+        _wolfPlayerCircleGridWidget(_wolfPlayer),
+        const SizedBox(height: 8),
+        if (_wolfNoActionPlayer.isNotEmpty) const Row(children: [Text("以下玩家为狼人玩家，但不参与刀人讨论")]),
+        if (_wolfNoActionPlayer.isNotEmpty) const SizedBox(height: 8),
+        if (_wolfNoActionPlayer.isNotEmpty) _wolfPlayerCircleGridWidget(_wolfNoActionPlayer),
+        if (_wolfNoActionPlayer.isNotEmpty) const SizedBox(height: 8),
+
+        const SizedBox(height: 8),
+        const Row(children: [Text("狼人请选择今晚要刀的对象")]),
         const SizedBox(height: 8),
         // 是否展示选择刀掉玩家
         if (!(action.isYes && action.noKill)) _selectKillPlayerWidget(),
@@ -377,6 +391,41 @@ class _WolfActionComponentState extends State<_WolfActionComponent> {
         const SizedBox(height: 8),
       ],
     );
+  }
+
+  Widget _wolfPlayerCircleGridWidget(List<Player> players) {
+    return Row(children: [
+      Expanded(
+        child: AutoGridView(
+          data: players,
+          childAspectRatio: 14 / 16,
+          // padding: 8,
+          itemBuilder: (t) {
+            var isLive = t.live;
+            return Column(
+              children: [
+                Circle(
+                  color: isLive ? null : Colors.red,
+                  child: Text(
+                    "P${t.number}",
+                    style: app.baseFont.copyWith(
+                      color: isLive ? null : Colors.white,
+                    ),
+                  ),
+                ),
+                Text(
+                  t.role.name,
+                  style: app.baseFont.copyWith(
+                    fontSize: 8,
+                    color: isLive ? null : Colors.red,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    ]);
   }
 
   Widget _killButton() {
@@ -460,4 +509,238 @@ class _WolfActionComponentState extends State<_WolfActionComponent> {
           ],
         ),
       );
+}
+
+@ToJsonEntity()
+@JsonSerializable()
+class WolfDayAction extends RoleAction {
+  int? wolfBombPlayer;
+
+  bool isBomb = false;
+
+  @override
+  bool get isYes => true;
+
+  WolfDayAction({this.isBomb = false}) : super(Role.WOLF);
+
+  factory WolfDayAction.fromJson(Map<String, dynamic> json) => _$WolfDayActionFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$WolfDayActionToJson(this);
+
+  void setBomb(int bombPlayer) {
+    wolfBombPlayer = bombPlayer;
+    isBomb = true;
+  }
+
+  @override
+  void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {
+    super.setToPlayerDetail(detail, states);
+    // 如果没有自爆，则不做处理
+    if (!isBomb) return;
+    if (wolfBombPlayer == null) throw AppError.roleNoSelectPlayer.toExc(args: [role.name]);
+    states.set(wolfBombPlayer!, PlayerStateType.isWolfBomb);
+  }
+}
+
+class _WolfDayGenerator extends RoleDayRoundGenerator<WolfDayAction> {
+  final DayFactory dayFactory;
+
+  _WolfDayGenerator(this.dayFactory) : super(role: Role.WOLF, roundFactory: dayFactory);
+
+  @override
+  JsonEntityData<WolfDayAction> actionJsonConvertor() {
+    return WolfDayActionJsonData();
+  }
+
+  @override
+  Future<void> preAction() {
+    return super.preAction();
+  }
+
+  @override
+  Widget? activeSkillWidget(Function() updateCallback) {
+    return _WolfDayActiveSkillWidget(dayFactory, action, resultListener: (bombPlayer, finishCallback) {
+      action.setBomb(bombPlayer);
+      saveAction();
+      updateCallback();
+      // finishCallback();
+    });
+  }
+
+  @override
+  List<int> dieForDayActiveSkill() {
+    if (action.isBomb) {
+      // 自爆狼人
+      return [action.wolfBombPlayer!];
+    }
+    return super.dieForDayActiveSkill();
+  }
+}
+
+class _WolfDayActiveSkillWidget extends StatefulWidget {
+  final DayFactory dayFactory;
+  final WolfDayAction action;
+  final Function(int bombPlayer, Function() finishCallback) resultListener;
+
+  const _WolfDayActiveSkillWidget(
+    this.dayFactory,
+    this.action, {
+    required this.resultListener,
+  });
+
+  @override
+  State<_WolfDayActiveSkillWidget> createState() => _WolfDayActiveSkillWidgetState();
+}
+
+class _WolfDayActiveSkillWidgetState extends State<_WolfDayActiveSkillWidget> {
+  WolfDayAction get _action => widget.action;
+
+  List<Player> get canBombWolf => widget.dayFactory.details.getCanBombWolf(_action.wolfBombPlayer ?? 0);
+
+  int _defaultBombPlayer = 0;
+
+  bool get _isBomb => _action.isBomb;
+
+  /// 是否开始自爆行为
+  bool _isBombAction = false;
+
+  bool get isCanAction => !widget.dayFactory.dayAction.isYesVotePlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _defaultBombPlayer = _action.wolfBombPlayer ?? 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isBombAction || _isBomb) {
+      return _wolfBombView();
+    } else {
+      return _initView();
+    }
+  }
+
+  /// 初始化界面
+  /// 用于是否发动狼人自爆
+  Widget _initView() {
+    return Row(
+      children: [
+        const Text("发动自爆："),
+        isCanAction
+            ? TextButton(
+                onPressed: () {
+                  setState(() {
+                    _isBombAction = true;
+                  });
+                },
+                child: const Text("发动狼人自爆"),
+              )
+            : const Text("投票后进入黑夜，已无法发动技能"),
+      ],
+    );
+  }
+
+  /// 狼人自爆操作界面
+  Widget _wolfBombView() {
+    return Column(
+      children: [
+        const Row(children: [Text("狼人自爆")]),
+        AutoGridView(
+          data: canBombWolf,
+          childAspectRatio: 8 / 9,
+          itemBuilder: (t) {
+            if (_isBomb) {
+              return _wolfBombItem(t);
+            } else {
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    _defaultBombPlayer = t.number;
+                  });
+                },
+                child: _wolfBombItem(t),
+              );
+            }
+          },
+        ),
+        const SizedBox(height: 8),
+        _bombButton(),
+        const SizedBox(height: 8 * 2),
+      ],
+    );
+  }
+
+  Widget _wolfBombItem(Player t) {
+    var isSelect = _defaultBombPlayer == t.number;
+    return Column(
+      children: [
+        Circle(
+          color: isSelect ? Colors.red : null,
+          child: Text(
+            "P${t.number}",
+            style: app.baseFont.copyWith(
+              color: isSelect ? Colors.white : Colors.black,
+            ),
+          ),
+        ),
+        Center(
+          child: Text(
+            t.role.name,
+            style: app.baseFont.copyWith(
+              fontSize: 8,
+              color: isSelect ? Colors.red : Colors.black,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _bombButton() {
+    if (_isBomb) {
+      return RichText(
+        text: TextSpan(
+          style: app.baseFont,
+          children: [
+            TextSpan(text: "狼人 P${_action.wolfBombPlayer} "),
+            TextSpan(
+              text: "自爆",
+              style: app.baseFont.copyWith(color: Colors.red),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Row(children: [
+        Expanded(
+          child: TextButton(
+            onPressed: () => setState(() {
+              _defaultBombPlayer = 0;
+              _isBombAction = false;
+            }),
+            child: const Text("取消"),
+          ),
+        ),
+        Expanded(
+          child: TextButton(
+            onPressed: _wolfBomb,
+            child: const Text("确认自爆"),
+          ),
+        ),
+      ]);
+    }
+  }
+
+  final _isShow = IsShowState();
+
+  void _wolfBomb() {
+    if (_defaultBombPlayer <= 0) {
+      showSnackBarMessage("还没有确定自爆玩家", isShow: _isShow);
+      return;
+    }
+
+    widget.resultListener(_defaultBombPlayer, () => setState(() {}));
+  }
 }

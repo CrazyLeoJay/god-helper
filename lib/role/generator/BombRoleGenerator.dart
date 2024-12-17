@@ -13,13 +13,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'BombRoleGenerator.g.dart';
 
-var _role = Role.BOMB;
+var _role = Role.bomb;
 
 class BombRoleGenerator extends RoleGenerator<EmptyAction, BombDayAction, EmptyRoleTempConfig> {
   BombRoleGenerator({required super.factory}) : super(role: _role);
 
   @override
-  RoleRoundGenerator<BombDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
+  RoleDayRoundGenerator<BombDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
     return _BombDayRoleRoundGenerator(dayFactory: dayFactory);
   }
 
@@ -65,19 +65,34 @@ class BombDayAction extends RoleAction {
 class _BombWinRule extends AbstractWinRule {
   _BombWinRule({required super.factory, required super.role});
 
+  /// 必须在白天被投票出局，并炸死剩余所有人，则胜利
   @override
   bool isWin() {
-    /// todo 炸弹人胜利条件编写
+    // 如果炸弹人还活着，就无需判断
+    var player = super.factory.players.details.getForRoleNullable(role);
+    if (player == null || player.live) return false;
+    // 如果炸弹人出局，但还有玩家存活，则炸弹人还是无法胜利
+    if (super.factory.players.details.getLivePlayer().isNotEmpty) return false;
+    var factory = super.factory.getLastRoundFactory();
+    // 如果是最后一个回合，并且已经结束回合，不是白天，判定炸弹人没有赢
+    if (factory.isNight && factory.actions.isYes) return false;
+    // 现在需要知道炸弹人是否是最后一个白天回合被投票出局。
+    DayFactory lastDayRound = super.factory.getLastDayRoundFactory();
+    if (lastDayRound.dayAction.isYesVotePlayer && lastDayRound.dayAction.votePlayer == player.number) {
+      // 确认玩家是在这一白天被投票出局的情况下
+      // 判定炸弹人胜利
+      return true;
+    }
     return false;
   }
 
   @override
   RoleWinEntity winEntity() {
-    return RoleWinEntity(role, "炸弹人被投票带走");
+    return RoleWinEntity(role, "炸弹人被投票带走后，投票的给他的玩家因为爆炸出局，并且爆炸带走了剩余所有玩家。炸弹人获胜。");
   }
 }
 
-class _BombDayRoleRoundGenerator extends RoleRoundGenerator<BombDayAction> with _BombDayHelper {
+class _BombDayRoleRoundGenerator extends RoleDayRoundGenerator<BombDayAction> with _BombDayHelper {
   final DayFactory dayFactory;
 
   _BombDayRoleRoundGenerator({required this.dayFactory}) : super(roundFactory: dayFactory, role: _role);
@@ -98,7 +113,7 @@ class _BombDayRoleRoundGenerator extends RoleRoundGenerator<BombDayAction> with 
   }
 
   @override
-  Widget actionWidget(Function() updateCallback) {
+  Widget? outWidget(Function() updateCallback) {
     return _BombDayWidget(
       factory: dayFactory,
       action: action,
@@ -115,7 +130,7 @@ class _BombDayRoleRoundGenerator extends RoleRoundGenerator<BombDayAction> with 
   }
 }
 
-mixin _BombDayHelper on RoleRoundGenerator<BombDayAction> {
+mixin _BombDayHelper on RoleDayRoundGenerator<BombDayAction> {
   DayFactory get _dayFactory => roundFactory as DayFactory;
 
   List<int> get _livePlayerNumber {

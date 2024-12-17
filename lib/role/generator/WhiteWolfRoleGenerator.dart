@@ -19,7 +19,7 @@ class WhiteWolfKingRoleGenerator extends RoleGenerator<EmptyAction, WhiteWolfKin
   WhiteWolfKingRoleGenerator({required super.factory}) : super(role: _role);
 
   @override
-  RoleRoundGenerator<WhiteWolfKingDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
+  RoleDayRoundGenerator<WhiteWolfKingDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
     return _WhiteWolfKingDayRoleGenerator(dayFactory);
   }
 }
@@ -65,7 +65,7 @@ class WhiteWolfKingDayAction extends RoleAction {
   }
 }
 
-class _WhiteWolfKingDayRoleGenerator extends RoleRoundGenerator<WhiteWolfKingDayAction> with _ActionHelper {
+class _WhiteWolfKingDayRoleGenerator extends RoleDayRoundGenerator<WhiteWolfKingDayAction> with _ActionHelper {
   @override
   final DayFactory dayFactory;
 
@@ -77,7 +77,7 @@ class _WhiteWolfKingDayRoleGenerator extends RoleRoundGenerator<WhiteWolfKingDay
   }
 
   @override
-  Widget actionWidget(Function() updateCallback) {
+  Widget? outWidget(Function() updateCallback) {
     return _WhiteWOlfKingDayActionWidget(
       dayFactory,
       action,
@@ -96,7 +96,7 @@ class _WhiteWolfKingDayRoleGenerator extends RoleRoundGenerator<WhiteWolfKingDay
   }
 }
 
-mixin _ActionHelper on RoleRoundGenerator<WhiteWolfKingDayAction> {
+mixin _ActionHelper on RoleDayRoundGenerator<WhiteWolfKingDayAction> {
   DayFactory get dayFactory => roundFactory as DayFactory;
 
   List<int> getLivePlayer() => dayFactory.getNowLivePlayer().map((e) => e.number).toList();

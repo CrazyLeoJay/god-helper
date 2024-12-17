@@ -17,7 +17,7 @@ class FoolRoleGenerator extends RoleGenerator<EmptyAction, FoolDayAction, EmptyR
   FoolRoleGenerator({required super.factory}) : super(role: _role);
 
   @override
-  RoleRoundGenerator<FoolDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
+  RoleDayRoundGenerator<FoolDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
     return _FoolDayRoleRoundGenerator(dayFactory);
   }
 }
@@ -51,7 +51,7 @@ class FoolDayAction extends RoleAction {
 
 /// 白痴白天行为
 /// 应该是被投票后显示
-class _FoolDayRoleRoundGenerator extends RoleRoundGenerator<FoolDayAction> with _FoolDayHelper {
+class _FoolDayRoleRoundGenerator extends RoleDayRoundGenerator<FoolDayAction> with _FoolDayHelper {
   final DayFactory dayFactory;
 
   _FoolDayRoleRoundGenerator(this.dayFactory) : super(role: _role, roundFactory: dayFactory);
@@ -74,7 +74,7 @@ class _FoolDayRoleRoundGenerator extends RoleRoundGenerator<FoolDayAction> with 
   JsonEntityData<FoolDayAction> actionJsonConvertor() => FoolDayActionJsonData();
 
   @override
-  Widget actionWidget(Function() updateCallback) {
+  Widget? outWidget(Function() updateCallback) {
     return Column(
       children: [
         isVoteOut ? const Text('白痴被投票出局了，触发被动，依旧存活。') : const Text("不是投票出局，被动技能无法发动"),
@@ -83,7 +83,7 @@ class _FoolDayRoleRoundGenerator extends RoleRoundGenerator<FoolDayAction> with 
   }
 }
 
-mixin _FoolDayHelper on RoleRoundGenerator<FoolDayAction> {
+mixin _FoolDayHelper on RoleDayRoundGenerator<FoolDayAction> {
   DayFactory get _dayFactory => roundFactory as DayFactory;
 
   bool get isVoteOut {

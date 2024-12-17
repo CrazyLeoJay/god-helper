@@ -32,12 +32,12 @@ class WolfKingRoleGenerator extends RoleGenerator<EmptyAction, WolfKingDayAction
 
   /// 狼王如果白天被带走，需要释放技能，可以带走一个玩家
   @override
-  RoleRoundGenerator<WolfKingDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
+  RoleDayRoundGenerator<WolfKingDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
     return _WolfKingDayRoleRoundGenerator(dayFactory);
   }
 }
 
-class _WolfKingDayRoleRoundGenerator extends RoleRoundGenerator<WolfKingDayAction> {
+class _WolfKingDayRoleRoundGenerator extends RoleDayRoundGenerator<WolfKingDayAction> {
   final DayFactory dayFactory;
 
   _WolfKingDayRoleRoundGenerator(this.dayFactory) : super(roundFactory: dayFactory, role: Role.WOLF_KING);
@@ -53,7 +53,7 @@ class _WolfKingDayRoleRoundGenerator extends RoleRoundGenerator<WolfKingDayActio
   }
 
   @override
-  Widget actionWidget(Function() updateCallback) {
+  Widget? outWidget(Function() updateCallback) {
     return _WolfKingDayActionWidget(
       super.factory,
       dayFactory,
@@ -63,6 +63,7 @@ class _WolfKingDayRoleRoundGenerator extends RoleRoundGenerator<WolfKingDayActio
       (killPlayer, callYesFinish) {
         action.shutPlayerId = killPlayer;
         action.isAbandon = false;
+        action.canShut = true;
         action.isYes = true;
         saveAction();
 
@@ -72,6 +73,7 @@ class _WolfKingDayRoleRoundGenerator extends RoleRoundGenerator<WolfKingDayActio
       (callYesFinish) {
         action.shutPlayerId = null;
         action.isAbandon = true;
+        action.canShut = true;
         action.isYes = true;
         saveAction();
 
@@ -117,12 +119,12 @@ class WolfKingDayAction extends RoleAction {
   bool _checkCanBiubiubiu(DayFactory dayFactory) {
     var wolfPlayer = dayFactory.details.getForRoleNullable(Role.WOLF_KING);
     if (wolfPlayer == null) throw AppError.wolfKingNoSelectPlayer.toExc();
-    if (dayFactory.dayAction.isYesWolfBomb) {
+    if (dayFactory.isYesWolfBomb) {
       // 自爆无法开枪
       if (dayFactory.dayAction.wolfBombPlayer == wolfPlayer.number) {
         noShutMsg = "狼王自爆无法开枪";
         canShut = false;
-        return false;
+        return canShut;
       }
     }
     // 获取昨晚情况
@@ -130,12 +132,12 @@ class WolfKingDayAction extends RoleAction {
     var action = WitchRoleGenerator.getRoleNightActionNullable(nightFactory.actions);
     if (null != action && !action.isKillNotUseSkill) {
       var player = action.getKillForPoison();
-      var result = player != wolfPlayer.number;
+      var result = player == wolfPlayer.number;
       if (result) {
         noShutMsg = "狼王被毒了，无法开枪";
       }
       canShut = !result;
-      return result;
+      return canShut;
     }
     return true;
   }

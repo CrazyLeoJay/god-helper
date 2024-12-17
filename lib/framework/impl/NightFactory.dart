@@ -28,7 +28,7 @@ class NightFactory extends RoundFactory {
   bool isShowNext(Role roleList) => true;
 
   @override
-  RoleRoundGenerator<RoleAction>? getRoleGenerator(Role role) {
+  RoleNightGenerator<RoleAction>? getRoleGenerator(Role role) {
     return super.factory.generator.get(role)?.getNightRoundGenerator(this);
   }
 
@@ -95,6 +95,34 @@ class NightFactory extends RoundFactory {
         }
       }
     }
+  }
+
+  @override
+  void thisRoundPlayerStateTransition(PlayerDetail details, PlayerStateMap playerStates) {
+    for (var entity in actions.roleActionMap.entries) {
+      var action = getRoleAction(entity.key);
+      if (action == null) continue;
+      /// 行为被封印，也无需判断，直接跳过
+      if (action.sealing) continue;
+      try {
+        var player = details.getForRole(entity.key);
+        // 如果玩家已经阵亡，则无需处理他的行为
+        if (!player.live) continue;
+        action.setToPlayerDetail(details, playerStates);
+      } on AppException catch (e, stackTrace) {
+        e.message = "role:${action.role}";
+        if (kDebugMode) print('Stack Trace:\n$stackTrace');
+        throw e
+          ..obj = action.role
+          ..printMessage();
+      }
+    }
+
+    details.checkLive(playerStates);
+
+    // 二次检查技能的延迟效果
+    secondSkillCheckForSummary(details, playerStates);
+    details.checkLive(playerStates);
   }
 
   PlayerIdentityGenerator getIdentityGenerator(Role role) {
@@ -216,4 +244,6 @@ class NightFactory extends RoundFactory {
       return playerDetails.getForRole(role).live;
     }
   }
+
+  List<int> getLivePlayerIds()=> getLivePlayer().map((e) => e.number).toList(growable: false);
 }

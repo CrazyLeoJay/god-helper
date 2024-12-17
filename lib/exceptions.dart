@@ -46,6 +46,10 @@ enum AppError implements ErrorMessage, Exception {
   withNoSaveSelf(31, "女巫不能自救"),
   roleActionNotYes(32, "角色 %s 还未行动"),
   roleActionNotKillPlayer(33, "角色 %s 没有击杀玩家"),
+  wolfBeautyNoSelectPlayer(34, "狼美人没有选择魅惑目标或者放弃技能。"),
+  barbarianChildSelectPlayerOnlyFirstNight(35, "野孩子必须在第一晚选择一位榜样。"),
+  roleNoSelectPlayer(36, "%s 没有选择玩家。"),
+  foxNotVerify(37, "狐狸还未进行验证"),
   ;
 
   @override

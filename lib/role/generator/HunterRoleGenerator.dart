@@ -27,18 +27,18 @@ class HunterRoleGenerator extends RoleGenerator<HunterAction, HunterDayAction, E
 
   /// 猎人晚上判断是否可以开枪
   @override
-  RoleRoundGenerator<HunterAction>? getNightRoundGenerator(NightFactory nightFactory) {
+  RoleNightGenerator<HunterAction>? getNightRoundGenerator(NightFactory nightFactory) {
     return _HunterNightRoleRoundGenerator(nightFactory);
   }
 
   /// 猎人如果白天被带走，需要释放技能，可以带走一个玩家
   @override
-  RoleRoundGenerator<HunterDayAction>? getDayRoundGenerator(DayFactory dayFactory) {
+  RoleDayRoundGenerator<HunterDayAction> getDayRoundGenerator(DayFactory dayFactory) {
     return _HunterDayRoleRoundGenerator(dayFactory);
   }
 }
 
-class _HunterNightRoleRoundGenerator extends RoleRoundGenerator<HunterAction> {
+class _HunterNightRoleRoundGenerator extends RoleNightGenerator<HunterAction> {
   final NightFactory roundFactory;
 
   _HunterNightRoleRoundGenerator(this.roundFactory) : super(roundFactory: roundFactory, role: Role.HUNTER);
@@ -56,7 +56,7 @@ class _HunterNightRoleRoundGenerator extends RoleRoundGenerator<HunterAction> {
   }
 }
 
-class _HunterDayRoleRoundGenerator extends RoleRoundGenerator<HunterDayAction> {
+class _HunterDayRoleRoundGenerator extends RoleDayRoundGenerator<HunterDayAction> {
   final DayFactory dayFactory;
 
   _HunterDayRoleRoundGenerator(this.dayFactory) : super(roundFactory: dayFactory, role: Role.HUNTER);

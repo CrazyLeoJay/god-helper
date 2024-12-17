@@ -7,6 +7,7 @@ import 'package:god_helper/exceptions.dart';
 import 'package:god_helper/framework/GameFactory.dart';
 import 'package:god_helper/framework/impl/FrameworkEntity.dart';
 import 'package:god_helper/framework/impl/NightFactory.dart';
+import 'package:god_helper/role/generator/WolfRoleGenerator.dart';
 
 /// 白天数据
 class DayFactory extends RoundFactory {
@@ -21,7 +22,7 @@ class DayFactory extends RoundFactory {
   }
 
   @override
-  RoleRoundGenerator<RoleAction>? getRoleGenerator(Role role) {
+  RoleDayRoundGenerator<RoleAction>? getRoleGenerator(Role role) {
     return super.factory.generator.get(role)?.getDayRoundGenerator(this);
   }
 
@@ -37,7 +38,6 @@ class DayFactory extends RoundFactory {
   ) {
     /// 白天行为已经将状态记录好了，所以无需执行
     playerStates.addMap(dayAction.playerStateMap);
-    // super.thisRoundPlayerStateTransition(details, playerStates, buffs);
     sheriff.checkSheriff(playerStates);
   }
 
@@ -47,7 +47,14 @@ class DayFactory extends RoundFactory {
 
     /// 设置本回合玩家状态，并且保存
     action.setToPlayerDetail(details, dayAction.playerStateMap);
+    // 保存角色行为数据
+    actions.save();
     dayAction.save();
+
+    /// 实时反应到 玩家信息上
+    details.checkLive(dayAction.playerStateMap);
+    secondSkillCheckForSummary(details, dayAction.playerStateMap);
+    details.checkLive(dayAction.playerStateMap);
 
     /// 并且去判断下警长是否被杀
     var nowSheriff = sheriff.last;
@@ -84,7 +91,7 @@ class DayFactory extends RoundFactory {
     }
 
     /// 4、判断是否完成投票
-    if (!dayAction.isYesVotePlayer && !dayAction.isYesWolfBomb) {
+    if (!dayAction.isYesVotePlayer && !isYesWolfBomb) {
       throw AppError.withDayNoYesVoteOutPlayer.toExc();
     }
   }
@@ -94,8 +101,13 @@ class DayFactory extends RoundFactory {
   /// 玩家详情
   PlayerDetail get details => super.factory.players.details;
 
+  bool get isYesWolfBomb {
+    var dayAction = actions.getRoleAction(Role.WOLF, WolfDayActionJsonData());
+    return dayAction.isYes && dayAction.isBomb && (dayAction.wolfBombPlayer ?? 0) > 0;
+  }
+
   /// 是否可以继续活动，对于其他玩家行为
-  bool isCanContinueAction() => !dayAction.isYesWolfBomb;
+  bool isCanContinueAction() => !isYesWolfBomb;
 
   /// 获取上一回合被淘汰的玩家
   List<Player> getLastRoundOutPlayers() {
@@ -199,5 +211,25 @@ class DayFactory extends RoundFactory {
     dayAction.clear();
     dayAction = DayAction(super.factory.entity.id, round);
     if (kDebugMode) print("清除 dayFactory dayAction");
+  }
+
+  /// 玩家是否已经阵亡，通过角色判断
+  bool isDieForRole(Role role) {
+    var player = details.getForRole(role);
+    if (!player.live) return true;
+    return dayAction.playerStateMap.getNoSet(player.number).isDead;
+  }
+
+  List<Role> activeSkillRoles() {
+    List<Role> result = [];
+    List<Role> list = [...super.factory.entity.tempConfig.roleConfig.all, Role.WOLF]..sort();
+    for (var value in list) {
+      var helper = getWidgetHelper(value);
+      var skillWidget = helper.activeSkillWidget();
+      if (null != skillWidget) {
+        result.add(value);
+      }
+    }
+    return result;
   }
 }

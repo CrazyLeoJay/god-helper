@@ -9,6 +9,7 @@ import 'package:god_helper/exceptions.dart';
 import 'package:god_helper/framework/DefaultFactoryConfig.dart';
 import 'package:god_helper/framework/GameFactory.dart';
 import 'package:god_helper/framework/impl/DayFactory.dart';
+import 'package:god_helper/framework/impl/NightFactory.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'FrameworkEntity.g.dart';
@@ -116,6 +117,19 @@ class RoundProcess extends NoSqlDataEntity<RoundProcess> {
     return map;
   }
 
+  /// 获取需要在一天开始时展示的状态
+  Map<int, PlayerStates> getNeedShowForBeginDayStatePlayers() {
+    Map<int, PlayerStates> map = {};
+    playerStateMap.states.forEach(
+      (key, value) {
+        if (value.showInDayBeginStates().isNotEmpty) {
+          map[key] = value;
+        }
+      },
+    );
+    return map;
+  }
+
   PlayerStates getState(int number) => playerStateMap.getNoSet(number);
 }
 
@@ -124,7 +138,7 @@ class DayAction extends NoSqlDataEntity<DayAction> {
   int round;
 
   /// 是否确认狼人自爆
-  bool isYesWolfBomb = false;
+  // bool isYesWolfBomb = false;
 
   /// 是否确认投票出局
   bool _isYesVotePlayer = false;
@@ -180,6 +194,8 @@ class DayAction extends NoSqlDataEntity<DayAction> {
   }
 
   PlayerStates? getState(int outId) => playerStateMap.getNullable(outId);
+
+  bool isDieForId(int number) => playerStateMap.get(number).isDead;
 }
 
 @JsonSerializable()
@@ -366,7 +382,7 @@ class Sheriff {
     }
 
     // 是否自爆
-    var isBomb = dayFactory.dayAction.isYesWolfBomb;
+    var isBomb = dayFactory.isYesWolfBomb;
 
     /// 1、先判断警长竞选
     /// 如果没有警长，则无需判断警徽流问题
@@ -425,6 +441,9 @@ class WidgetFactory {
 
   GeneratorFactory get _generator => _factory.factory.generator;
 
+  /// 获取回合配置
+  RoundExtraConfig get roundExtraConfig => _factory.config;
+
   WidgetFactory(this._factory, this._role);
 
   /// 身份选择器，每个角色必须有
@@ -437,9 +456,17 @@ class WidgetFactory {
   }
 
   /// 获取角色行为活动界面
-  Widget? getAction({Function()? updateCallback, bool isLive = true}) {
-    var generator = _factory.getRoleGenerator(_role);
+  Widget? getNightAction({Function()? updateCallback, bool isLive = true}) {
+    if (_factory is! NightFactory) return const SizedBox();
+    var generator = _factory.factory.generator.get(_role)?.getNightRoundGenerator(_factory);
     if (generator == null) return null;
+
+    if (!roundExtraConfig.isCanAction(_role)) {
+      /// 设置技能被封印。
+      generator.sealingSkill();
+      return const Text("技能被封印，无法发动技能。");
+    }
+
     // 需要去执行一些预操作
     generator.preAction();
     if (isLive) {
@@ -449,6 +476,38 @@ class WidgetFactory {
     } else {
       return generator.playerLastKillNoActionWidget() ?? const Text("由于玩家已经出局，无法使用技能");
     }
+  }
+
+  /// 获取角色出局操作界面，在白天回合上
+  Widget? getOutViewForDay({Function()? updateCallback, bool isLive = true}) {
+    if (_factory is! DayFactory) return null;
+    var generator = _factory.factory.generator.get(_role)?.getDayRoundGenerator(_factory);
+    if (generator == null) return null;
+
+    generator.preAction();
+
+    /// 阵亡操作没有封印一说，直接去获取界面
+    return generator.outWidget(() {
+      if (null != updateCallback) updateCallback();
+    });
+  }
+
+  /// 主动技能界面
+  Widget? activeSkillWidget({Function()? updateCallback}) {
+    if (_factory is! DayFactory) return null;
+    var generator = _factory.factory.generator.get(_role)?.getDayRoundGenerator(_factory);
+    if (generator == null) return null;
+
+    return generator.activeSkillWidget(() {
+      if (null != updateCallback) updateCallback();
+    });
+  }
+
+  List<int> dieForDayActiveSkill() {
+    if (_factory is! DayFactory) return [];
+    var generator = _factory.factory.generator.get(_role)?.getDayRoundGenerator(_factory);
+    if (generator == null) return [];
+    return generator.dieForDayActiveSkill();
   }
 }
 

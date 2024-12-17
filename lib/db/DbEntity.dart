@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:god_helper/entity/Entity.dart';
+import 'package:god_helper/entity/Role.dart';
 import 'package:god_helper/framework/AppFactory.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -102,6 +103,24 @@ class GameTemplateConfigEntity {
       this.extraRule = TempExtraRule();
     }
   }
+
+  GameTemplateConfigEntity.systemTemp({
+    required int id,
+    required String name,
+    required int citizenCount,
+    required int wolfCount,
+    required Map<RoleType, List<Role>> roles,
+    TempExtraRule? extraRule,
+  }) : this(
+          id: id,
+          name: name,
+          playerCount: TemplateRoleConfig(roles: roles, citizenCount: citizenCount, wolfCount: wolfCount).count(),
+          roleConfig: TemplateRoleConfig(roles: roles, citizenCount: citizenCount, wolfCount: wolfCount),
+          extraRule: extraRule ?? TempExtraRule(),
+          weight: 3,
+          createTime: null,
+          isDefaultConfig: true,
+        );
 
   factory GameTemplateConfigEntity.fromJson(Map<String, dynamic> json) => _$GameTemplateConfigEntityFromJson(json);
 

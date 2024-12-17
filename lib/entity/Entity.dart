@@ -277,11 +277,11 @@ class PlayerDetail extends NoSqlDataEntity<PlayerDetail> {
     return null;
   }
 
-  List<Player> getCanBombWolf() {
+  List<Player> getCanBombWolf(int bombPlayer) {
     List<Player> list = [];
     for (var value in players) {
       // 存活且为狼人阵营的角色可以自爆
-      if (value.live && !value.identity) list.add(value);
+      if ((bombPlayer == value.number) ||(value.live && !value.identity)) list.add(value);
     }
     return list;
   }
@@ -335,6 +335,26 @@ class PlayerDetail extends NoSqlDataEntity<PlayerDetail> {
       }
     }
   }
+
+  /// 获取狼人，可以参与刀人的玩家
+  /// 有些角色会转换为狼人角色，需要这里做出额外判断
+  /// 参考参数 Role.isActionForWolf 注释
+  List<Player> getWolfKillActionPlayer() {
+    List<Player> list = [];
+    for (var value in players) {
+      if (value.roleType == RoleType.WOLF && value.role.isActionForWolf) list.add(value);
+    }
+    return list;
+  }
+
+  /// 获取是狼人阵营，但不睁眼的玩家
+  List<Player> getWolfKillNoActionPlayer() {
+    List<Player> list = [];
+    for (var value in players) {
+      if (value.roleType == RoleType.WOLF && !value.role.isActionForWolf) list.add(value);
+    }
+    return list;
+  }
 }
 
 /// 单个玩家
@@ -347,6 +367,7 @@ class Player {
   Role role;
 
   /// 是否是好人
+  /// 从开局到结束都不会变
   bool identity;
 
   /// 是否存活
@@ -511,6 +532,16 @@ class PlayerStates {
     }
     return list;
   }
+
+  List<String> showInDayBeginStates() {
+    List<String> list = [];
+    var types = PlayerStateType.values;
+    for (var value in types) {
+      if (!value.isShowInDayBegin) continue;
+      if (get(value)) list.add(value.desc);
+    }
+    return list;
+  }
 }
 
 /// 玩家每一回合会被附加的状态
@@ -536,6 +567,22 @@ enum PlayerStateType {
   dieForBomb("被炸弹人炸死", ifKill: true),
   foolShowIdentity("白痴表明身份，抵挡一次投票出局"),
   isKillWithWhiteWolfKing("被白狼王带走", ifKill: true),
+  isCharmFormWolfBeauty("被狼美人魅惑"),
+  isDieBecauseWolfBeautyDie("由于是狼美人的魅惑对象，随着狼美人出局而出局", ifKill: true),
+  barbarianChildExample("成为野孩子的榜样"),
+  barbarianChildChangeWolfForExampleDie("由于榜样阵亡，野孩子变为狼人"),
+  theBearGrowled("熊咆哮了!", isShowInDayBegin: true),
+  bloodMoonApostlesBomb("血月使者自爆。进入黑夜后，所有好人玩家技能全部封禁！"),
+  bannedOfShutUpForbiddenElder("玩家被禁言长老禁言了。", isShowInDayBegin: true),
+  verifyForFox("被狐狸查验。"),
+  foxVerifyWolf("狐狸查验到狼人。"),
+  foxVerifyNoWolf("狐狸查验到都是好人。"),
+  knightDuelFailure("骑士决斗失败。", ifKill: true),
+  knightDuelSuccess("骑士决斗胜利。"),
+  killForKnightDuel("被骑士决斗出局。", ifKill: true),
+  liveForKnightDuel("被骑士决斗，但存活。"),
+  killInWitcherHunt("被猎魔狩猎出局。", ifKill: true),
+  killInWitcherHuntFailure("猎魔狩猎失败出局。", ifKill: true),
   ;
 
   final String desc;
@@ -543,7 +590,14 @@ enum PlayerStateType {
   /// 该状态是否致死
   final bool ifKill;
 
-  const PlayerStateType(this.desc, {this.ifKill = false});
+  /// 是否在一天开始的时候显示该状态
+  final bool isShowInDayBegin;
+
+  const PlayerStateType(
+    this.desc, {
+    this.ifKill = false,
+    this.isShowInDayBegin = false,
+  });
 }
 
 /// 玩家buff类型
@@ -551,6 +605,9 @@ enum PlayerStateType {
 enum PlayerBuffType {
   /// 白痴被投票出局防御一次
   foolVoteOutDefense("白痴被投票，翻牌，抵挡一次投票放逐"),
+  foxVerifyThreeGoodPlayer("狐狸验证了三个好人，技能失效"),
+  witchUsedAntidote("女巫使用了解药。"),
+  witchUsedPoison("女巫使用了毒药。"),
   ;
 
   final String desc;
@@ -756,12 +813,15 @@ class TemplateRoleConfig {
   ///
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<Role> get allForActions {
-    List<Role> list = [];
-    list.add(Role.WOLF);
-    list.addAll(gods);
-    // list.addAll(wolfs);
-    list.addAll(thirds);
-    list.addAll(citizen);
+    // List<Role> list = [];
+    // list.add(Role.WOLF);
+    // list.addAll(gods);
+    // // list.addAll(wolfs);
+    // list.addAll(thirds);
+    // list.addAll(citizen);
+
+    List<Role> list = [...all, Role.WOLF];
+    list.removeWhere((element) => !element.inNightSingleAction);
 
     /// 排序
     list.sort();

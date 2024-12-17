@@ -67,7 +67,7 @@ class _GameDayViewState extends State<GameDayView> {
             /// 处理昨晚如果选举的警长阵亡的处理方式。
             if (isNeedLastRoundSheriffKill())
               _sheriffKillWidget(
-                this,
+                _dayFactory,
                 "昨晚倒牌",
                 sheriffAction: _dayFactory.sheriff.defaultSheriffAction,
                 // 确认结果后
@@ -77,21 +77,17 @@ class _GameDayViewState extends State<GameDayView> {
             title("昨晚是否死亡玩家可发动技能"),
             const SizedBox(height: 8),
             _outPlayerMotorSkill(
-              this,
+              _dayFactory,
               _dayFactory.getBeforeVoteOutPlayers(),
               () => setState(() => saveAction()),
               () => setState(() => saveAction()),
             ),
 
             const SizedBox(height: 8),
-            title("狼人自爆？"),
-            const SizedBox(height: 8),
-            _wolfBombWidget(this, (map, finishCallback) {
-              _dayFactory.dayAction.playerStateMap.addMap(map);
-              saveAction();
-              finishCallback();
-              setState(() {});
-            }),
+            _PlayerActiveSkillWidget(
+              _dayFactory,
+              finishCallback: () => setState(() {}),
+            ),
 
             const SizedBox(height: 8),
             title("投票出局"),
@@ -102,7 +98,7 @@ class _GameDayViewState extends State<GameDayView> {
             title("本回合出局玩家是否发动技能"),
             const SizedBox(height: 8),
             _outPlayerMotorSkill(
-              this,
+              _dayFactory,
               _dayFactory.getAfterVoteOutPlayers(),
               () => setState(() => saveAction()),
               () => setState(() => saveAction()),
@@ -149,12 +145,10 @@ class _GameDayViewState extends State<GameDayView> {
         ),
       ];
 
-  Widget _bottomAppBarChild() => TextButton(
-        onPressed: () => saveAndFinishThisRoundToNext(),
-        child: Text((_dayFactory.dayAction.isYesWolfBomb)
-            ? "狼人 ${_dayFactory.dayAction.wolfBombPlayer} 自爆，进入黑夜!"
-            : "结束一天，天黑进入下一回合"),
-      );
+  Widget _bottomAppBarChild() {
+    var msg = (_dayFactory.isYesWolfBomb) ? "狼人 ${_dayFactory.dayAction.wolfBombPlayer} 自爆，进入黑夜!" : "结束一天，天黑进入下一回合";
+    return TextButton(onPressed: () => saveAndFinishThisRoundToNext(), child: Text(msg));
+  }
 
   /// 是否需要处理昨晚警徽相关情况
   /// 如果是第一天，选择完警长后，会判断昨晚这个玩家是否死亡，如果玩家阵亡，返回true
@@ -399,6 +393,7 @@ class _KillPlayerWidget extends StatelessWidget {
     var outPlayer = state._dayFactory.getLastRoundOutPlayers();
     return Row(
       children: [
+        _showDayBegin(),
         const Text("昨晚倒牌玩家:"),
         const SizedBox(width: 8),
         outPlayer.isNotEmpty
@@ -416,6 +411,40 @@ class _KillPlayerWidget extends StatelessWidget {
             : const Text("无"),
       ],
     );
+  }
+
+  /// 展示一些在一天开始时候，个别角色提供的额外信息
+  /// todo 还未测试，主要是熊咆哮的行为，检查改代码是否可以正常显示
+  Widget _showDayBegin() {
+    var statePlayers = state._dayFactory.getLastRound().getNeedShowForBeginDayStatePlayers();
+    if (statePlayers.isEmpty) return const SizedBox();
+    var keys = statePlayers.keys.toList(growable: false);
+    return Column(children: [
+      const Row(children: [Text("昨晚额外信息")]),
+      ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          var player = state._dayFactory.details.get(keys[index]);
+          var states = statePlayers[keys[index]]!.showInDayBeginStates();
+          return Column(
+            children: [
+              Row(children: [Text("玩家(P${player.number}) 角色 ：${player.role.name} ")]),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => Text("\t\t- ${states[index]}"),
+                separatorBuilder: (context, index) => const SizedBox(),
+                itemCount: states.length,
+              ),
+            ],
+          );
+        },
+        separatorBuilder: (context, index) => const SizedBox(),
+        itemCount: keys.length,
+      ),
+      const SizedBox(width: 8),
+    ]);
   }
 }
 
@@ -477,7 +506,7 @@ class _lastNightWidget extends StatelessWidget {
 
 /// 处理出局玩家的一些被动技能发动
 class _outPlayerMotorSkill extends StatefulWidget {
-  final _GameDayViewState state;
+  final DayFactory _dayFactory;
   final List<Player> players;
 
   /// 技能结束回调
@@ -487,7 +516,7 @@ class _outPlayerMotorSkill extends StatefulWidget {
   final Function() sheriffFinishCallback;
 
   const _outPlayerMotorSkill(
-    this.state,
+    this._dayFactory,
     this.players,
     this.finishCallback,
     this.sheriffFinishCallback,
@@ -500,9 +529,7 @@ class _outPlayerMotorSkill extends StatefulWidget {
 class _outPlayerMotorSkillState extends State<_outPlayerMotorSkill> {
   List<Player> get _players => widget.players;
 
-  _GameDayViewState get _state => widget.state;
-
-  DayFactory get _dayFactory => widget.state._dayFactory;
+  DayFactory get _dayFactory => widget._dayFactory;
 
   // PlayerStateMap get playerStateMap => widget.playerStateMap;
 
@@ -526,26 +553,19 @@ class _outPlayerMotorSkillState extends State<_outPlayerMotorSkill> {
         }
 
         // 获取该玩家本回合的技能界面
-        var outWidget = _state._dayFactory
+        var outWidget = _dayFactory
             .getWidgetHelper(player.role)
-            .getAction(updateCallback: () => widget.finishCallback.call());
+            .getOutViewForDay(updateCallback: () => widget.finishCallback.call());
 
         return Column(
           children: [
             outWidget ??
-                Row(
-                  children: [
-                    Text(
-                      "P${player.number}号玩家 ${player.role.roleName} 出局(无技能)",
-                      style: app.font.subtitle,
-                    ),
-                  ],
-                ),
+                Row(children: [Text("P${player.number}号玩家 ${player.role.roleName} 出局(无技能)", style: app.font.subtitle)]),
 
             /// 警徽判断
             if (null != lastSheriff)
               _sheriffKillWidget(
-                widget.state,
+                _dayFactory,
                 "被 ${_players[index].role.roleName} 带走",
                 sheriffAction: lastSheriff,
                 // 确认结果后
@@ -562,7 +582,7 @@ class _outPlayerMotorSkillState extends State<_outPlayerMotorSkill> {
 
 /// 警长被杀处理
 class _sheriffKillWidget extends StatefulWidget {
-  final _GameDayViewState state;
+  final DayFactory _dayFactory;
 
   /// 死亡描述
   final String killDesc;
@@ -571,32 +591,34 @@ class _sheriffKillWidget extends StatefulWidget {
   final SheriffAction? sheriffAction;
   final Function() finishCallback;
 
-  const _sheriffKillWidget(this.state, this.killDesc, this.finishCallback, {this.sheriffAction});
+  const _sheriffKillWidget(this._dayFactory, this.killDesc, this.finishCallback, {this.sheriffAction});
 
   @override
   State<_sheriffKillWidget> createState() => _sheriffKillWidgetState();
 }
 
 class _sheriffKillWidgetState extends State<_sheriffKillWidget> {
-  Sheriff get _sheriff => widget.state._dayFactory.sheriff;
+  Sheriff get _sheriff => widget._dayFactory.sheriff;
 
   SheriffAction get _sheriffPlayer => widget.sheriffAction ?? _sheriff.last;
 
-  Player get _player => widget.state._dayFactory.details.getNullable(_sheriffPlayer.sheriffPlayer!)!;
+  Player get _player => widget._dayFactory.details.getNullable(_sheriffPlayer.sheriffPlayer!)!;
+
+  final _isShow = IsShowState();
 
   @override
   Widget build(BuildContext context) {
-    var livePlayers = widget.state._dayFactory.details.getLivePlayer().map((e) => e.number).toList();
+    var livePlayers = widget._dayFactory.details.getLivePlayer().map((e) => e.number).toList();
     livePlayers.removeWhere((element) => element == _player.number);
     return Column(
       children: [
-        Row(children: [Text("警长 ${widget.killDesc}", style: widget.state.app.baseFont.copyWith(fontSize: 18))]),
-        Row(children: [Text("P${_player.number}号玩家 警长 ${widget.killDesc}", style: widget.state.app.baseFont)]),
+        Row(children: [Text("警长 ${widget.killDesc}", style: app.baseFont.copyWith(fontSize: 18))]),
+        Row(children: [Text("P${_player.number}号玩家 警长 ${widget.killDesc}", style: app.baseFont)]),
         (_sheriffPlayer.isDestroySheriff && _sheriffPlayer.isTransferSheriff)
             ? const Row(children: [Text("警徽已被该玩家撕毁撕毁")])
             : RichText(
                 text: TextSpan(
-                  style: widget.state.app.baseFont,
+                  style: app.baseFont,
                   children: [
                     const TextSpan(text: "转移警徽给"),
                     const WidgetSpan(child: SizedBox(width: 8)),
@@ -634,10 +656,7 @@ class _sheriffKillWidgetState extends State<_sheriffKillWidget> {
                 child: TextButton(
                     onPressed: () => setState(() {
                           if ((_sheriffPlayer.transferSheriffPlayer ?? 0) <= 0) {
-                            widget.state.showSnackBarMessage(
-                              "需要先设置转移警徽给哪个玩家，或者撕毁。",
-                              isShow: widget.state._isShow,
-                            );
+                            showSnackBarMessage("需要先设置转移警徽给哪个玩家，或者撕毁。", isShow: _isShow);
                             return;
                           }
 
@@ -661,117 +680,59 @@ class _sheriffKillWidgetState extends State<_sheriffKillWidget> {
   }
 }
 
-/// 狼人自爆处理组件
-class _wolfBombWidget extends StatefulWidget {
-  final _GameDayViewState state;
-  final Function(PlayerStateMap map, Function() finishCallback) finishCallback;
+/// 玩家主动技能发动界面
+class _PlayerActiveSkillWidget extends StatefulWidget {
+  final DayFactory _dayFactory;
 
-  const _wolfBombWidget(this.state, this.finishCallback);
+  /// 技能结束回调
+  final Function() finishCallback;
+
+  const _PlayerActiveSkillWidget(this._dayFactory, {required this.finishCallback});
 
   @override
-  State<_wolfBombWidget> createState() => _wolfBombWidgetState();
+  State<_PlayerActiveSkillWidget> createState() => _PlayerActiveSkillWidgetState();
 }
 
-class _wolfBombWidgetState extends State<_wolfBombWidget> {
-  DayAction get _action => widget.state._dayFactory.dayAction;
+class _PlayerActiveSkillWidgetState extends State<_PlayerActiveSkillWidget> {
+  DayFactory get _dayFactory => widget._dayFactory;
 
-  List<Player> get canBombWolf => widget.state._dayFactory.details.getCanBombWolf();
-
-  int _defaultBombPlayer = 0;
-
-  bool get isBomb => _defaultBombPlayer > 0 && _action.isYesWolfBomb;
-
-  @override
-  void initState() {
-    super.initState();
-    _defaultBombPlayer = _action.wolfBombPlayer ?? 0;
-  }
+  List<Role> get activeSkillRoles => _dayFactory.activeSkillRoles();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 60,
-          width: double.maxFinite,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              var select = _defaultBombPlayer == canBombWolf[index].number;
-              return CircleButton(
-                clickable: !_action.isYesWolfBomb,
-                size: 40,
-                onTap: () => setState(() {
-                  _defaultBombPlayer = canBombWolf[index].number;
-                }),
-                color: select ? Colors.red : null,
-                child: Text(
-                  "P${canBombWolf[index].number}",
-                  style: app.baseFont.copyWith(
-                    color: select ? Colors.white : Colors.black,
+        title("玩家主动技能"),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            /// 由于获取时已经判断过，这里做多余的判断
+            var helper = _dayFactory.getWidgetHelper(activeSkillRoles[index]);
+            // 这里需要在角色发动技能后，进行一个判断，判断该角色是否导致阵亡，并且是否需要发动该角色的特定技能
+            List<int> skills = helper.dieForDayActiveSkill();
+            var activeWidget = helper.activeSkillWidget(updateCallback: () => widget.finishCallback())!;
+            if (skills.isEmpty) {
+              return activeWidget;
+            } else {
+              return Column(
+                children: [
+                  activeWidget,
+                  _outPlayerMotorSkill(
+                    _dayFactory,
+                    skills.map((e) => _dayFactory.playerDetails.get(e)).toList(),
+                    widget.finishCallback,
+                    () {},
                   ),
-                ),
+                ],
               );
-            },
-            separatorBuilder: (context, index) => const SizedBox(width: 8),
-            itemCount: canBombWolf.length,
-          ),
+            }
+          },
+          separatorBuilder: (context, index) => const SizedBox(),
+          itemCount: activeSkillRoles.length,
         ),
-        _bombButton(),
-        const SizedBox(height: 8),
-        if (isBomb)
-          _outPlayerMotorSkill(
-            widget.state,
-            [widget.state._dayFactory.details.get(_defaultBombPlayer)],
-            () {},
-            () {},
-          ),
       ],
     );
-  }
-
-  Widget _bombButton() {
-    if (_defaultBombPlayer <= 0) return const SizedBox();
-    if (isBomb) {
-      return RichText(
-        text: TextSpan(
-          style: app.baseFont,
-          children: [
-            TextSpan(text: "狼人 P${_action.wolfBombPlayer} "),
-            TextSpan(
-              text: "自爆",
-              style: app.baseFont.copyWith(color: Colors.red),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Row(children: [
-        Expanded(
-          child: TextButton(
-            onPressed: () => setState(() => _defaultBombPlayer = 0),
-            child: const Text("取消"),
-          ),
-        ),
-        Expanded(
-          child: TextButton(
-            onPressed: _wolfBomb,
-            child: const Text("确认自爆"),
-          ),
-        ),
-      ]);
-    }
-  }
-
-  void _wolfBomb() {
-    var state = PlayerStateMap()..set(_defaultBombPlayer, PlayerStateType.isWolfBomb);
-    widget.finishCallback(state, () {
-      _action.isYesWolfBomb = true;
-      _action.save();
-      setState(() {});
-    });
   }
 }
 
@@ -859,7 +820,7 @@ class _voteOutWidgetState extends State<_voteOutWidget> {
         // 判断是否显示警徽流
         if (isSheriffKill)
           _sheriffKillWidget(
-            widget.state,
+            _dayFactory,
             "被投票出局",
             sheriffAction: _dayFactory.sheriff.last,
             // 确认结果后

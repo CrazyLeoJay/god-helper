@@ -6,14 +6,16 @@ part of 'DefaultFactoryConfig.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DefaultCacheEntity _$DefaultCacheEntityFromJson(Map<String, dynamic> json) => DefaultCacheEntity(
+DefaultCacheEntity _$DefaultCacheEntityFromJson(Map<String, dynamic> json) =>
+    DefaultCacheEntity(
       (json['gameId'] as num).toInt(),
       $enumDecode(_$RoleEnumMap, json['role']),
     )
       ..playerId = (json['playerId'] as num).toInt()
       ..isRecordFinish = json['isRecordFinish'] as bool;
 
-Map<String, dynamic> _$DefaultCacheEntityToJson(DefaultCacheEntity instance) => <String, dynamic>{
+Map<String, dynamic> _$DefaultCacheEntityToJson(DefaultCacheEntity instance) =>
+    <String, dynamic>{
       'gameId': instance.gameId,
       'role': _$RoleEnumMap[instance.role]!,
       'playerId': instance.playerId,
@@ -32,6 +34,14 @@ const _$RoleEnumMap = {
   Role.FOOL: 'FOOL',
   Role.WOLF_KING: 'WOLF_KING',
   Role.WHITE_WOLF_KING: 'WHITE_WOLF_KING',
-  Role.WOLF_AMOR: 'WOLF_AMOR',
-  Role.BOMB: 'BOMB',
+  Role.wolfBeauty: 'wolfBeauty',
+  Role.bomb: 'bomb',
+  Role.fox: 'fox',
+  Role.bear: 'bear',
+  Role.bloodMoonApostles: 'bloodMoonApostles',
+  Role.machineWolf: 'machineWolf',
+  Role.forbiddenElder: 'forbiddenElder',
+  Role.barbarianChild: 'barbarianChild',
+  Role.knight: 'knight',
+  Role.witcher: 'witcher',
 };

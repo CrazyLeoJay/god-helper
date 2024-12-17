@@ -73,7 +73,7 @@ List<GameTemplateConfigEntity> defaultGameTemplate = [
       roles: {
         RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER, Role.GUARD],
         RoleType.WOLF: [Role.WOLF_KING],
-        RoleType.THIRD: [Role.BOMB],
+        RoleType.THIRD: [Role.bomb],
       },
     ),
     extraRule: TempExtraRule()
@@ -103,27 +103,18 @@ List<GameTemplateConfigEntity> defaultGameTemplate = [
     weight: 3,
     isDefaultConfig: true,
   ),
-  // GameTemplateConfigEntity(
-  //    id: 5,
-  //    name: "炸弹人禁言长老12人局",
-  //    playerCount: 12,
-  //    roleConfig: TemplateRoleConfig(
-  //      citizenCount: 2,
-  //      wolfCount: 3,
-  //      roles: {
-  //        // RoleType.CITIZEN: [Role.],
-  //        RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER, Role.FOOL],
-  //        RoleType.WOLF: [Role.WOLF_KING],
-  //        RoleType.THIRD: [Role.BOMB],
-  //      },
-  //    ),
-  //    extraRule: TempExtraRule()
-  //      ..winRule = WinRule.KILL_SIDE
-  //      ..add(Role.SHERIFF, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
-  //      ..add(Role.WITCH, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ALL_NOT_SAVE)),
-  //    weight: 3,
-  //    isDefaultConfig: true,
-  //  ),
+  GameTemplateConfigEntity.systemTemp(
+    id: 6,
+    name: "炸弹人禁言长老狼王狼美12人局",
+    citizenCount: 2,
+    wolfCount: 3,
+    roles: {
+      RoleType.CITIZEN: [Role.forbiddenElder, Role.bomb],
+      RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER, Role.GUARD],
+      RoleType.WOLF: [Role.WOLF_KING, Role.wolfBeauty],
+      RoleType.THIRD: [Role.bomb],
+    },
+  ),
 ];
 
 /// 将list转为map，方便获取游戏默认配置

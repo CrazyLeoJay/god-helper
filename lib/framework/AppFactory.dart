@@ -4,10 +4,8 @@ import 'package:god_helper/db/DbEntity.dart';
 import 'package:god_helper/db/Service.dart';
 import 'package:god_helper/entity/Entity.dart';
 import 'package:god_helper/entity/Role.dart';
-import 'package:god_helper/entity/RuleConfig.dart';
 import 'package:god_helper/framework/GameFactory.dart';
 import 'package:god_helper/framework/impl/FrameworkEntity.dart';
-import 'package:god_helper/role/generator/WitchRoleGenerator.dart';
 import 'package:god_helper/view/ui2/phone/Ui2RouteFactory.dart';
 
 class AppFactory {
@@ -30,7 +28,8 @@ class AppFactory {
         _tempData,
         name: "模板数据",
         isSystemConfig: true,
-      ));
+      ))
+        ..players.initDetailsForTemp();
 
   /// 根据给定的模板生成一个模板数据
   GameFactory tempForTemp(GameTemplateConfigEntity temp) => GameFactory.create(GameDetailEntity.generateForTemp(
@@ -59,20 +58,12 @@ class AppFactory {
 
 /// 模板，用于保存角色的默认配置
 /// 或者其他配置项
-var _tempData = GameTemplateConfigEntity(
+var _tempData = GameTemplateConfigEntity.systemTemp(
   id: -1,
-  name: "预女猎九人局",
-  playerCount: Role.getRoles().length + 8,
-  roleConfig: TemplateRoleConfig(
-    citizenCount: 4,
-    wolfCount: 4,
-    roles: RoleType.getRolesForType(),
-  ),
-  extraRule: TempExtraRule()
-    ..winRule = WinRule.KILL_SIDE
-    ..add(Role.SHERIFF, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
-    ..add(Role.WITCH, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ALL_NOT_SAVE)),
-  weight: -1,
+  name: "全角色",
+  citizenCount: 4,
+  wolfCount: 4,
+  roles: RoleType.getRolesForType(),
 );
 
 abstract class AppRoute {
@@ -116,4 +107,7 @@ abstract class AppRoute {
 
   /// 跳转到模板详情界面，并且可以以此开始新游戏
   RouteHelper toTempDetail(GameTemplateConfigEntity temp, bool isSystemConfig);
+
+  /// 查看系统配置的角色信息
+  RouteHelper toRoleDetailsView();
 }
