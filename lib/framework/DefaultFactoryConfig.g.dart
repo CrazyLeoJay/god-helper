@@ -6,16 +6,14 @@ part of 'DefaultFactoryConfig.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DefaultCacheEntity _$DefaultCacheEntityFromJson(Map<String, dynamic> json) =>
-    DefaultCacheEntity(
+DefaultCacheEntity _$DefaultCacheEntityFromJson(Map<String, dynamic> json) => DefaultCacheEntity(
       (json['gameId'] as num).toInt(),
       $enumDecode(_$RoleEnumMap, json['role']),
     )
       ..playerId = (json['playerId'] as num).toInt()
       ..isRecordFinish = json['isRecordFinish'] as bool;
 
-Map<String, dynamic> _$DefaultCacheEntityToJson(DefaultCacheEntity instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DefaultCacheEntityToJson(DefaultCacheEntity instance) => <String, dynamic>{
       'gameId': instance.gameId,
       'role': _$RoleEnumMap[instance.role]!,
       'playerId': instance.playerId,

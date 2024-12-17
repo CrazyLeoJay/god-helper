@@ -135,7 +135,6 @@ class NightEntity {
   NightFactory get factory => state.nightFactory;
 
   GeneratorFactory get generator => factory.factory.generator;
-
 }
 
 /// 游戏角色当晚进程操作列表

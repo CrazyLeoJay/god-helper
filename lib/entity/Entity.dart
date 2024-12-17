@@ -281,7 +281,7 @@ class PlayerDetail extends NoSqlDataEntity<PlayerDetail> {
     List<Player> list = [];
     for (var value in players) {
       // 存活且为狼人阵营的角色可以自爆
-      if ((bombPlayer == value.number) ||(value.live && !value.identity)) list.add(value);
+      if ((bombPlayer == value.number) || (value.live && !value.identity)) list.add(value);
     }
     return list;
   }

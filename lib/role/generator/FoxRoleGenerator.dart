@@ -68,6 +68,7 @@ class FoxNightAction extends RoleAction {
     var player = detail.getForRole(role);
     if (isWolf == false) {
       states.set(selectPlayer!, PlayerStateType.verifyForFox);
+
       /// 没有狼人，技能失效
       player.putBuff(PlayerBuffType.foxVerifyThreeGoodPlayer);
       return;

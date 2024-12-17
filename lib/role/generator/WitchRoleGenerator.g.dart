@@ -22,15 +22,12 @@ class WitchActionJsonData extends JsonEntityData<WitchAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-WitchExtraConfig _$WitchExtraConfigFromJson(Map<String, dynamic> json) =>
-    WitchExtraConfig(
-      witchRule: $enumDecodeNullable(
-              _$WitchSelfSaveRuleTypeEnumMap, json['witchRule']) ??
+WitchExtraConfig _$WitchExtraConfigFromJson(Map<String, dynamic> json) => WitchExtraConfig(
+      witchRule: $enumDecodeNullable(_$WitchSelfSaveRuleTypeEnumMap, json['witchRule']) ??
           WitchSelfSaveRuleType.ONLY_FIRST_DAY_NOT_SELF_SAVE,
     );
 
-Map<String, dynamic> _$WitchExtraConfigToJson(WitchExtraConfig instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WitchExtraConfigToJson(WitchExtraConfig instance) => <String, dynamic>{
       'witchRule': _$WitchSelfSaveRuleTypeEnumMap[instance.witchRule]!,
     };
 
@@ -38,8 +35,7 @@ const _$WitchSelfSaveRuleTypeEnumMap = {
   WitchSelfSaveRuleType.ALL_NOT_SAVE: 'ALL_NOT_SAVE',
   WitchSelfSaveRuleType.ALL_SELF_SAVE: 'ALL_SELF_SAVE',
   WitchSelfSaveRuleType.ONLY_FIRST_DAY_SELF_SAVE: 'ONLY_FIRST_DAY_SELF_SAVE',
-  WitchSelfSaveRuleType.ONLY_FIRST_DAY_NOT_SELF_SAVE:
-      'ONLY_FIRST_DAY_NOT_SELF_SAVE',
+  WitchSelfSaveRuleType.ONLY_FIRST_DAY_NOT_SELF_SAVE: 'ONLY_FIRST_DAY_NOT_SELF_SAVE',
 };
 
 WitchAction _$WitchActionFromJson(Map<String, dynamic> json) => WitchAction()
@@ -53,8 +49,7 @@ WitchAction _$WitchActionFromJson(Map<String, dynamic> json) => WitchAction()
   ..haveKillMedicine = json['haveKillMedicine'] as bool
   ..isYes = json['isYes'] as bool;
 
-Map<String, dynamic> _$WitchActionToJson(WitchAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WitchActionToJson(WitchAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'sealing': instance.sealing,

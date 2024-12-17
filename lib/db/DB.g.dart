@@ -3,183 +3,134 @@
 part of 'DB.dart';
 
 // ignore_for_file: type=lint
-class $GameDataTable extends GameData
-    with TableInfo<$GameDataTable, GameEntity> {
+class $GameDataTable extends GameData with TableInfo<$GameDataTable, GameEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $GameDataTable(this.attachedDatabase, [this._alias]);
+
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<int> id = GeneratedColumn<int>('id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+      defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _configTemplateIdMeta =
-      const VerificationMeta('configTemplateId');
+  late final GeneratedColumn<String> name =
+      GeneratedColumn<String>('name', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _configTemplateIdMeta = const VerificationMeta('configTemplateId');
   @override
-  late final GeneratedColumn<int> configTemplateId = GeneratedColumn<int>(
-      'config_template_id', aliasedName, false,
+  late final GeneratedColumn<int> configTemplateId = GeneratedColumn<int>('config_template_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _isDefaultConfigMeta =
-      const VerificationMeta('isDefaultConfig');
+  static const VerificationMeta _isDefaultConfigMeta = const VerificationMeta('isDefaultConfig');
   @override
-  late final GeneratedColumn<bool> isDefaultConfig = GeneratedColumn<bool>(
-      'is_default_config', aliasedName, false,
+  late final GeneratedColumn<bool> isDefaultConfig = GeneratedColumn<bool>('is_default_config', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_default_config" IN (0, 1))'));
-  static const VerificationMeta _extraRuleMeta =
-      const VerificationMeta('extraRule');
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_default_config" IN (0, 1))'));
+  static const VerificationMeta _extraRuleMeta = const VerificationMeta('extraRule');
   @override
-  late final GeneratedColumn<String> extraRule = GeneratedColumn<String>(
-      'extra_rule', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _saveRuleMeta =
-      const VerificationMeta('saveRule');
+  late final GeneratedColumn<String> extraRule =
+      GeneratedColumn<String>('extra_rule', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _saveRuleMeta = const VerificationMeta('saveRule');
   @override
-  late final GeneratedColumn<String> saveRule = GeneratedColumn<String>(
-      'save_rule', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _isBeginGameMeta =
-      const VerificationMeta('isBeginGame');
+  late final GeneratedColumn<String> saveRule =
+      GeneratedColumn<String>('save_rule', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isBeginGameMeta = const VerificationMeta('isBeginGame');
   @override
-  late final GeneratedColumn<bool> isBeginGame = GeneratedColumn<bool>(
-      'is_begin_game', aliasedName, false,
+  late final GeneratedColumn<bool> isBeginGame = GeneratedColumn<bool>('is_begin_game', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_begin_game" IN (0, 1))'),
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_begin_game" IN (0, 1))'),
       defaultValue: const Constant(false));
-  static const VerificationMeta _isFinishMeta =
-      const VerificationMeta('isFinish');
+  static const VerificationMeta _isFinishMeta = const VerificationMeta('isFinish');
   @override
-  late final GeneratedColumn<bool> isFinish = GeneratedColumn<bool>(
-      'is_finish', aliasedName, false,
+  late final GeneratedColumn<bool> isFinish = GeneratedColumn<bool>('is_finish', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_finish" IN (0, 1))'),
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_finish" IN (0, 1))'),
       defaultValue: const Constant(false));
-  static const VerificationMeta _createTimeMeta =
-      const VerificationMeta('createTime');
+  static const VerificationMeta _createTimeMeta = const VerificationMeta('createTime');
   @override
-  late final GeneratedColumn<DateTime> createTime = GeneratedColumn<DateTime>(
-      'create_time', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      defaultValue: Constant(DateTime.now()));
+  late final GeneratedColumn<DateTime> createTime = GeneratedColumn<DateTime>('create_time', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false, defaultValue: Constant(DateTime.now()));
+
   @override
-  List<GeneratedColumn> get $columns => [
-        id,
-        name,
-        configTemplateId,
-        isDefaultConfig,
-        extraRule,
-        saveRule,
-        isBeginGame,
-        isFinish,
-        createTime
-      ];
+  List<GeneratedColumn> get $columns =>
+      [id, name, configTemplateId, isDefaultConfig, extraRule, saveRule, isBeginGame, isFinish, createTime];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'game_data';
+
   @override
-  VerificationContext validateIntegrity(Insertable<GameEntity> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(Insertable<GameEntity> instance, {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+      context.handle(_nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('config_template_id')) {
-      context.handle(
-          _configTemplateIdMeta,
-          configTemplateId.isAcceptableOrUnknown(
-              data['config_template_id']!, _configTemplateIdMeta));
+      context.handle(_configTemplateIdMeta,
+          configTemplateId.isAcceptableOrUnknown(data['config_template_id']!, _configTemplateIdMeta));
     } else if (isInserting) {
       context.missing(_configTemplateIdMeta);
     }
     if (data.containsKey('is_default_config')) {
-      context.handle(
-          _isDefaultConfigMeta,
-          isDefaultConfig.isAcceptableOrUnknown(
-              data['is_default_config']!, _isDefaultConfigMeta));
+      context.handle(_isDefaultConfigMeta,
+          isDefaultConfig.isAcceptableOrUnknown(data['is_default_config']!, _isDefaultConfigMeta));
     } else if (isInserting) {
       context.missing(_isDefaultConfigMeta);
     }
     if (data.containsKey('extra_rule')) {
-      context.handle(_extraRuleMeta,
-          extraRule.isAcceptableOrUnknown(data['extra_rule']!, _extraRuleMeta));
+      context.handle(_extraRuleMeta, extraRule.isAcceptableOrUnknown(data['extra_rule']!, _extraRuleMeta));
     } else if (isInserting) {
       context.missing(_extraRuleMeta);
     }
     if (data.containsKey('save_rule')) {
-      context.handle(_saveRuleMeta,
-          saveRule.isAcceptableOrUnknown(data['save_rule']!, _saveRuleMeta));
+      context.handle(_saveRuleMeta, saveRule.isAcceptableOrUnknown(data['save_rule']!, _saveRuleMeta));
     } else if (isInserting) {
       context.missing(_saveRuleMeta);
     }
     if (data.containsKey('is_begin_game')) {
-      context.handle(
-          _isBeginGameMeta,
-          isBeginGame.isAcceptableOrUnknown(
-              data['is_begin_game']!, _isBeginGameMeta));
+      context.handle(_isBeginGameMeta, isBeginGame.isAcceptableOrUnknown(data['is_begin_game']!, _isBeginGameMeta));
     }
     if (data.containsKey('is_finish')) {
-      context.handle(_isFinishMeta,
-          isFinish.isAcceptableOrUnknown(data['is_finish']!, _isFinishMeta));
+      context.handle(_isFinishMeta, isFinish.isAcceptableOrUnknown(data['is_finish']!, _isFinishMeta));
     }
     if (data.containsKey('create_time')) {
-      context.handle(
-          _createTimeMeta,
-          createTime.isAcceptableOrUnknown(
-              data['create_time']!, _createTimeMeta));
+      context.handle(_createTimeMeta, createTime.isAcceptableOrUnknown(data['create_time']!, _createTimeMeta));
     }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+
   @override
   GameEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return GameEntity.forDB(
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      attachedDatabase.typeMapping.read(
-          DriftSqlType.int, data['${effectivePrefix}config_template_id'])!,
-      attachedDatabase.typeMapping.read(
-          DriftSqlType.bool, data['${effectivePrefix}is_default_config'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}save_rule'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}extra_rule'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_begin_game'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_finish'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}create_time'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}config_template_id'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_default_config'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}save_rule'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}extra_rule'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_begin_game'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_finish'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}create_time'])!,
     );
   }
 
@@ -199,6 +150,7 @@ class GameDataCompanion extends UpdateCompanion<GameEntity> {
   final Value<bool> isBeginGame;
   final Value<bool> isFinish;
   final Value<DateTime> createTime;
+
   const GameDataCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -210,6 +162,7 @@ class GameDataCompanion extends UpdateCompanion<GameEntity> {
     this.isFinish = const Value.absent(),
     this.createTime = const Value.absent(),
   });
+
   GameDataCompanion.insert({
     this.id = const Value.absent(),
     required String name,
@@ -225,6 +178,7 @@ class GameDataCompanion extends UpdateCompanion<GameEntity> {
         isDefaultConfig = Value(isDefaultConfig),
         extraRule = Value(extraRule),
         saveRule = Value(saveRule);
+
   static Insertable<GameEntity> custom({
     Expression<int>? id,
     Expression<String>? name,
@@ -327,133 +281,103 @@ class $GameTemplateConfigTable extends GameTemplateConfig
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $GameTemplateConfigTable(this.attachedDatabase, [this._alias]);
+
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<int> id = GeneratedColumn<int>('id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+      defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _playerCountMeta =
-      const VerificationMeta('playerCount');
+  late final GeneratedColumn<String> name =
+      GeneratedColumn<String>('name', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _playerCountMeta = const VerificationMeta('playerCount');
   @override
-  late final GeneratedColumn<int> playerCount = GeneratedColumn<int>(
-      'player_count', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _roleConfigMeta =
-      const VerificationMeta('roleConfig');
+  late final GeneratedColumn<int> playerCount =
+      GeneratedColumn<int>('player_count', aliasedName, false, type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _roleConfigMeta = const VerificationMeta('roleConfig');
   @override
-  late final GeneratedColumn<String> roleConfig = GeneratedColumn<String>(
-      'role_config', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _extraRuleMeta =
-      const VerificationMeta('extraRule');
+  late final GeneratedColumn<String> roleConfig =
+      GeneratedColumn<String>('role_config', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _extraRuleMeta = const VerificationMeta('extraRule');
   @override
-  late final GeneratedColumn<String> extraRule = GeneratedColumn<String>(
-      'extra_rule', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<String> extraRule =
+      GeneratedColumn<String>('extra_rule', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _weightMeta = const VerificationMeta('weight');
   @override
-  late final GeneratedColumn<int> weight = GeneratedColumn<int>(
-      'weight', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _createTimeMeta =
-      const VerificationMeta('createTime');
+  late final GeneratedColumn<int> weight =
+      GeneratedColumn<int>('weight', aliasedName, false, type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _createTimeMeta = const VerificationMeta('createTime');
   @override
-  late final GeneratedColumn<DateTime> createTime = GeneratedColumn<DateTime>(
-      'create_time', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      defaultValue: Constant(DateTime.now()));
+  late final GeneratedColumn<DateTime> createTime = GeneratedColumn<DateTime>('create_time', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false, defaultValue: Constant(DateTime.now()));
+
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, playerCount, roleConfig, extraRule, weight, createTime];
+  List<GeneratedColumn> get $columns => [id, name, playerCount, roleConfig, extraRule, weight, createTime];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'game_template_config';
+
   @override
-  VerificationContext validateIntegrity(
-      Insertable<GameTemplateConfigEntity> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(Insertable<GameTemplateConfigEntity> instance, {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+      context.handle(_nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('player_count')) {
-      context.handle(
-          _playerCountMeta,
-          playerCount.isAcceptableOrUnknown(
-              data['player_count']!, _playerCountMeta));
+      context.handle(_playerCountMeta, playerCount.isAcceptableOrUnknown(data['player_count']!, _playerCountMeta));
     } else if (isInserting) {
       context.missing(_playerCountMeta);
     }
     if (data.containsKey('role_config')) {
-      context.handle(
-          _roleConfigMeta,
-          roleConfig.isAcceptableOrUnknown(
-              data['role_config']!, _roleConfigMeta));
+      context.handle(_roleConfigMeta, roleConfig.isAcceptableOrUnknown(data['role_config']!, _roleConfigMeta));
     } else if (isInserting) {
       context.missing(_roleConfigMeta);
     }
     if (data.containsKey('extra_rule')) {
-      context.handle(_extraRuleMeta,
-          extraRule.isAcceptableOrUnknown(data['extra_rule']!, _extraRuleMeta));
+      context.handle(_extraRuleMeta, extraRule.isAcceptableOrUnknown(data['extra_rule']!, _extraRuleMeta));
     } else if (isInserting) {
       context.missing(_extraRuleMeta);
     }
     if (data.containsKey('weight')) {
-      context.handle(_weightMeta,
-          weight.isAcceptableOrUnknown(data['weight']!, _weightMeta));
+      context.handle(_weightMeta, weight.isAcceptableOrUnknown(data['weight']!, _weightMeta));
     } else if (isInserting) {
       context.missing(_weightMeta);
     }
     if (data.containsKey('create_time')) {
-      context.handle(
-          _createTimeMeta,
-          createTime.isAcceptableOrUnknown(
-              data['create_time']!, _createTimeMeta));
+      context.handle(_createTimeMeta, createTime.isAcceptableOrUnknown(data['create_time']!, _createTimeMeta));
     }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+
   @override
-  GameTemplateConfigEntity map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
+  GameTemplateConfigEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return GameTemplateConfigEntity.forDB(
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}player_count'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}role_config'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}extra_rule'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}weight'])!,
-      attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}create_time'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}player_count'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}role_config'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}extra_rule'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}weight'])!,
+      attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}create_time'])!,
     );
   }
 
@@ -463,8 +387,7 @@ class $GameTemplateConfigTable extends GameTemplateConfig
   }
 }
 
-class GameTemplateConfigCompanion
-    extends UpdateCompanion<GameTemplateConfigEntity> {
+class GameTemplateConfigCompanion extends UpdateCompanion<GameTemplateConfigEntity> {
   final Value<int> id;
   final Value<String> name;
   final Value<int> playerCount;
@@ -472,6 +395,7 @@ class GameTemplateConfigCompanion
   final Value<String> extraRule;
   final Value<int> weight;
   final Value<DateTime> createTime;
+
   const GameTemplateConfigCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -481,6 +405,7 @@ class GameTemplateConfigCompanion
     this.weight = const Value.absent(),
     this.createTime = const Value.absent(),
   });
+
   GameTemplateConfigCompanion.insert({
     this.id = const Value.absent(),
     required String name,
@@ -494,6 +419,7 @@ class GameTemplateConfigCompanion
         roleConfig = Value(roleConfig),
         extraRule = Value(extraRule),
         weight = Value(weight);
+
   static Insertable<GameTemplateConfigEntity> custom({
     Expression<int>? id,
     Expression<String>? name,
@@ -577,17 +503,17 @@ class GameTemplateConfigCompanion
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
+
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $GameDataTable gameData = $GameDataTable(this);
-  late final $GameTemplateConfigTable gameTemplateConfig =
-      $GameTemplateConfigTable(this);
+  late final $GameTemplateConfigTable gameTemplateConfig = $GameTemplateConfigTable(this);
   late final GameDao gameDao = GameDao(this as AppDatabase);
+
   @override
-  Iterable<TableInfo<Table, Object?>> get allTables =>
-      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [gameData, gameTemplateConfig];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [gameData, gameTemplateConfig];
 }
 
 typedef $$GameDataTableCreateCompanionBuilder = GameDataCompanion Function({
@@ -613,8 +539,7 @@ typedef $$GameDataTableUpdateCompanionBuilder = GameDataCompanion Function({
   Value<DateTime> createTime,
 });
 
-class $$GameDataTableFilterComposer
-    extends Composer<_$AppDatabase, $GameDataTable> {
+class $$GameDataTableFilterComposer extends Composer<_$AppDatabase, $GameDataTable> {
   $$GameDataTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -622,38 +547,34 @@ class $$GameDataTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get configTemplateId => $composableBuilder(
-      column: $table.configTemplateId,
-      builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get name => $composableBuilder(column: $table.name, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<bool> get isDefaultConfig => $composableBuilder(
-      column: $table.isDefaultConfig,
-      builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get configTemplateId =>
+      $composableBuilder(column: $table.configTemplateId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get extraRule => $composableBuilder(
-      column: $table.extraRule, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get isDefaultConfig =>
+      $composableBuilder(column: $table.isDefaultConfig, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get saveRule => $composableBuilder(
-      column: $table.saveRule, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get extraRule =>
+      $composableBuilder(column: $table.extraRule, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<bool> get isBeginGame => $composableBuilder(
-      column: $table.isBeginGame, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get saveRule =>
+      $composableBuilder(column: $table.saveRule, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<bool> get isFinish => $composableBuilder(
-      column: $table.isFinish, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get isBeginGame =>
+      $composableBuilder(column: $table.isBeginGame, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<DateTime> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get isFinish =>
+      $composableBuilder(column: $table.isFinish, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createTime =>
+      $composableBuilder(column: $table.createTime, builder: (column) => ColumnFilters(column));
 }
 
-class $$GameDataTableOrderingComposer
-    extends Composer<_$AppDatabase, $GameDataTable> {
+class $$GameDataTableOrderingComposer extends Composer<_$AppDatabase, $GameDataTable> {
   $$GameDataTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -661,38 +582,35 @@ class $$GameDataTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get configTemplateId => $composableBuilder(
-      column: $table.configTemplateId,
-      builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<bool> get isDefaultConfig => $composableBuilder(
-      column: $table.isDefaultConfig,
-      builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get configTemplateId =>
+      $composableBuilder(column: $table.configTemplateId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get extraRule => $composableBuilder(
-      column: $table.extraRule, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get isDefaultConfig =>
+      $composableBuilder(column: $table.isDefaultConfig, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get saveRule => $composableBuilder(
-      column: $table.saveRule, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get extraRule =>
+      $composableBuilder(column: $table.extraRule, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<bool> get isBeginGame => $composableBuilder(
-      column: $table.isBeginGame, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get saveRule =>
+      $composableBuilder(column: $table.saveRule, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<bool> get isFinish => $composableBuilder(
-      column: $table.isFinish, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get isBeginGame =>
+      $composableBuilder(column: $table.isBeginGame, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<DateTime> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get isFinish =>
+      $composableBuilder(column: $table.isFinish, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createTime =>
+      $composableBuilder(column: $table.createTime, builder: (column) => ColumnOrderings(column));
 }
 
-class $$GameDataTableAnnotationComposer
-    extends Composer<_$AppDatabase, $GameDataTable> {
+class $$GameDataTableAnnotationComposer extends Composer<_$AppDatabase, $GameDataTable> {
   $$GameDataTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -700,32 +618,27 @@ class $$GameDataTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
+  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get configTemplateId => $composableBuilder(
-      column: $table.configTemplateId, builder: (column) => column);
+  GeneratedColumn<String> get name => $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<bool> get isDefaultConfig => $composableBuilder(
-      column: $table.isDefaultConfig, builder: (column) => column);
+  GeneratedColumn<int> get configTemplateId =>
+      $composableBuilder(column: $table.configTemplateId, builder: (column) => column);
 
-  GeneratedColumn<String> get extraRule =>
-      $composableBuilder(column: $table.extraRule, builder: (column) => column);
+  GeneratedColumn<bool> get isDefaultConfig =>
+      $composableBuilder(column: $table.isDefaultConfig, builder: (column) => column);
 
-  GeneratedColumn<String> get saveRule =>
-      $composableBuilder(column: $table.saveRule, builder: (column) => column);
+  GeneratedColumn<String> get extraRule => $composableBuilder(column: $table.extraRule, builder: (column) => column);
 
-  GeneratedColumn<bool> get isBeginGame => $composableBuilder(
-      column: $table.isBeginGame, builder: (column) => column);
+  GeneratedColumn<String> get saveRule => $composableBuilder(column: $table.saveRule, builder: (column) => column);
 
-  GeneratedColumn<bool> get isFinish =>
-      $composableBuilder(column: $table.isFinish, builder: (column) => column);
+  GeneratedColumn<bool> get isBeginGame => $composableBuilder(column: $table.isBeginGame, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => column);
+  GeneratedColumn<bool> get isFinish => $composableBuilder(column: $table.isFinish, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createTime =>
+      $composableBuilder(column: $table.createTime, builder: (column) => column);
 }
 
 class $$GameDataTableTableManager extends RootTableManager<
@@ -744,12 +657,9 @@ class $$GameDataTableTableManager extends RootTableManager<
       : super(TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () =>
-              $$GameDataTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$GameDataTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$GameDataTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () => $$GameDataTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$GameDataTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$GameDataTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
@@ -794,9 +704,7 @@ class $$GameDataTableTableManager extends RootTableManager<
             isFinish: isFinish,
             createTime: createTime,
           ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
+          withReferenceMapper: (p0) => p0.map((e) => (e.readTable(table), BaseReferences(db, table, e))).toList(),
           prefetchHooksCallback: null,
         ));
 }
@@ -813,8 +721,7 @@ typedef $$GameDataTableProcessedTableManager = ProcessedTableManager<
     (GameEntity, BaseReferences<_$AppDatabase, $GameDataTable, GameEntity>),
     GameEntity,
     PrefetchHooks Function()>;
-typedef $$GameTemplateConfigTableCreateCompanionBuilder
-    = GameTemplateConfigCompanion Function({
+typedef $$GameTemplateConfigTableCreateCompanionBuilder = GameTemplateConfigCompanion Function({
   Value<int> id,
   required String name,
   required int playerCount,
@@ -823,8 +730,7 @@ typedef $$GameTemplateConfigTableCreateCompanionBuilder
   required int weight,
   Value<DateTime> createTime,
 });
-typedef $$GameTemplateConfigTableUpdateCompanionBuilder
-    = GameTemplateConfigCompanion Function({
+typedef $$GameTemplateConfigTableUpdateCompanionBuilder = GameTemplateConfigCompanion Function({
   Value<int> id,
   Value<String> name,
   Value<int> playerCount,
@@ -834,8 +740,7 @@ typedef $$GameTemplateConfigTableUpdateCompanionBuilder
   Value<DateTime> createTime,
 });
 
-class $$GameTemplateConfigTableFilterComposer
-    extends Composer<_$AppDatabase, $GameTemplateConfigTable> {
+class $$GameTemplateConfigTableFilterComposer extends Composer<_$AppDatabase, $GameTemplateConfigTable> {
   $$GameTemplateConfigTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -843,30 +748,28 @@ class $$GameTemplateConfigTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get playerCount => $composableBuilder(
-      column: $table.playerCount, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get name => $composableBuilder(column: $table.name, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get roleConfig => $composableBuilder(
-      column: $table.roleConfig, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get playerCount =>
+      $composableBuilder(column: $table.playerCount, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get extraRule => $composableBuilder(
-      column: $table.extraRule, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get roleConfig =>
+      $composableBuilder(column: $table.roleConfig, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get weight => $composableBuilder(
-      column: $table.weight, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get extraRule =>
+      $composableBuilder(column: $table.extraRule, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<DateTime> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get weight =>
+      $composableBuilder(column: $table.weight, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createTime =>
+      $composableBuilder(column: $table.createTime, builder: (column) => ColumnFilters(column));
 }
 
-class $$GameTemplateConfigTableOrderingComposer
-    extends Composer<_$AppDatabase, $GameTemplateConfigTable> {
+class $$GameTemplateConfigTableOrderingComposer extends Composer<_$AppDatabase, $GameTemplateConfigTable> {
   $$GameTemplateConfigTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -874,30 +777,29 @@ class $$GameTemplateConfigTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get playerCount => $composableBuilder(
-      column: $table.playerCount, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get roleConfig => $composableBuilder(
-      column: $table.roleConfig, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get playerCount =>
+      $composableBuilder(column: $table.playerCount, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get extraRule => $composableBuilder(
-      column: $table.extraRule, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get roleConfig =>
+      $composableBuilder(column: $table.roleConfig, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get weight => $composableBuilder(
-      column: $table.weight, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get extraRule =>
+      $composableBuilder(column: $table.extraRule, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<DateTime> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get weight =>
+      $composableBuilder(column: $table.weight, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createTime =>
+      $composableBuilder(column: $table.createTime, builder: (column) => ColumnOrderings(column));
 }
 
-class $$GameTemplateConfigTableAnnotationComposer
-    extends Composer<_$AppDatabase, $GameTemplateConfigTable> {
+class $$GameTemplateConfigTableAnnotationComposer extends Composer<_$AppDatabase, $GameTemplateConfigTable> {
   $$GameTemplateConfigTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -905,26 +807,21 @@ class $$GameTemplateConfigTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
+  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get playerCount => $composableBuilder(
-      column: $table.playerCount, builder: (column) => column);
+  GeneratedColumn<String> get name => $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get roleConfig => $composableBuilder(
-      column: $table.roleConfig, builder: (column) => column);
+  GeneratedColumn<int> get playerCount => $composableBuilder(column: $table.playerCount, builder: (column) => column);
 
-  GeneratedColumn<String> get extraRule =>
-      $composableBuilder(column: $table.extraRule, builder: (column) => column);
+  GeneratedColumn<String> get roleConfig => $composableBuilder(column: $table.roleConfig, builder: (column) => column);
 
-  GeneratedColumn<int> get weight =>
-      $composableBuilder(column: $table.weight, builder: (column) => column);
+  GeneratedColumn<String> get extraRule => $composableBuilder(column: $table.extraRule, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => column);
+  GeneratedColumn<int> get weight => $composableBuilder(column: $table.weight, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createTime =>
+      $composableBuilder(column: $table.createTime, builder: (column) => column);
 }
 
 class $$GameTemplateConfigTableTableManager extends RootTableManager<
@@ -936,25 +833,16 @@ class $$GameTemplateConfigTableTableManager extends RootTableManager<
     $$GameTemplateConfigTableAnnotationComposer,
     $$GameTemplateConfigTableCreateCompanionBuilder,
     $$GameTemplateConfigTableUpdateCompanionBuilder,
-    (
-      GameTemplateConfigEntity,
-      BaseReferences<_$AppDatabase, $GameTemplateConfigTable,
-          GameTemplateConfigEntity>
-    ),
+    (GameTemplateConfigEntity, BaseReferences<_$AppDatabase, $GameTemplateConfigTable, GameTemplateConfigEntity>),
     GameTemplateConfigEntity,
     PrefetchHooks Function()> {
-  $$GameTemplateConfigTableTableManager(
-      _$AppDatabase db, $GameTemplateConfigTable table)
+  $$GameTemplateConfigTableTableManager(_$AppDatabase db, $GameTemplateConfigTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () =>
-              $$GameTemplateConfigTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$GameTemplateConfigTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$GameTemplateConfigTableAnnotationComposer(
-                  $db: db, $table: table),
+          createFilteringComposer: () => $$GameTemplateConfigTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$GameTemplateConfigTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$GameTemplateConfigTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
@@ -991,9 +879,7 @@ class $$GameTemplateConfigTableTableManager extends RootTableManager<
             weight: weight,
             createTime: createTime,
           ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
+          withReferenceMapper: (p0) => p0.map((e) => (e.readTable(table), BaseReferences(db, table, e))).toList(),
           prefetchHooksCallback: null,
         ));
 }
@@ -1007,19 +893,17 @@ typedef $$GameTemplateConfigTableProcessedTableManager = ProcessedTableManager<
     $$GameTemplateConfigTableAnnotationComposer,
     $$GameTemplateConfigTableCreateCompanionBuilder,
     $$GameTemplateConfigTableUpdateCompanionBuilder,
-    (
-      GameTemplateConfigEntity,
-      BaseReferences<_$AppDatabase, $GameTemplateConfigTable,
-          GameTemplateConfigEntity>
-    ),
+    (GameTemplateConfigEntity, BaseReferences<_$AppDatabase, $GameTemplateConfigTable, GameTemplateConfigEntity>),
     GameTemplateConfigEntity,
     PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
+
   $AppDatabaseManager(this._db);
-  $$GameDataTableTableManager get gameData =>
-      $$GameDataTableTableManager(_db, _db.gameData);
+
+  $$GameDataTableTableManager get gameData => $$GameDataTableTableManager(_db, _db.gameData);
+
   $$GameTemplateConfigTableTableManager get gameTemplateConfig =>
       $$GameTemplateConfigTableTableManager(_db, _db.gameTemplateConfig);
 }

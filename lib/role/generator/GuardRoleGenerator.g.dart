@@ -22,8 +22,7 @@ class GuardNightActionJsonData extends JsonEntityData<GuardNightAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-GuardNightAction _$GuardNightActionFromJson(Map<String, dynamic> json) =>
-    GuardNightAction(
+GuardNightAction _$GuardNightActionFromJson(Map<String, dynamic> json) => GuardNightAction(
       protectedPlayer: (json['protectedPlayer'] as num?)?.toInt(),
       isAbandonUseSkill: json['isAbandonUseSkill'] as bool? ?? false,
       isKillNotUseSkill: json['isKillNotUseSkill'] as bool? ?? false,
@@ -32,8 +31,7 @@ GuardNightAction _$GuardNightActionFromJson(Map<String, dynamic> json) =>
       ..isYes = json['isYes'] as bool
       ..sealing = json['sealing'] as bool;
 
-Map<String, dynamic> _$GuardNightActionToJson(GuardNightAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$GuardNightActionToJson(GuardNightAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

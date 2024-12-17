@@ -1,10 +1,4 @@
-import 'package:annotation/annotation.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:god_helper/entity/Role.dart';
-import 'package:god_helper/framework/GameFactory.dart';
-import 'package:god_helper/framework/impl/NightFactory.dart';
-import 'package:god_helper/role/generator/DefaultEmptyGenerator.dart';
-import 'package:json_annotation/json_annotation.dart';
+
 
 // part 'RobbersRoleGenerator.g.dart';
 

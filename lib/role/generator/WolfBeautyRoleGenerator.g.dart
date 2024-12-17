@@ -6,8 +6,7 @@ part of 'WolfBeautyRoleGenerator.dart';
 // AppCodeGenerator
 // **************************************************************************
 
-class WolfBeautyNightActionJsonData
-    extends JsonEntityData<WolfBeautyNightAction> {
+class WolfBeautyNightActionJsonData extends JsonEntityData<WolfBeautyNightAction> {
   @override
   WolfBeautyNightAction createForMap(Map<String, dynamic> map) {
     return WolfBeautyNightAction.fromJson(map);
@@ -35,19 +34,15 @@ class WolfBeautyDayActionJsonData extends JsonEntityData<WolfBeautyDayAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-WolfBeautyNightAction _$WolfBeautyNightActionFromJson(
-        Map<String, dynamic> json) =>
-    WolfBeautyNightAction()
-      ..role = $enumDecode(_$RoleEnumMap, json['role'])
-      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-      ..isYes = json['isYes'] as bool
-      ..sealing = json['sealing'] as bool
-      ..charmPlayer = (json['charmPlayer'] as num?)?.toInt()
-      ..isAbandon = json['isAbandon'] as bool;
+WolfBeautyNightAction _$WolfBeautyNightActionFromJson(Map<String, dynamic> json) => WolfBeautyNightAction()
+  ..role = $enumDecode(_$RoleEnumMap, json['role'])
+  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+  ..isYes = json['isYes'] as bool
+  ..sealing = json['sealing'] as bool
+  ..charmPlayer = (json['charmPlayer'] as num?)?.toInt()
+  ..isAbandon = json['isAbandon'] as bool;
 
-Map<String, dynamic> _$WolfBeautyNightActionToJson(
-        WolfBeautyNightAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WolfBeautyNightActionToJson(WolfBeautyNightAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,
@@ -80,16 +75,13 @@ const _$RoleEnumMap = {
   Role.witcher: 'witcher',
 };
 
-WolfBeautyDayAction _$WolfBeautyDayActionFromJson(Map<String, dynamic> json) =>
-    WolfBeautyDayAction()
-      ..role = $enumDecode(_$RoleEnumMap, json['role'])
-      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-      ..isYes = json['isYes'] as bool
-      ..sealing = json['sealing'] as bool;
+WolfBeautyDayAction _$WolfBeautyDayActionFromJson(Map<String, dynamic> json) => WolfBeautyDayAction()
+  ..role = $enumDecode(_$RoleEnumMap, json['role'])
+  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+  ..isYes = json['isYes'] as bool
+  ..sealing = json['sealing'] as bool;
 
-Map<String, dynamic> _$WolfBeautyDayActionToJson(
-        WolfBeautyDayAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WolfBeautyDayActionToJson(WolfBeautyDayAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

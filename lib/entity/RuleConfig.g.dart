@@ -7,8 +7,7 @@ part of 'RuleConfig.dart';
 // **************************************************************************
 
 WitchRule _$WitchRuleFromJson(Map<String, dynamic> json) => WitchRule(
-      selfSave: $enumDecodeNullable(
-              _$WitchSelfSaveRuleTypeEnumMap, json['selfSave']) ??
+      selfSave: $enumDecodeNullable(_$WitchSelfSaveRuleTypeEnumMap, json['selfSave']) ??
           WitchSelfSaveRuleType.ONLY_FIRST_DAY_SELF_SAVE,
     );
 
@@ -20,19 +19,14 @@ const _$WitchSelfSaveRuleTypeEnumMap = {
   WitchSelfSaveRuleType.ALL_NOT_SAVE: 'ALL_NOT_SAVE',
   WitchSelfSaveRuleType.ALL_SELF_SAVE: 'ALL_SELF_SAVE',
   WitchSelfSaveRuleType.ONLY_FIRST_DAY_SELF_SAVE: 'ONLY_FIRST_DAY_SELF_SAVE',
-  WitchSelfSaveRuleType.ONLY_FIRST_DAY_NOT_SELF_SAVE:
-      'ONLY_FIRST_DAY_NOT_SELF_SAVE',
+  WitchSelfSaveRuleType.ONLY_FIRST_DAY_NOT_SELF_SAVE: 'ONLY_FIRST_DAY_NOT_SELF_SAVE',
 };
 
-SheriffExtraConfig _$SheriffExtraConfigFromJson(Map<String, dynamic> json) =>
-    SheriffExtraConfig(
-      sheriffRace:
-          $enumDecodeNullable(_$SheriffRaceEnumMap, json['sheriffRace']) ??
-              SheriffRace.onlyFirstDay,
+SheriffExtraConfig _$SheriffExtraConfigFromJson(Map<String, dynamic> json) => SheriffExtraConfig(
+      sheriffRace: $enumDecodeNullable(_$SheriffRaceEnumMap, json['sheriffRace']) ?? SheriffRace.onlyFirstDay,
     );
 
-Map<String, dynamic> _$SheriffExtraConfigToJson(SheriffExtraConfig instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$SheriffExtraConfigToJson(SheriffExtraConfig instance) => <String, dynamic>{
       'sheriffRace': _$SheriffRaceEnumMap[instance.sheriffRace]!,
     };
 

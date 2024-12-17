@@ -34,13 +34,13 @@ class _BearSecondSkillCheck extends SecondSkillCheck {
     var player = details.getForRole(_role);
     var leftPlayer = _leftPlayer(details, player);
     // 查看前一个玩家是否有狼
-    if(!leftPlayer.identity){
+    if (!leftPlayer.identity) {
       states.set(player.number, PlayerStateType.theBearGrowled);
       return;
     }
     // 查看后一个玩家是否有狼
     var rightPlayer = _rightPlayer(details, player);
-    if(!rightPlayer.identity){
+    if (!rightPlayer.identity) {
       states.set(player.number, PlayerStateType.theBearGrowled);
       return;
     }

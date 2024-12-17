@@ -102,6 +102,7 @@ class NightFactory extends RoundFactory {
     for (var entity in actions.roleActionMap.entries) {
       var action = getRoleAction(entity.key);
       if (action == null) continue;
+
       /// 行为被封印，也无需判断，直接跳过
       if (action.sealing) continue;
       try {
@@ -245,5 +246,5 @@ class NightFactory extends RoundFactory {
     }
   }
 
-  List<int> getLivePlayerIds()=> getLivePlayer().map((e) => e.number).toList(growable: false);
+  List<int> getLivePlayerIds() => getLivePlayer().map((e) => e.number).toList(growable: false);
 }

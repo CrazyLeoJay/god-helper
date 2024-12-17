@@ -80,7 +80,7 @@ class _BloodMoonApostlesDayRoleRoundGenerator extends RoleDayRoundGenerator<Bloo
   }
 
   @override
-  Widget? outWidget( Function() updateCallback) {
+  Widget? outWidget(Function() updateCallback) {
     if (_isBomb) {
       return const Column(
         children: [
