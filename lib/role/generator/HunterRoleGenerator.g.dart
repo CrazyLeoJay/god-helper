@@ -67,6 +67,7 @@ const _$RoleEnumMap = {
   Role.bear: 'bear',
   Role.bloodMoonApostles: 'bloodMoonApostles',
   Role.machineWolf: 'machineWolf',
+  Role.robbers: 'robbers',
   Role.forbiddenElder: 'forbiddenElder',
   Role.barbarianChild: 'barbarianChild',
   Role.knight: 'knight',

@@ -25,6 +25,7 @@ import 'package:god_helper/role/generator/GuardRoleGenerator.dart';
 import 'package:god_helper/role/generator/HunterRoleGenerator.dart';
 import 'package:god_helper/role/generator/KnightRoleGenerator.dart';
 import 'package:god_helper/role/generator/MachineWolfRoleGenerator.dart';
+import 'package:god_helper/role/generator/RobbersRoleGenerator.dart';
 import 'package:god_helper/role/generator/SeerRoleGenerator.dart';
 import 'package:god_helper/role/generator/WhiteWolfRoleGenerator.dart';
 import 'package:god_helper/role/generator/WitchRoleGenerator.dart';
@@ -60,7 +61,7 @@ part 'GameFactory.g.dart';
   BearRoleGenerator,
   BloodMoonApostlesRoleGenerator,
   MachineWolfRoleGenerator,
-  // RobbersRoleGenerator,
+  RobbersRoleGenerator,
   ForbiddenElderRoleGenerator,
   BarbarianChildRoleGenerator,
   KnightRoleGenerator,

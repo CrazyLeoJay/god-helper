@@ -1,20 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'SeerRoleGenerator.dart';
+part of 'RobbersRoleGenerator.dart';
 
 // **************************************************************************
 // AppCodeGenerator
 // **************************************************************************
 
-class SeerActionJsonData extends JsonEntityData<SeerAction> {
+class RobbersNightActionJsonData extends JsonEntityData<RobbersNightAction> {
   @override
-  SeerAction createForMap(Map<String, dynamic> map) {
-    return SeerAction.fromJson(map);
+  RobbersNightAction createForMap(Map<String, dynamic> map) {
+    return RobbersNightAction.fromJson(map);
   }
 
   @override
-  SeerAction emptyReturn() {
-    return SeerAction();
+  RobbersNightAction emptyReturn() {
+    return RobbersNightAction();
   }
 }
 
@@ -22,22 +22,17 @@ class SeerActionJsonData extends JsonEntityData<SeerAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SeerAction _$SeerActionFromJson(Map<String, dynamic> json) => SeerAction.createJson(
-      checkPlayer: (json['checkPlayer'] as num?)?.toInt() ?? 0,
-      identity: json['identity'] as bool? ?? true,
-    )
-      ..role = $enumDecode(_$RoleEnumMap, json['role'])
-      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-      ..isYes = json['isYes'] as bool
-      ..sealing = json['sealing'] as bool;
+RobbersNightAction _$RobbersNightActionFromJson(Map<String, dynamic> json) => RobbersNightAction()
+  ..role = $enumDecode(_$RoleEnumMap, json['role'])
+  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+  ..isYes = json['isYes'] as bool
+  ..sealing = json['sealing'] as bool;
 
-Map<String, dynamic> _$SeerActionToJson(SeerAction instance) => <String, dynamic>{
+Map<String, dynamic> _$RobbersNightActionToJson(RobbersNightAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,
       'sealing': instance.sealing,
-      'checkPlayer': instance.checkPlayer,
-      'identity': instance.identity,
     };
 
 const _$RoleEnumMap = {

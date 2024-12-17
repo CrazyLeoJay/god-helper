@@ -149,17 +149,19 @@ enum Role implements Comparable<Role> {
     15,
     "机械狼",
     RoleType.WOLF,
+    online: false,
     inNightSingleAction: true,
   ),
 
   /// 盗贼
   /// todo 由于盗贼角色需要额外增加两张身份牌给他选，模板配置和适配上会存在问题，这里先不加入盗贼角色
-  // robbers(
-  //   16,
-  //   "盗贼",
-  //   RoleType.THIRD,
-  //   ruleDesc: "上带将剩下的两张没有分配的身份牌出示，你可以在这两张牌中，选择一张成为你的身份牌。有狼人必须选择狼人。",
-  // ),
+  robbers(
+    16,
+    "盗贼",
+    RoleType.THIRD,
+    online: false,
+    ruleDesc: "上带将剩下的两张没有分配的身份牌出示，你可以在这两张牌中，选择一张成为你的身份牌。有狼人必须选择狼人。",
+  ),
 
   /// 禁言长老
   forbiddenElder(
@@ -260,6 +262,10 @@ enum Role implements Comparable<Role> {
   /// 如果狼人阵营，且不随狼人刀人行动，需要单独确定玩家ID
   final bool isActionForWolf;
 
+  /// 是否上线角色，主要处理角色显示问题
+  /// 如果还未开发完成，可以设置成false。防止被使用
+  final bool _online;
+
   const Role(
     this.id,
     this.roleName,
@@ -274,18 +280,21 @@ enum Role implements Comparable<Role> {
     bool? canSelfBomb,
     this.canKillTargetForWolf = true,
     bool? isActionForWolf,
+    bool online = true,
   })  : _sortWeight = sortWeight,
         // 默认 非狼、村民角色，晚上都有行动
         inNightSingleAction = inNightSingleAction ?? (type != RoleType.WOLF && id > 1),
         canSelfBomb = canSelfBomb ?? (type == RoleType.WOLF),
-        isActionForWolf = isActionForWolf ?? (type == RoleType.WOLF);
+        isActionForWolf = isActionForWolf ?? (type == RoleType.WOLF),
+        _online = online;
 
   /// 获取有角色行为的所有角色
   /// 除去 村民、狼人、警长等一些特殊角色
-  static List<Role> getRoles() => [...Role.values]..removeWhere((element) => element.id < 3);
+  static List<Role> getRoles() => [...Role.values]..removeWhere((e) => e.id < 3 || !e._online);
 
-  // List<Role> get all => values.toList();
-  List<Role> get all => getRoles();
+  static List<Role> get all => values.toList()..removeWhere((e) => !e._online);
+
+  // static List<Role> get all => getRoles();
 
   /// 获取实际权重
   /// 这里将好人和狼人的权重做一个较大的分别
@@ -365,7 +374,7 @@ enum RoleType {
   /// @param isAll 是否包含所有角色，包括普通村民和狼人这样的角色
   static Map<RoleType, List<Role>> getRolesForType({bool isAll = false}) {
     Map<RoleType, List<Role>> map = {};
-    for (var role in (isAll ? Role.values : Role.getRoles())) {
+    for (var role in (isAll ? Role.all : Role.getRoles())) {
       if (isAll) {
         if (role.id <= 0) continue;
       } else {

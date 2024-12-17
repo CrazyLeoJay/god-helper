@@ -22,6 +22,7 @@ extension GameFactoryRoleGeneratorExtends on GameFactory {
         BearRoleGenerator(factory: this),
         BloodMoonApostlesRoleGenerator(factory: this),
         MachineWolfRoleGenerator(factory: this),
+        RobbersRoleGenerator(factory: this),
         ForbiddenElderRoleGenerator(factory: this),
         BarbarianChildRoleGenerator(factory: this),
         KnightRoleGenerator(factory: this),
