@@ -26,7 +26,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'graalvm'
+        distribution: 'oracle'
         cache: gradle
         
     - run: flutter pub get
