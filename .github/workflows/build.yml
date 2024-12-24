@@ -54,30 +54,32 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: apk
+        name: release.apk
         path: build/app/outputs/flutter-apk/app-release.apk
+        compression: none
 
-  # ios-build:
-  #   runs-on: macos-latest
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: stable
-  #     - run: flutter pub get
-  #     - name: Build iOS App
-  #       run: flutter build ios --release --no-codesign
-  #     - name: Archive the build
-  #       run: |
-  #         cd build/ios/iphoneos
-  #         zip -r app.ipa Payload
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: ios-app
-  #         path: build/ios/iphoneos/app.ipa
+  ios-build:
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - name: Build iOS App
+        run: flutter build ios --release --no-codesign
+      # - name: Archive the build
+      #   run: |
+      #     cd build/ios/iphoneos
+      #     zip -r app.ipa Payload
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app.ipa
+          path: build/ios/iphoneos/app.ipa
+          compression: none
 
 
 
