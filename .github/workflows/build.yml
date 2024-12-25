@@ -15,7 +15,7 @@ jobs:
     - shell: bash
       run: echo $BUILD_TEST_ARG
       env:
-        BUILD_TEST_ARG: ${{ variables.BUILD_TEST_ARG }}
+        BUILD_TEST_ARG: ${{ vars.BUILD_TEST_ARG }}
     - name: Create keystore
       shell: bash
       run: |
