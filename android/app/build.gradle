@@ -38,6 +38,8 @@ android {
         }
     }
 
+    println("storeFile: ${System.getenv("KEYSTORE_FILE")}")
+    println("keyAlias: ${System.getenv("KEYSTORE_ALIAS")}")
     signingConfigs {
         github_actions {
             storeFile System.getenv("KEYSTORE_FILE")
