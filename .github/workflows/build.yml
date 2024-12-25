@@ -7,9 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  apk-build:
+  apk-build:      
     runs-on: ubuntu-latest
-
     steps:
     - name: Clone repository
       uses: actions/checkout@v4.2.2
@@ -31,56 +30,54 @@ jobs:
         
     - run: flutter pub get
     
-    # - name: Create keystore
-    #   run: |
-    #     echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > keystore.jks
-    #   env:
-    #     ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+    - name: Create keystore
+      run: |
+        echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > keystore.jks
+      env:
+        ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       
-    # - name: Build APK with signing
-    #   run: |
-    #     flutter build apk --release \
-    #     -- keystore=keystore.jks \
-    #     --store-password ${{ secrets.JKS_PASSWORD }} \
-    #     --key-password ${{ secrets.JKS_PASSWORD }} \
-    #     --alias ${{ secrets.ANDROID_KEY_ALIAS }}
-    #   env:
-    #     JKS_PASSWORD: ${{ secrets.JKS_PASSWORD }}
-    #     ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+    - name: Build APK with signing
+      run: |
+        flutter build apk --release \
+        -- keystore=keystore.jks \
+        --store-password ${{ secrets.JKS_PASSWORD }} \
+        --key-password ${{ secrets.JKS_PASSWORD }} \
+        --alias god-helper-key
+      env:
+        JKS_PASSWORD: ${{ secrets.JKS_PASSWORD }}
 
-    - run: flutter build apk
-      name: Build APK with signing
+    # - run: flutter build apk
+    #   name: Build APK with signing
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: release.apk
         path: build/app/outputs/flutter-apk/app-release.apk
-        compression: none
+        compression-level: 0 
 
-  ios-build:
-    runs-on: macos-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - run: flutter pub get
-      - name: Build iOS App
-        run: flutter build ios --release --no-codesign
-      # - name: Archive the build
-      #   run: |
-      #     cd build/ios/iphoneos
-      #     zip -r app.ipa Payload
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-app.ipa
-          path: build/ios/iphoneos/app.ipa
-          compression: none
-
+  # ios-build:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
+  #     - name: Set up Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: stable
+  #     - run: flutter pub get
+  #     - name: Build iOS App
+  #       run: flutter build ios --release --no-codesign
+  #     # - name: Archive the build
+  #     #   run: |
+  #     #     cd build/ios/iphoneos
+  #     #     zip -r app.ipa Payload
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ios-app.ipa
+  #         path: build/ios/iphoneos/app.ipa
+  #         compression-level: 0 
 
 
 
