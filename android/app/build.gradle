@@ -42,7 +42,7 @@ android {
     println("keyAlias: ${System.getenv("KEYSTORE_ALIAS")}")
     signingConfigs {
         github_actions {
-            storeFile System.getenv("KEYSTORE_FILE")
+            storeFile file(System.getenv("KEYSTORE_FILE"))
             storePassword System.getenv("JKS_PASSWORD")
             keyAlias System.getenv("KEYSTORE_ALIAS")
             keyPassword System.getenv("JKS_PASSWORD")
