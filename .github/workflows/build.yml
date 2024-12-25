@@ -46,7 +46,7 @@ jobs:
     - name: Build APK with signing
       run: |
         flutter build apk --release \
-        -- keystore=keystore.jks \
+        --keystore=keystore.jks \
         --store-password ${{ secrets.JKS_PASSWORD }} \
         --key-password ${{ secrets.JKS_PASSWORD }} \
         --alias god-helper-key
