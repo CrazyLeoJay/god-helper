@@ -45,9 +45,9 @@ jobs:
       - run: flutter pub get
 
       - name: Build APK with signing
-        run: export KEYSTORE_FILE=$KEYSTORE_FILE && \
-          export JKS_PASSWORD=$JKS_PASSWORD && \
-          export KEYSTORE_ALIAS=$KEYSTORE_ALIAS && \
+        run: KEYSTORE_FILE=$KEYSTORE_FILE && \
+          JKS_PASSWORD=$JKS_PASSWORD && \
+          KEYSTORE_ALIAS=$KEYSTORE_ALIAS && \
           flutter build apk --release --flavor github_actions
         env:
           JKS_PASSWORD: ${{ secrets.JKS_PASSWORD }}
