@@ -10,6 +10,12 @@ jobs:
   apk-build:      
     runs-on: ubuntu-latest
     steps:
+    - name: Create keystore
+      run: |
+        echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > keystore.jks
+      env:
+        ANDROID_KEYSTORE_BASE64: ${{ build.ANDROID_KEYSTORE_BASE64 }}
+        
     - name: Clone repository
       uses: actions/checkout@v4.2.2
     
@@ -29,13 +35,7 @@ jobs:
         cache: gradle
         
     - run: flutter pub get
-    
-    - name: Create keystore
-      run: |
-        echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > keystore.jks
-      env:
-        ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-      
+  
     - name: Build APK with signing
       run: |
         flutter build apk --release \
