@@ -12,7 +12,12 @@ jobs:
     environment: 
       name: build
     steps:
+    - shell: bash
+      run: echo $BUILD_TEST_ARG
+      env:
+        BUILD_TEST_ARG: ${{ variables.BUILD_TEST_ARG }}
     - name: Create keystore
+      shell: bash
       run: |
         echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > keystore.jks
       env:
