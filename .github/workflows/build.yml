@@ -37,7 +37,8 @@ jobs:
       - run: flutter pub get
 
       - name: Build APK with signing
-        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks &&\ 
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
           flutter build apk --release --flavor github_actions
         env:
           JKS_PASSWORD: ${{ secrets.JKS_PASSWORD }}
