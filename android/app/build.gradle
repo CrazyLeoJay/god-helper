@@ -25,7 +25,7 @@ if (keystorePropertiesFile.exists()) {
     devVariable['KEYSTORE_ALIAS'] = jks_alias
 }
 
-println("storeFile: ${rootProject.file(keystore_file)}")
+println("storeFile(${rootProject.file(keystore_file).exists()}): ${rootProject.file(keystore_file)}")
 println("keyAlias: ${jks_alias}")
 
 android {
