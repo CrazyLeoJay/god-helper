@@ -16,14 +16,6 @@ jobs:
         run: echo $BUILD_TEST_ARG
         env:
           BUILD_TEST_ARG: ${{ vars.BUILD_TEST_ARG }}
-      - name: Create keystore
-        shell: bash
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks && pwd && ls -al
-        env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          KEYSTORE_FILE: keystore.jks
-
       - name: Clone repository
         uses: actions/checkout@v4.2.2
 
@@ -45,7 +37,8 @@ jobs:
       - run: flutter pub get
 
       - name: Build APK with signing
-        run: flutter build apk --release --flavor github_actions
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks &&\ 
+          flutter build apk --release --flavor github_actions
         env:
           JKS_PASSWORD: ${{ secrets.JKS_PASSWORD }}
           KEYSTORE_FILE: "../keystore.jks"
