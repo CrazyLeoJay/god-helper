@@ -48,7 +48,7 @@ jobs:
         run: flutter build apk --release --flavor github_actions
         env:
           JKS_PASSWORD: ${{ secrets.JKS_PASSWORD }}
-          KEYSTORE_FILE: "keystore.jks"
+          KEYSTORE_FILE: "../keystore.jks"
           KEYSTORE_ALIAS: "god-helper-key"
 
       # - run: flutter build apk

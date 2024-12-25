@@ -5,6 +5,29 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keystorePropertiesFile = rootProject.file("dev2.properties")
+def devVariable = new Properties()
+
+// 主要是应用于github
+// 环境变量优先
+def keystore_file = System.getenv("KEYSTORE_FILE") ?: "debug.keystore.jks"
+def jks_password = System.getenv("JKS_PASSWORD") ?: "god_helper_debug"
+def jks_alias = System.getenv("KEYSTORE_ALIAS") ?: "debug"
+
+if (keystorePropertiesFile.exists()) {
+    // 即使有文件，也是已环境变量为优先
+    println("有配置文件 use config")
+    devVariable.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    println("没有配置文件 no config")
+    devVariable['KEYSTORE_FILE'] = keystore_file
+    devVariable['JKS_PASSWORD'] = jks_password
+    devVariable['KEYSTORE_ALIAS'] = jks_alias
+}
+
+println("storeFile: ${rootProject.file(keystore_file)}")
+println("keyAlias: ${jks_alias}")
+
 android {
     namespace = "site.leojay.god_helper"
     compileSdk = flutter.compileSdkVersion
@@ -38,14 +61,22 @@ android {
         }
     }
 
-    println("storeFile: ${System.getenv("KEYSTORE_FILE")}")
-    println("keyAlias: ${System.getenv("KEYSTORE_ALIAS")}")
+
     signingConfigs {
+        // 如果配置文件存在，以配置文件为准
+        dev {
+            storeFile rootProject.file(devVariable['KEYSTORE_FILE'])
+            storePassword devVariable['JKS_PASSWORD']
+            keyAlias devVariable['KEYSTORE_ALIAS']
+            keyPassword devVariable['JKS_PASSWORD']
+        }
+
+        // 以常量为准
         github_actions {
-            storeFile file(System.getenv("KEYSTORE_FILE"))
-            storePassword System.getenv("JKS_PASSWORD")
-            keyAlias System.getenv("KEYSTORE_ALIAS")
-            keyPassword System.getenv("JKS_PASSWORD")
+            storeFile rootProject.file(keystore_file)
+            storePassword jks_password
+            keyAlias jks_alias
+            keyPassword jks_password
         }
     }
 
@@ -53,6 +84,11 @@ android {
     flavorDimensions "path"
 
     productFlavors {
+        dev {
+            dimension "path"
+            signingConfig = signingConfigs.dev
+        }
+
         local {
             dimension "path"
             signingConfig = signingConfigs.debug
