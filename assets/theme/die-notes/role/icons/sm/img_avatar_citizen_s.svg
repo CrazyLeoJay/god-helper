@@ -1,0 +1,6 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 32L28 8" stroke="white"/>
+<g style="mix-blend-mode:difference">
+<path d="M8 28V12L18 8.5V11L20 8L32 4L20 28H8Z" fill="white"/>
+</g>
+</svg>

@@ -258,7 +258,7 @@ class GameConfigSelectedCard extends StatelessWidget {
 
   Widget _makeListView(List<Role> roles) => ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index) => roles[index].icon,
+        itemBuilder: (BuildContext context, int index) => roles[index].icon(),
         separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 8),
         itemCount: roles.length,
       );

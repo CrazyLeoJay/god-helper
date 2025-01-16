@@ -278,7 +278,8 @@ class _CreateNewTempViewState extends State<CreateNewTempView> {
             ),
             // itemBuilder: (t) => Text("R${t.roleName}"),
             itemBuilder: (t, isSelect) {
-              return Icon(t.icon.icon, color: isSelect ? Colors.white : null);
+              // return Icon(t.icon.icon, color: isSelect ? Colors.white : null);
+              return t.icon(color: isSelect ? Colors.white : null);
             },
             itemDescBuilder: (t) => t.roleName,
             buttonBuilder: () => const Icon(Icons.add),

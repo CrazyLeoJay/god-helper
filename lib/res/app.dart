@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:god_helper/framework/Theme.dart';
 import 'package:god_helper/res/ThemeDiy.dart';
 import 'package:god_helper/tools/AppData.dart';
 
@@ -9,7 +10,9 @@ class App extends LeoJayApp {
 
   AppData get data => AppData();
 
-  App({super.ct = ColorTheme.LIGHT, required super.child}) {
+  AppTheme appTheme = AppTheme.DEFAULT;
+
+  App({super.ct = ColorTheme.LIGHT, required super.child, this.appTheme = AppTheme.DEFAULT}) {
     data.init();
   }
 

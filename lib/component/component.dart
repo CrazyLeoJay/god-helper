@@ -1487,8 +1487,8 @@ class AutoGridView<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        int row = (constraints.maxWidth / circleSize).toInt();
-        print("width constraints.maxWidth= ${constraints.maxWidth}");
+        int row = (constraints.maxWidth / (circleSize + padding)).toInt();
+        print("width constraints.maxWidth= ${constraints.maxWidth} row=${row}");
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),

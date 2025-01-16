@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:god_helper/entity/Entity.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -7,7 +8,13 @@ enum Role implements Comparable<Role> {
   SHERIFF(-1, "警长", RoleType.CITIZEN, isSkill: false),
 
   /// 村民
-  CITIZEN(1, "村民", RoleType.CITIZEN, isSkill: false),
+  CITIZEN(
+    1,
+    "村民",
+    RoleType.CITIZEN,
+    isSkill: false,
+    iconAsset: "citizen",
+  ),
 
   /// 狼人
   WOLF(
@@ -226,7 +233,26 @@ enum Role implements Comparable<Role> {
   // 二级信息，用于排序，或者基础的Icon设置
 
   /// 角色图标
-  final Icon icon;
+  final Icon _defaultIcon;
+
+  final String? iconAsset;
+
+  Widget icon({
+    Color? color,
+    double? size,
+  }) {
+    if (null != iconAsset) {
+      return SvgPicture.asset(
+        "assets/theme/die-notes/role/icons/img_avatar_${iconAsset}_lg.svg",
+        color: color,
+        // width: size,
+        // height: size,
+      );
+      // return Image(AssetImage("assets/theme/die-notes/role/icons/img_avatar_${iconAsset}_lg.svg"));
+    }
+    // var
+    return Icon(_defaultIcon.icon, color: color, size: size);
+  }
 
   /// 排序权重
   final int _sortWeight;
@@ -271,7 +297,8 @@ enum Role implements Comparable<Role> {
     this.roleName,
     this.type, {
     int sortWeight = 0,
-    this.icon = const Icon(Icons.emoji_people),
+    Icon icon = const Icon(Icons.emoji_people),
+    this.iconAsset = null,
     this.isSkill = true,
     this.afterWithRole,
     this.winTarget = "",
@@ -286,7 +313,8 @@ enum Role implements Comparable<Role> {
         inNightSingleAction = inNightSingleAction ?? (type != RoleType.WOLF && id > 1),
         canSelfBomb = canSelfBomb ?? (type == RoleType.WOLF),
         isActionForWolf = isActionForWolf ?? (type == RoleType.WOLF),
-        _online = online;
+        _online = online,
+        _defaultIcon = icon;
 
   /// 获取有角色行为的所有角色
   /// 除去 村民、狼人、警长等一些特殊角色

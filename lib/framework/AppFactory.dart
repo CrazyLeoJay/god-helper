@@ -54,6 +54,10 @@ class AppFactory {
       isSystemConfig: isSystemConfig,
     ));
   }
+
+  ss() {
+    // Assets.image.icon1.load();
+  }
 }
 
 /// 模板，用于保存角色的默认配置
@@ -110,4 +114,6 @@ abstract class AppRoute {
 
   /// 查看系统配置的角色信息
   RouteHelper toRoleDetailsView();
+
+  RouteHelper toAssetsResourceView();
 }

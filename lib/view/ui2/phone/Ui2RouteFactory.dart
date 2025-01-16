@@ -11,6 +11,7 @@ import 'package:god_helper/view/ui2/phone/GameDayView.dart';
 import 'package:god_helper/view/ui2/phone/GameNightView.dart';
 import 'package:god_helper/view/ui2/phone/GameProcessesView.dart';
 import 'package:god_helper/view/ui2/phone/GameTemplateListView.dart';
+import 'package:god_helper/view/ui2/phone/ResourceView.dart';
 import 'package:god_helper/view/ui2/phone/RoleDetailsView.dart';
 
 class Ui2RouteFactory extends AppRoute {
@@ -92,7 +93,12 @@ class Ui2RouteFactory extends AppRoute {
 
   @override
   RouteHelper toRoleDetailsView() {
-    return toHelper(RowDetailsView());
+    return toHelper(const RowDetailsView());
+  }
+
+  @override
+  RouteHelper toAssetsResourceView() {
+    return toHelper(const ResourceView());
   }
 
 //

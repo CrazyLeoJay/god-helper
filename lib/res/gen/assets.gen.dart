@@ -9,4 +9,6 @@
 
 class Assets {
   Assets._();
+
+  static const String package = 'god_helper';
 }

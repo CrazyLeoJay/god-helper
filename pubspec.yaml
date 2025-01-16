@@ -61,6 +61,7 @@ dependencies:
   path_provider: ^2.0.8
   #  字符格式化工具
   sprintf: ^7.0.0
+  flutter_svg: ^2.0.16
 
 dev_dependencies:
   flutter_test:
@@ -85,7 +86,9 @@ dev_dependencies:
 
   #  资源生成
   # https://pub.dev/packages/flutter_gen
-  flutter_gen_runner:
+  # https://pub.dev/packages/flutter_gen_runner
+  flutter_gen_runner: ^5.8.0
+#  flutter_gen: ^5.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -105,7 +108,13 @@ flutter:
   #  assets:
   #    - default_theme/**/*.*
   assets:
-    - assets/
+#    - path: assets/
+#      transformers:
+#        - package: vector_graphics_compiler
+#    - assets/theme/die-notes/**/*.*
+#    - assets/
+#    - assets/**
+    - assets/theme/die-notes/role/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -132,12 +141,23 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-#  fonts:
+  fonts:
+    - family: Hansanssc
+      fonts:
+        - asset: assets/theme/die-notes/fonts/SOURCEHANSANSSC-BOLD-2.OTF
+        - asset: assets/theme/die-notes/fonts/SOURCEHANSANSSC-EXTRALIGHT-2.OTF
+        - asset: assets/theme/die-notes/fonts/SOURCEHANSANSSC-HEAVY-2.OTF
+        - asset: assets/theme/die-notes/fonts/SOURCEHANSANSSC-LIGHT-2.OTF
+        - asset: assets/theme/die-notes/fonts/SOURCEHANSANSSC-MEDIUM-2.OTF
+        - asset: assets/theme/die-notes/fonts/SOURCEHANSANSSC-NORMAL-2.OTF
+        - asset: assets/theme/die-notes/fonts/SOURCEHANSANSSC-REGULAR-2.OTF
+
 
 flutter_gen:
   #  output: lib/gen/ # Optional (default: lib/gen/)
   output: lib/res/gen
   line_length: 150 # Optional (default: 80)
+  parse_metadata: true # <- Add this line (default: false)
   # Optional
   integrations:
     flutter_svg: true
@@ -147,9 +167,14 @@ flutter_gen:
   colors:
     inputs:
       - assets/default/colors.xml
-#  assets:
-#    outputs:
-#      directory_path_enabled: true
-#  fonts:
-#    outputs:
-#      package_parameter_enabled: true # <- Add this line.
+  assets:
+    inputs:
+#      - assets/
+#      - assets/**/*.*
+      - assets/theme/die-notes/role/icons/
+    outputs:
+      directory_path_enabled: true # 生成一个包资源
+      package_parameter_enabled: true
+  fonts:
+    outputs:
+      package_parameter_enabled: true

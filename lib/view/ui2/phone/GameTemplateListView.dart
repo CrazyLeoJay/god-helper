@@ -184,7 +184,7 @@ class _GameBoardConfig extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
                   itemCount: roles.length,
-                  itemBuilder: (BuildContext context, int index) => roles[index].icon,
+                  itemBuilder: (BuildContext context, int index) => roles[index].icon(),
                   separatorBuilder: (BuildContext context, int index) => const SizedBox(
                     height: 8,
                     width: 8,

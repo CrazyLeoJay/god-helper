@@ -60,6 +60,7 @@ class _AppHomeState extends State<AppHome> {
         child: MenuDrawerChildren(
           menus: [
             MenuItem("查看角色", (route) => route.toRoleDetailsView().push()),
+            MenuItem("查看资源", (route) => route.toAssetsResourceView().push()),
           ],
         ),
       ),
