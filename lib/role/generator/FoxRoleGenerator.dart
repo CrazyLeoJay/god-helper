@@ -60,11 +60,11 @@ class FoxNightAction extends RoleAction {
   @override
   void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {
     super.setToPlayerDetail(detail, states);
-    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.name]);
+    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.nickname]);
     // 放弃使用技能
     if (isAbandon) return;
-    if (selectPlayer == null) throw AppError.roleNoSelectPlayer.toExc(args: [role.name]);
-    if (isWolf == null) throw AppError.foxNotVerify.toExc(args: [role.name]);
+    if (selectPlayer == null) throw AppError.roleNoSelectPlayer.toExc(args: [role.nickname]);
+    if (isWolf == null) throw AppError.foxNotVerify.toExc(args: [role.nickname]);
     var player = detail.getForRole(role);
     if (isWolf == false) {
       states.set(selectPlayer!, PlayerStateType.verifyForFox);
@@ -298,7 +298,7 @@ class _FoxNightViewState extends State<_FoxNightView> {
                   ),
                 ),
                 Text(
-                  players[index].role.name,
+                  players[index].role.nickname,
                   style: app.baseFont.copyWith(
                     fontSize: 8,
                     color: isWolf ? Colors.red : Colors.black,

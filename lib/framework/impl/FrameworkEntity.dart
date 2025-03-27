@@ -270,7 +270,7 @@ class PlayerIdentityCache extends NoSqlDataEntity<PlayerIdentityCache> {
   }
 
   Role? checkPlayerIsConfig(int selectIndex) {
-    if (wolfNumbers.contains(selectIndex)) return Role.WOLF;
+    if (wolfNumbers.contains(selectIndex)) return Role.wolf;
     for (var e in rolePlayerNumberMap.entries) {
       if (e.value == (selectIndex)) return e.key;
     }
@@ -391,12 +391,12 @@ class Sheriff {
     if (isYesSheriffPlayer && firstSheriffPlayer != null) {
       // 警长已经选择过了，仅仅需要判断当前的警长是否阵亡即可
       if (!last.isLive && !last.isTransferSheriff) {
-        throw AppError.haveDieSheriffNoTransfer.toExc(args: [last.sheriffPlayer!], obj: Role.SHERIFF);
+        throw AppError.haveDieSheriffNoTransfer.toExc(args: [last.sheriffPlayer!], obj: Role.sheriff);
       }
     } else {
       // 如果警长没有选择，那么就要抛出异常，必须竞选警长
       if (!isBomb) {
-        throw AppError.dayNeedVoteSelectSheriff.toExc(obj: Role.SHERIFF);
+        throw AppError.dayNeedVoteSelectSheriff.toExc(obj: Role.sheriff);
       }
 
       // 如果没竞选过，且狼人自爆了，则需要根据规则销毁警徽
@@ -542,8 +542,8 @@ class SummaryHelper {
 
     for (var player in _factory.players.details.players) {
       if (!player.live) continue;
-      if (player.identity && player.role != Role.WOLF) {
-        if (player.role == Role.CITIZEN) {
+      if (player.identity && player.role != Role.wolf) {
+        if (player.role == Role.citizen) {
           liveCitizen.add(player.number);
         } else if (player.role.camp == Camp.THIRD) {
           // 三方阵营算民

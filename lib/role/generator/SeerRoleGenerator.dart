@@ -16,7 +16,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'SeerRoleGenerator.g.dart';
 
 class SeerRoleGenerator extends RoleGenerator<SeerAction, SeerAction, EmptyRoleTempConfig> {
-  SeerRoleGenerator({required super.factory}) : super(role: Role.SEER);
+  SeerRoleGenerator({required super.factory}) : super(role: Role.seer);
 
   @override
   RoleNightGenerator<SeerAction>? getNightRoundGenerator(NightFactory nightFactory) {
@@ -31,9 +31,9 @@ class SeerAction extends RoleAction {
   int checkPlayer = 0;
   bool identity = true;
 
-  SeerAction() : super(Role.SEER);
+  SeerAction() : super(Role.seer);
 
-  SeerAction.createJson({this.checkPlayer = 0, this.identity = true}) : super(Role.SEER);
+  SeerAction.createJson({this.checkPlayer = 0, this.identity = true}) : super(Role.seer);
 
   factory SeerAction.fromJson(Map<String, dynamic> json) => _$SeerActionFromJson(json);
 
@@ -49,7 +49,7 @@ class SeerAction extends RoleAction {
 class _SeerRoleRoundGenerator extends RoleNightGenerator<SeerAction> {
   final NightFactory nightFactory;
 
-  _SeerRoleRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.SEER);
+  _SeerRoleRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.seer);
 
   @override
   Widget actionWidget(Function() updateCallback) {
@@ -156,7 +156,7 @@ class _SeerActionComponentState extends State<SeerActionComponent> {
     } else {
       return TextButton(
           onPressed: () {
-            if (!widget.nightFactory.isAction(context, Role.SEER, isShow)) {
+            if (!widget.nightFactory.isAction(context, Role.seer, isShow)) {
               return;
             }
 

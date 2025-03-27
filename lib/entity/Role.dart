@@ -1,52 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:god_helper/component/component.dart';
 import 'package:god_helper/entity/Entity.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 enum Role implements Comparable<Role> {
   EMPTY(0, "默认空", RoleType.CITIZEN, isSkill: false),
-  SHERIFF(-1, "警长", RoleType.CITIZEN, isSkill: false),
+  sheriff(-1, "警长", RoleType.CITIZEN, isSkill: false),
 
   /// 村民
-  CITIZEN(
+  citizen(
     1,
     "村民",
     RoleType.CITIZEN,
     isSkill: false,
     iconAsset: "citizen",
+    // icon: Icon(AppIcons.imgAvatarWolfKingLg),
   ),
 
   /// 狼人
-  WOLF(
+  wolf(
     2,
     "狼人",
     RoleType.WOLF,
     inNightSingleAction: true,
     isSkill: false,
     sortWeight: 10,
+    // icon: Icon(PhosphorIconsRegular.horse),
+    iconAsset: "wolf",
     icon: Icon(PhosphorIconsRegular.horse),
     ruleDesc: "所有的狼人阵营玩家，除非规则显示，在狼人回合时，一起睁眼，共同商量刀一个玩家出局。",
   ),
 
   /// 预言家
-  SEER(
+  seer(
     3,
     "预言家",
     RoleType.GOD,
     sortWeight: 10,
-    afterWithRole: [Role.WOLF],
+    afterWithRole: [Role.wolf],
     icon: Icon(PhosphorIconsRegular.detective),
+    iconAsset: "seer",
     ruleDesc: "每晚可以查验一名玩家，可以知道他是好人还是狼人",
   ),
 
   /// 女巫
-  WITCH(
+  witch(
     4,
     "女巫",
     RoleType.GOD,
     sortWeight: 9,
-    afterWithRole: [Role.WOLF],
+    afterWithRole: [Role.wolf],
     icon: Icon(PhosphorIconsRegular.stethoscope),
+    iconAsset: "witch",
     ruleDesc: "女巫有两瓶药，一瓶解药一瓶毒药，每晚只能用一瓶药。\n"
         "当女巫有解药时，可以知道谁被狼人刀，可以选择救治，但没有药时，不知道。\n"
         "如果女巫也可以选择使用毒药毒一名玩家使其出局。\n"
@@ -54,34 +59,31 @@ enum Role implements Comparable<Role> {
   ),
 
   /// 猎人
-  HUNTER(
+  hunter(
     5,
     "猎人",
     RoleType.GOD,
-    afterWithRole: [Role.WITCH],
+    afterWithRole: [Role.witch],
     icon: Icon(PhosphorIconsRegular.crosshair),
+    iconAsset: "hunter",
     ruleDesc: "当且仅当猎人被狼人出局或被投票放逐时，猎人可以亮出自己的身份牌并指定猎捕一名玩家。",
   ),
 
   /// 守卫
-  GUARD(
+  guard(
     6,
     "守卫",
     RoleType.GOD,
     icon: Icon(PhosphorIconsRegular.shieldWarning),
+    iconAsset: "guard",
     ruleDesc: "每晚可以守护一名玩家，但不能连续两晚守护同一名玩家。被守卫守护的玩家当晚不会被狼人淘汰。",
   ),
 
   /// 白痴
-  FOOL(
-    7,
-    "白痴",
-    RoleType.GOD,
-    ruleDesc: "白痴被投票出局后翻牌，可以免除一次放逐，但后续不能被选择为投票目标。",
-  ),
+  fool(7, "白痴", RoleType.GOD, ruleDesc: "白痴被投票出局后翻牌，可以免除一次放逐，但后续不能被选择为投票目标。", iconAsset: "fool"),
 
   /// 狼王/狼枪
-  WOLF_KING(
+  wolfKing(
     8,
     "狼王/狼枪",
     RoleType.WOLF,
@@ -90,7 +92,7 @@ enum Role implements Comparable<Role> {
   ),
 
   /// 白狼王
-  WHITE_WOLF_KING(
+  whiteWolfKing(
     9,
     "白狼王",
     RoleType.WOLF,
@@ -105,7 +107,7 @@ enum Role implements Comparable<Role> {
     RoleType.WOLF,
     icon: Icon(PhosphorIconsRegular.horse),
     ruleDesc: "狼美人每天晚上参与杀人后，可单独魅惑一名好人阵营的玩家。狼美人死亡时，当晚被魅惑的玩家随之殉情。狼美人不能自爆或自刀。",
-    afterWithRole: [Role.WOLF],
+    afterWithRole: [Role.wolf],
     inNightSingleAction: true,
     canSelfBomb: false,
     canKillTargetForWolf: false,
@@ -237,21 +239,27 @@ enum Role implements Comparable<Role> {
 
   final String? iconAsset;
 
+  static const _RES_PATH = "assets/theme/die-notes/role/icons";
+
   Widget icon({
     Color? color,
     double? size,
   }) {
-    if (null != iconAsset) {
-      return SvgPicture.asset(
-        "assets/theme/die-notes/role/icons/img_avatar_${iconAsset}_lg.svg",
-        color: color,
-        // width: size,
-        // height: size,
-      );
-      // return Image(AssetImage("assets/theme/die-notes/role/icons/img_avatar_${iconAsset}_lg.svg"));
-    }
-    // var
-    return Icon(_defaultIcon.icon, color: color, size: size);
+    var defaultResName = name.toLowerCase();
+    return MultiIcon(
+      defaultIcon: _defaultIcon,
+      resList: [
+        // "$_RES_PATH/s/img_avatar_${iconAsset}_s.svg",
+        "$_RES_PATH/sm/img_avatar_${iconAsset}_s.svg",
+        // "$_RES_PATH/lg/img_avatar_${iconAsset}_lg.svg",
+
+        // "$_RES_PATH/s/img_avatar_${defaultResName}_s.svg",
+        "$_RES_PATH/sm/img_avatar_${defaultResName}_s.svg",
+        // "$_RES_PATH/lg/img_avatar_${defaultResName}_lg.svg",
+      ],
+      color: color,
+      size: size,
+    );
   }
 
   /// 排序权重
@@ -361,13 +369,13 @@ enum Role implements Comparable<Role> {
   /// 除了0 空占位和 -1警长这种没有玩家映射的角色
   bool get isGameRole => id > 0;
 
-  String get name => roleName;
+  String get nickname => roleName;
 
   /// 是否单独确认身份信息
   /// 根据这个判断角色是否需要展示身份确认界面
   bool get isSingleYesPlayerIdentity =>
       (id > 1) &&
-      ((this == Role.WOLF) ||
+      ((this == Role.wolf) ||
           // 狼人，且不予狼人单独行动的角色
           (type == RoleType.WOLF && !isActionForWolf) ||
           // 神职
@@ -375,7 +383,7 @@ enum Role implements Comparable<Role> {
           // 三方村民
           (type == RoleType.THIRD) ||
           // 村民类型，但不是普通村民
-          (type == RoleType.CITIZEN && this != Role.CITIZEN));
+          (type == RoleType.CITIZEN && this != Role.citizen));
 }
 
 /// 角色类型

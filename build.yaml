@@ -10,3 +10,8 @@ targets:
 
             # Optional: Add more databases
 #            another_db: lib/database2.dart
+
+      flutter_gen_runner: # or flutter_gen
+        options:
+          output: lib/gen/assets/ # Optional (default: lib/gen/)
+          line_length: 150 # Optional (default: 80)

@@ -102,7 +102,7 @@ class DayFactory extends RoundFactory {
   PlayerDetail get details => super.factory.players.details;
 
   bool get isYesWolfBomb {
-    var dayAction = actions.getRoleAction(Role.WOLF, WolfDayActionJsonData());
+    var dayAction = actions.getRoleAction(Role.wolf, WolfDayActionJsonData());
     return dayAction.isYes && dayAction.isBomb && (dayAction.wolfBombPlayer ?? 0) > 0;
   }
 
@@ -222,7 +222,7 @@ class DayFactory extends RoundFactory {
 
   List<Role> activeSkillRoles() {
     List<Role> result = [];
-    List<Role> list = [...super.factory.entity.tempConfig.roleConfig.all, Role.WOLF]..sort();
+    List<Role> list = [...super.factory.entity.tempConfig.roleConfig.all, Role.wolf]..sort();
     for (var value in list) {
       var helper = getWidgetHelper(value);
       var skillWidget = helper.activeSkillWidget();

@@ -55,7 +55,7 @@ class DefaultCacheEntity extends NoSqlDataEntity<DefaultCacheEntity> {
 
   @override
   String getSaveKey() {
-    return "game_${gameId}_identity_${role.name}";
+    return "game_${gameId}_identity_${role.nickname}";
   }
 }
 

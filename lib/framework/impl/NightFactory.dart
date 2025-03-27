@@ -50,13 +50,13 @@ class NightFactory extends RoundFactory {
       // 第一回合检查身份
       if (cache.wolfNumbers.length != smallWolfCount) {
         throw AppError.selectWolfCountTooSmall.toExc()
-          ..obj = Role.WOLF
+          ..obj = Role.wolf
           ..message = "${cache.wolfNumbers.length} / ${smallWolfCount}";
       }
-      var action = actions.getRoleAction(Role.WOLF, EmptyActionJsonData());
+      var action = actions.getRoleAction(Role.wolf, EmptyActionJsonData());
       if (!action.isYes) {
         throw AppError.roleNoFinishAction.toExc()
-          ..obj = Role.WOLF
+          ..obj = Role.wolf
           ..message = "狼人还未刀人";
       }
     }
@@ -234,7 +234,7 @@ class NightFactory extends RoundFactory {
     }
   }
 
-  Player? getPlayer(Role witch) => playerDetails.getForRoleNullable(Role.WITCH);
+  Player? getPlayer(Role witch) => playerDetails.getForRoleNullable(Role.witch);
 
   ///  该角色对应的玩家是否存活
   ///  在晚上，仅需要判断天黑前玩家的存活状态即可

@@ -26,7 +26,7 @@ class _RowDetailsViewState extends State<RowDetailsView> {
       childBuilder: (t) => _RoleTabView<Role>(
         roleTypeMap[t] ?? [],
         isScrollable: true,
-        tabBuilder: (t) => Tab(text: "${t.name}(${t.inNightSingleAction ? "N" : "D"})"),
+        tabBuilder: (t) => Tab(text: "${t.nickname}(${t.inNightSingleAction ? "N" : "D"})"),
         childBuilder: (t) => _RoleDetailItemView(t),
       ),
     );

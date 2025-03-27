@@ -11,7 +11,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'FoolRoleGenerator.g.dart';
 
 // 白痴
-var _role = Role.FOOL;
+var _role = Role.fool;
 
 class FoolRoleGenerator extends RoleGenerator<EmptyAction, FoolDayAction, EmptyRoleTempConfig> {
   FoolRoleGenerator({required super.factory}) : super(role: _role);
@@ -27,7 +27,7 @@ class FoolRoleGenerator extends RoleGenerator<EmptyAction, FoolDayAction, EmptyR
 class FoolDayAction extends RoleAction {
   bool isVoteOut = false;
 
-  FoolDayAction() : super(Role.FOOL);
+  FoolDayAction() : super(Role.fool);
 
   factory FoolDayAction.fromJson(Map<String, dynamic> json) => _$FoolDayActionFromJson(json);
 

@@ -19,10 +19,10 @@ part 'WolfRoleGenerator.g.dart';
 
 /// 狼人相生成器
 class WolfRoleGenerator extends RoleGenerator<WolfAction, WolfDayAction, EmptyRoleTempConfig> {
-  WolfRoleGenerator({required super.factory}) : super(role: Role.WOLF);
+  WolfRoleGenerator({required super.factory}) : super(role: Role.wolf);
 
   static WolfAction getRoleNightAction(RoundActions actions) {
-    return actions.getRoleAction(Role.WOLF, WolfActionJsonData());
+    return actions.getRoleAction(Role.wolf, WolfActionJsonData());
   }
 
   @override
@@ -54,7 +54,7 @@ class _WolfPlayerIdentityGenerator extends PlayerIdentityGenerator {
         for (var item in identityWolfMap.entries) {
           cache.setRoleIdentity(item.key, item.value);
         }
-        cache.setRolePlayerRecordFinish(Role.WOLF);
+        cache.setRolePlayerRecordFinish(Role.wolf);
         cache.save();
 
         /// 数据保存结束，通知界面修改
@@ -102,7 +102,7 @@ class _WolfPlayerNumberRecordWidgetState extends State<_WolfPlayerNumberRecordWi
   @override
   void initState() {
     super.initState();
-    _isYesPlayersIdentity = _factory.players.cache.isRecordFinish(Role.WOLF);
+    _isYesPlayersIdentity = _factory.players.cache.isRecordFinish(Role.wolf);
   }
 
   @override
@@ -294,7 +294,7 @@ class _WolfPlayerNumberRecordWidgetState extends State<_WolfPlayerNumberRecordWi
 class _WolfRoleNightRoundGenerator extends RoleNightGenerator<WolfAction> {
   final NightFactory nightFactory;
 
-  _WolfRoleNightRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.WOLF);
+  _WolfRoleNightRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.wolf);
 
   @override
   Widget actionWidget(Function() updateCallback) {
@@ -317,7 +317,7 @@ class WolfAction extends RoleAction {
   /// 本回合放弃出刀
   bool noKill = false;
 
-  WolfAction() : super(Role.WOLF);
+  WolfAction() : super(Role.wolf);
 
   factory WolfAction.fromJson(Map<String, dynamic> json) => _$WolfActionFromJson(json);
 
@@ -414,7 +414,7 @@ class _WolfActionComponentState extends State<_WolfActionComponent> {
                   ),
                 ),
                 Text(
-                  t.role.name,
+                  t.role.nickname,
                   style: app.baseFont.copyWith(
                     fontSize: 8,
                     color: isLive ? null : Colors.red,
@@ -431,7 +431,7 @@ class _WolfActionComponentState extends State<_WolfActionComponent> {
   Widget _killButton() {
     return TextButton(
         onPressed: () {
-          if (!widget.nightFactory.isAction(context, Role.WOLF, _isShow)) {
+          if (!widget.nightFactory.isAction(context, Role.wolf, _isShow)) {
             return;
           }
           if (action.killPlayer <= 0) {
@@ -450,7 +450,7 @@ class _WolfActionComponentState extends State<_WolfActionComponent> {
   Widget _abandonButton() {
     return TextButton(
         onPressed: () {
-          if (!widget.nightFactory.isAction(context, Role.WOLF, _isShow)) {
+          if (!widget.nightFactory.isAction(context, Role.wolf, _isShow)) {
             return;
           }
           setState(() {
@@ -466,7 +466,7 @@ class _WolfActionComponentState extends State<_WolfActionComponent> {
   /// 结果确认后的界面
   Widget _yesWidget() {
     return action.noKill
-        ? Text("${Role.WOLF.desc.name} 放弃刀人")
+        ? Text("${Role.wolf.desc.name} 放弃刀人")
         : RichText(
             text: TextSpan(
               style: app.baseFont.copyWith(color: Colors.black),
@@ -521,7 +521,7 @@ class WolfDayAction extends RoleAction {
   @override
   bool get isYes => true;
 
-  WolfDayAction({this.isBomb = false}) : super(Role.WOLF);
+  WolfDayAction({this.isBomb = false}) : super(Role.wolf);
 
   factory WolfDayAction.fromJson(Map<String, dynamic> json) => _$WolfDayActionFromJson(json);
 
@@ -538,7 +538,7 @@ class WolfDayAction extends RoleAction {
     super.setToPlayerDetail(detail, states);
     // 如果没有自爆，则不做处理
     if (!isBomb) return;
-    if (wolfBombPlayer == null) throw AppError.roleNoSelectPlayer.toExc(args: [role.name]);
+    if (wolfBombPlayer == null) throw AppError.roleNoSelectPlayer.toExc(args: [role.nickname]);
     states.set(wolfBombPlayer!, PlayerStateType.isWolfBomb);
   }
 }
@@ -546,7 +546,7 @@ class WolfDayAction extends RoleAction {
 class _WolfDayGenerator extends RoleDayRoundGenerator<WolfDayAction> {
   final DayFactory dayFactory;
 
-  _WolfDayGenerator(this.dayFactory) : super(role: Role.WOLF, roundFactory: dayFactory);
+  _WolfDayGenerator(this.dayFactory) : super(role: Role.wolf, roundFactory: dayFactory);
 
   @override
   JsonEntityData<WolfDayAction> actionJsonConvertor() {
@@ -687,7 +687,7 @@ class _WolfDayActiveSkillWidgetState extends State<_WolfDayActiveSkillWidget> {
         ),
         Center(
           child: Text(
-            t.role.name,
+            t.role.nickname,
             style: app.baseFont.copyWith(
               fontSize: 8,
               color: isSelect ? Colors.red : Colors.black,

@@ -19,10 +19,10 @@ part 'HunterRoleGenerator.g.dart';
 
 /// 女巫玩家生成器
 class HunterRoleGenerator extends RoleGenerator<HunterAction, HunterDayAction, EmptyRoleTempConfig> {
-  HunterRoleGenerator({required super.factory}) : super(role: Role.HUNTER);
+  HunterRoleGenerator({required super.factory}) : super(role: Role.hunter);
 
   static HunterAction getRoleNightAction(RoundActions actions) {
-    return actions.getRoleAction(Role.HUNTER, HunterActionJsonData());
+    return actions.getRoleAction(Role.hunter, HunterActionJsonData());
   }
 
   /// 猎人晚上判断是否可以开枪
@@ -41,7 +41,7 @@ class HunterRoleGenerator extends RoleGenerator<HunterAction, HunterDayAction, E
 class _HunterNightRoleRoundGenerator extends RoleNightGenerator<HunterAction> {
   final NightFactory roundFactory;
 
-  _HunterNightRoleRoundGenerator(this.roundFactory) : super(roundFactory: roundFactory, role: Role.HUNTER);
+  _HunterNightRoleRoundGenerator(this.roundFactory) : super(roundFactory: roundFactory, role: Role.hunter);
 
   @override
   Widget actionWidget(Function() updateCallback) {
@@ -59,7 +59,7 @@ class _HunterNightRoleRoundGenerator extends RoleNightGenerator<HunterAction> {
 class _HunterDayRoleRoundGenerator extends RoleDayRoundGenerator<HunterDayAction> {
   final DayFactory dayFactory;
 
-  _HunterDayRoleRoundGenerator(this.dayFactory) : super(roundFactory: dayFactory, role: Role.HUNTER);
+  _HunterDayRoleRoundGenerator(this.dayFactory) : super(roundFactory: dayFactory, role: Role.hunter);
 
   @override
   Future<void> preAction() {
@@ -111,7 +111,7 @@ class _HunterDayRoleRoundGenerator extends RoleDayRoundGenerator<HunterDayAction
 class HunterAction extends RoleAction {
   bool isCanBiubiubiu = true;
 
-  HunterAction() : super(Role.HUNTER);
+  HunterAction() : super(Role.hunter);
 
   factory HunterAction.fromJson(Map<String, dynamic> json) => _$HunterActionFromJson(json);
 
@@ -119,12 +119,12 @@ class HunterAction extends RoleAction {
 
   /// 是否可以开枪
   bool checkCanBiubiubiu(NightFactory nightFactory) {
-    int hunterId = nightFactory.getRoleNumber(Role.HUNTER);
+    int hunterId = nightFactory.getRoleNumber(Role.hunter);
     if (nightFactory.round == 1 && hunterId <= 0) {
       throw AppError.hunterNoSelectPlayer.toExc();
     }
     // 如果玩家已经是阵亡状态，则无需其他判断
-    if (!nightFactory.isRolePlayerLive(Role.WITCH)) return true;
+    if (!nightFactory.isRolePlayerLive(Role.witch)) return true;
     var action = WitchRoleGenerator.getRoleNightAction(nightFactory.actions);
     var player = action.getKillForPoison();
     isCanBiubiubiu = player != hunterId;
@@ -146,7 +146,7 @@ class HunterDayAction extends RoleAction {
   HunterDayAction({
     this.isAbandon = false,
     this.canShut = true,
-  }) : super(Role.HUNTER);
+  }) : super(Role.hunter);
 
   factory HunterDayAction.fromJson(Map<String, dynamic> json) => _$HunterDayActionFromJson(json);
 
@@ -154,7 +154,7 @@ class HunterDayAction extends RoleAction {
   Map<String, dynamic> toJson() => _$HunterDayActionToJson(this);
 
   bool isCanShut(DayFactory factory) {
-    var hunter = factory.details.getForRole(Role.HUNTER);
+    var hunter = factory.details.getForRole(Role.hunter);
     int hunterId = hunter.number;
     if (factory.round == 1 && hunterId <= 0) {
       throw AppError.hunterNoSelectPlayer.toExc();
@@ -237,7 +237,7 @@ class _HunterNineActionComponentState extends State<_HunterNineActionComponent> 
   final _isShowState = IsShowState();
 
   void check() {
-    if (!_nightFactory.isAction(context, Role.HUNTER, _isShowState)) return;
+    if (!_nightFactory.isAction(context, Role.hunter, _isShowState)) return;
     _action.checkCanBiubiubiu(_nightFactory);
     setState(() {
       _action.isYes = true;
@@ -271,7 +271,7 @@ class _HunterDayActionWidget extends StatefulWidget {
 }
 
 class _HunterDayActionWidgetState extends State<_HunterDayActionWidget> {
-  final _role = Role.HUNTER;
+  final _role = Role.hunter;
 
   DayFactory get _dayFactory => widget.dayFactory;
 

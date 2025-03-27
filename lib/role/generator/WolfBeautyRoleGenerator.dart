@@ -52,7 +52,7 @@ class WolfBeautyNightAction extends RoleAction {
   @override
   void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {
     super.setToPlayerDetail(detail, states);
-    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.name]);
+    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.nickname]);
     if (isAbandon) return;
     if (charmPlayer == null) throw AppError.wolfBeautyNoSelectPlayer.toExc();
 
@@ -120,7 +120,7 @@ class _WolfBeautySummarySecondSkillCheck extends SecondSkillCheck {
       action = (factory as DayFactory).lastNight().getRoleAction(_role) as WolfBeautyNightAction;
     }
 
-    if (!action.isYes) throw AppError.roleActionNotYes.toExc(args: [_role.name]);
+    if (!action.isYes) throw AppError.roleActionNotYes.toExc(args: [_role.nickname]);
     if (action.isAbandon) return;
     if ((action.charmPlayer ?? 0) <= 0) throw AppError.wolfBeautyNoSelectPlayer.toExc();
 

@@ -51,7 +51,7 @@ class KnightDayAction extends RoleAction {
     /// 白天的技能，无需判断是否完成，没有完成即表示不使用技能
     if (!isYes) return;
     if (targetPlayer == null || targetPlayerIdentity == null) {
-      throw AppError.roleNoSelectPlayer.toExc(args: [role.name]);
+      throw AppError.roleNoSelectPlayer.toExc(args: [role.nickname]);
     }
     var player = detail.getForRole(role);
 

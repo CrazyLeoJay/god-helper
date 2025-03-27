@@ -429,7 +429,7 @@ class _KillPlayerWidget extends StatelessWidget {
           var states = statePlayers[keys[index]]!.showInDayBeginStates();
           return Column(
             children: [
-              Row(children: [Text("玩家(P${player.number}) 角色 ：${player.role.name} ")]),
+              Row(children: [Text("玩家(P${player.number}) 角色 ：${player.role.nickname} ")]),
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

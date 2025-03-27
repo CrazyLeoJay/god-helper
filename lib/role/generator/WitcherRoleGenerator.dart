@@ -54,9 +54,9 @@ class WitcherNightAction extends RoleAction {
   @override
   void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {
     super.setToPlayerDetail(detail, states);
-    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.name]);
+    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.nickname]);
     if (isAbandon) return;
-    if (selectPlayer == null) throw AppError.roleNoSelectPlayer.toExc(args: [role.name]);
+    if (selectPlayer == null) throw AppError.roleNoSelectPlayer.toExc(args: [role.nickname]);
     var player = detail.get(selectPlayer!);
     if (player.roleType == RoleType.WOLF) {
       states.set(selectPlayer!, PlayerStateType.killInWitcherHunt);

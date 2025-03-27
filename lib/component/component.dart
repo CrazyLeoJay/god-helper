@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:god_helper/entity/RuleConfig.dart';
 import 'package:god_helper/extend.dart';
 import 'package:god_helper/framework/AppFactory.dart';
@@ -1503,5 +1506,66 @@ class AutoGridView<T> extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+/// 多重选择Icon
+/// 可以根据传入列表的优先级依次加载icon
+class MultiIcon extends StatelessWidget {
+  final Icon defaultIcon;
+  final List<String> resList;
+
+  final Color? color;
+  final double? size;
+
+  const MultiIcon({
+    super.key,
+    required this.defaultIcon,
+    required this.resList,
+    this.color,
+    this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Widget>(
+      future: loadWidget(),
+      builder: (context, snapshot) {
+        // 根据异步状态构建 UI
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            // 错误时显示占位图标
+            return const Icon(Icons.error, color: Colors.red);
+          } else {
+            // 成功时显示加载的图标
+            return snapshot.data!;
+          }
+        } else {
+          // 加载中显示 Loading 状态
+          return const CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Future<String> loadRes() async {
+    for (var res in resList) {
+      try {
+        await rootBundle.load(res);
+        return res;
+      } catch (e) {}
+    }
+    return "";
+  }
+
+  Future<Widget> loadWidget() async {
+    var res = await loadRes();
+    if (res.isEmpty) {
+      return Icon(defaultIcon.icon, color: color, size: size);
+    }
+    if (kDebugMode) {
+      print("loadIcon: res=$res");
+    }
+    return SvgPicture.asset(res, color: color, width: size, height: size);
   }
 }

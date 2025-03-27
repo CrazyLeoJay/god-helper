@@ -15,14 +15,14 @@ part 'WitchRoleGenerator.g.dart';
 
 /// 女巫玩家生成器
 class WitchRoleGenerator extends RoleGenerator<WitchAction, WitchAction, WitchExtraConfig> {
-  WitchRoleGenerator({required super.factory}) : super(role: Role.WITCH);
+  WitchRoleGenerator({required super.factory}) : super(role: Role.witch);
 
   static WitchAction getRoleNightAction(RoundActions actions) {
-    return actions.getRoleAction(Role.WITCH, WitchActionJsonData());
+    return actions.getRoleAction(Role.witch, WitchActionJsonData());
   }
 
   static WitchAction? getRoleNightActionNullable(RoundActions actions) {
-    return actions.getRoleActionNullable(Role.WITCH, WitchActionJsonData());
+    return actions.getRoleActionNullable(Role.witch, WitchActionJsonData());
   }
 
   @override
@@ -45,7 +45,7 @@ class WitchExtraConfig extends RoleTempConfig<WitchExtraConfig> {
   });
 
   factory WitchExtraConfig.get(GameFactory factory) {
-    return factory.extraRule.get(Role.WITCH, WitchExtraConfig());
+    return factory.extraRule.get(Role.witch, WitchExtraConfig());
   }
 
   factory WitchExtraConfig.fromJson(Map<String, dynamic> json) => _$WitchExtraConfigFromJson(json);
@@ -126,7 +126,7 @@ class WitchAction extends RoleAction {
     return super.isYes;
   }
 
-  WitchAction() : super(Role.WITCH);
+  WitchAction() : super(Role.witch);
 
   factory WitchAction.fromJson(Map<String, dynamic> json) => _$WitchActionFromJson(json);
 
@@ -218,7 +218,7 @@ class WitchAction extends RoleAction {
 
   @override
   void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {
-    var player = detail.getForRole(Role.WITCH);
+    var player = detail.getForRole(Role.witch);
     states.set(
       player.number,
       PlayerStateType.isHaveAntidote,
@@ -265,7 +265,7 @@ enum WitchActionSelect {
 class _WitchNightRoleRoundGenerator extends RoleNightGenerator<WitchAction> {
   final NightFactory nightFactory;
 
-  _WitchNightRoleRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.WITCH);
+  _WitchNightRoleRoundGenerator(this.nightFactory) : super(roundFactory: nightFactory, role: Role.witch);
 
   @override
   Future<void> preAction() async {
@@ -323,9 +323,9 @@ class _WitchActionComponentState extends State<_WitchActionComponent> {
   /// 是否是自己被出局
   bool get isSelfOut => (thisPlayer ?? 0) > 0 && wolfKillPlayer == thisPlayer;
 
-  int? get thisPlayer => _nightFactory.getPlayerNumber(Role.WITCH);
+  int? get thisPlayer => _nightFactory.getPlayerNumber(Role.witch);
 
-  bool get isLive => _nightFactory.getPlayer(Role.WITCH)?.live ?? true;
+  bool get isLive => _nightFactory.getPlayer(Role.witch)?.live ?? true;
 
   final _isShowState = IsShowState();
 
@@ -475,7 +475,7 @@ class _WitchActionComponentState extends State<_WitchActionComponent> {
       } else {
         button = TextButton(
           onPressed: () {
-            if (!_nightFactory.isAction(context, Role.WITCH, _isShowState)) {
+            if (!_nightFactory.isAction(context, Role.witch, _isShowState)) {
               return;
             }
             try {
@@ -545,7 +545,7 @@ class _WitchActionComponentState extends State<_WitchActionComponent> {
             ? Text("你使用了毒药，玩家 ${_action.target} 被你毒了")
             : TextButton(
                 onPressed: () {
-                  if (!_nightFactory.isAction(context, Role.WITCH, _isShowState)) {
+                  if (!_nightFactory.isAction(context, Role.witch, _isShowState)) {
                     return;
                   }
                   if (_killPlayer <= 0) {

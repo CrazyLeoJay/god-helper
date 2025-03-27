@@ -24,8 +24,11 @@ class App extends LeoJayApp {
 
   @override
   bool updateShouldNotify(App oldWidget) {
+    // Assets.theme.dieNotes.role.icons.lg.
     return super.updateShouldNotify(oldWidget);
   }
+
+  void test() {}
 }
 
 class _AppStrings {

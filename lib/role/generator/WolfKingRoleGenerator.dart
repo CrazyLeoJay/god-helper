@@ -23,11 +23,11 @@ part 'WolfKingRoleGenerator.g.dart';
 /// 普通玩家也可以有技能发动流程，上帝判定不生效
 /// 可以让玩家发动技能，上帝判断是否生效
 class WolfKingRoleGenerator extends RoleGenerator<EmptyAction, WolfKingDayAction, EmptyRoleTempConfig> {
-  WolfKingRoleGenerator({required super.factory}) : super(role: Role.WOLF_KING);
+  WolfKingRoleGenerator({required super.factory}) : super(role: Role.wolfKing);
 
   /// 获取狼王白天的Actions
   static WolfKingDayAction getDayAction(RoundActions actions) {
-    return actions.getRoleAction(Role.WOLF_KING, WolfKingDayActionJsonData());
+    return actions.getRoleAction(Role.wolfKing, WolfKingDayActionJsonData());
   }
 
   /// 狼王如果白天被带走，需要释放技能，可以带走一个玩家
@@ -40,7 +40,7 @@ class WolfKingRoleGenerator extends RoleGenerator<EmptyAction, WolfKingDayAction
 class _WolfKingDayRoleRoundGenerator extends RoleDayRoundGenerator<WolfKingDayAction> {
   final DayFactory dayFactory;
 
-  _WolfKingDayRoleRoundGenerator(this.dayFactory) : super(roundFactory: dayFactory, role: Role.WOLF_KING);
+  _WolfKingDayRoleRoundGenerator(this.dayFactory) : super(roundFactory: dayFactory, role: Role.wolfKing);
 
   @override
   Future<void> preAction() async {
@@ -106,7 +106,7 @@ class WolfKingDayAction extends RoleAction {
   WolfKingDayAction({
     this.isAbandon = false,
     this.canShut = true,
-  }) : super(Role.WOLF_KING);
+  }) : super(Role.wolfKing);
 
   factory WolfKingDayAction.fromJson(Map<String, dynamic> json) => _$WolfKingDayActionFromJson(json);
 
@@ -117,7 +117,7 @@ class WolfKingDayAction extends RoleAction {
 
   /// 是否可以开枪
   bool _checkCanBiubiubiu(DayFactory dayFactory) {
-    var wolfPlayer = dayFactory.details.getForRoleNullable(Role.WOLF_KING);
+    var wolfPlayer = dayFactory.details.getForRoleNullable(Role.wolfKing);
     if (wolfPlayer == null) throw AppError.wolfKingNoSelectPlayer.toExc();
     if (dayFactory.isYesWolfBomb) {
       // 自爆无法开枪
@@ -187,7 +187,7 @@ class _WolfKingDayActionWidget extends StatefulWidget {
 }
 
 class _WolfKingDayActionWidgetState extends State<_WolfKingDayActionWidget> {
-  final _role = Role.WOLF_KING;
+  final _role = Role.wolfKing;
 
   GameFactory get _factory => widget.factory;
 

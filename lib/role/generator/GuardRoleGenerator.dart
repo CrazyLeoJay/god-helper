@@ -14,7 +14,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'GuardRoleGenerator.g.dart';
 
 /// 守卫
-var _role = Role.GUARD;
+var _role = Role.guard;
 
 class GuardRoleGenerator extends RoleGenerator<GuardNightAction, EmptyAction, EmptyRoleTempConfig> {
   GuardRoleGenerator({required super.factory}) : super(role: _role);

@@ -15,13 +15,13 @@ List<GameTemplateConfigEntity> defaultGameTemplate = [
       citizenCount: 3,
       wolfCount: 3,
       roles: {
-        RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER]
+        RoleType.GOD: [Role.seer, Role.witch, Role.hunter]
       },
     ),
     extraRule: TempExtraRule()
       ..winRule = WinRule.KILL_SIDE
-      ..add(Role.SHERIFF, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
-      ..add(Role.WITCH, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ALL_NOT_SAVE)),
+      ..add(Role.sheriff, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
+      ..add(Role.witch, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ALL_NOT_SAVE)),
     weight: 1,
     isDefaultConfig: true,
   ),
@@ -33,14 +33,14 @@ List<GameTemplateConfigEntity> defaultGameTemplate = [
       citizenCount: 4,
       wolfCount: 3,
       roles: {
-        RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER, Role.GUARD],
-        RoleType.WOLF: [Role.WOLF_KING],
+        RoleType.GOD: [Role.seer, Role.witch, Role.hunter, Role.guard],
+        RoleType.WOLF: [Role.wolfKing],
       },
     ),
     extraRule: TempExtraRule()
       ..winRule = WinRule.KILL_SIDE
-      ..add(Role.SHERIFF, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
-      ..add(Role.WITCH, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ONLY_FIRST_DAY_SELF_SAVE)),
+      ..add(Role.sheriff, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
+      ..add(Role.witch, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ONLY_FIRST_DAY_SELF_SAVE)),
     weight: 2,
     isDefaultConfig: true,
   ),
@@ -52,14 +52,14 @@ List<GameTemplateConfigEntity> defaultGameTemplate = [
       citizenCount: 4,
       wolfCount: 3,
       roles: {
-        RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER, Role.GUARD],
-        RoleType.WOLF: [Role.WHITE_WOLF_KING],
+        RoleType.GOD: [Role.seer, Role.witch, Role.hunter, Role.guard],
+        RoleType.WOLF: [Role.whiteWolfKing],
       },
     ),
     extraRule: TempExtraRule()
       ..winRule = WinRule.KILL_SIDE
-      ..add(Role.SHERIFF, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
-      ..add(Role.WITCH, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ONLY_FIRST_DAY_SELF_SAVE)),
+      ..add(Role.sheriff, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
+      ..add(Role.witch, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ONLY_FIRST_DAY_SELF_SAVE)),
     weight: 3,
     isDefaultConfig: true,
   ),
@@ -71,15 +71,15 @@ List<GameTemplateConfigEntity> defaultGameTemplate = [
       citizenCount: 3,
       wolfCount: 3,
       roles: {
-        RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER, Role.GUARD],
-        RoleType.WOLF: [Role.WOLF_KING],
+        RoleType.GOD: [Role.seer, Role.witch, Role.hunter, Role.guard],
+        RoleType.WOLF: [Role.wolfKing],
         RoleType.THIRD: [Role.bomb],
       },
     ),
     extraRule: TempExtraRule()
       ..winRule = WinRule.KILL_SIDE
-      ..add(Role.SHERIFF, SheriffExtraConfig(sheriffRace: SheriffRace.notForSecond))
-      ..add(Role.WITCH, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ALL_NOT_SAVE)),
+      ..add(Role.sheriff, SheriffExtraConfig(sheriffRace: SheriffRace.notForSecond))
+      ..add(Role.witch, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ALL_NOT_SAVE)),
     weight: 3,
     isDefaultConfig: true,
   ),
@@ -92,14 +92,14 @@ List<GameTemplateConfigEntity> defaultGameTemplate = [
       wolfCount: 3,
       roles: {
         // RoleType.CITIZEN: [Role.],
-        RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER, Role.FOOL],
-        RoleType.WOLF: [Role.WHITE_WOLF_KING],
+        RoleType.GOD: [Role.seer, Role.witch, Role.hunter, Role.fool],
+        RoleType.WOLF: [Role.whiteWolfKing],
       },
     ),
     extraRule: TempExtraRule()
       ..winRule = WinRule.KILL_SIDE
-      ..add(Role.SHERIFF, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
-      ..add(Role.WITCH, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ALL_NOT_SAVE)),
+      ..add(Role.sheriff, SheriffExtraConfig(sheriffRace: SheriffRace.onlyFirstDay))
+      ..add(Role.witch, WitchExtraConfig(witchRule: WitchSelfSaveRuleType.ALL_NOT_SAVE)),
     weight: 3,
     isDefaultConfig: true,
   ),
@@ -110,8 +110,8 @@ List<GameTemplateConfigEntity> defaultGameTemplate = [
     wolfCount: 3,
     roles: {
       RoleType.CITIZEN: [Role.forbiddenElder, Role.bomb],
-      RoleType.GOD: [Role.SEER, Role.WITCH, Role.HUNTER, Role.GUARD],
-      RoleType.WOLF: [Role.WOLF_KING, Role.wolfBeauty],
+      RoleType.GOD: [Role.seer, Role.witch, Role.hunter, Role.guard],
+      RoleType.WOLF: [Role.wolfKing, Role.wolfBeauty],
       RoleType.THIRD: [Role.bomb],
     },
   ),

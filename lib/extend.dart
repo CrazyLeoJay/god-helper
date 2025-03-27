@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:god_helper/exceptions.dart';
 import 'package:god_helper/framework/AppFactory.dart';
 import 'package:god_helper/res/app.dart';
@@ -112,5 +113,17 @@ extension ExceptionTools on AppException {
     if (kDebugMode) {
       print(toString());
     }
+  }
+}
+
+Future<bool> assetsExists(String assetName) async {
+  try {
+    // 尝试加载资产文件
+    await rootBundle.load(assetName);
+    // 如果没有抛出异常，则文件存在
+    return true;
+  } catch (e) {
+    // 如果抛出异常，则文件不存在
+    return false;
   }
 }

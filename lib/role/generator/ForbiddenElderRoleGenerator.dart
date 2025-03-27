@@ -54,7 +54,7 @@ class ForbiddenElderNightAction extends RoleAction {
   @override
   void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {
     super.setToPlayerDetail(detail, states);
-    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.name]);
+    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.nickname]);
     if (abandon) return;
 
     /// 设置玩家被禁言

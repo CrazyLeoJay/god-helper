@@ -13,7 +13,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'WhiteWolfRoleGenerator.g.dart';
 
-var _role = Role.WHITE_WOLF_KING;
+var _role = Role.whiteWolfKing;
 
 class WhiteWolfKingRoleGenerator extends RoleGenerator<EmptyAction, WhiteWolfKingDayAction, EmptyRoleTempConfig> {
   WhiteWolfKingRoleGenerator({required super.factory}) : super(role: _role);
@@ -41,9 +41,9 @@ class WhiteWolfKingDayAction extends RoleAction {
   @override
   void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {
     super.setToPlayerDetail(detail, states);
-    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.name]);
+    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.nickname]);
     if (isAbandonSkill) return;
-    if (killPlayer == null) throw AppError.roleActionNotKillPlayer.toExc(args: [role.name]);
+    if (killPlayer == null) throw AppError.roleActionNotKillPlayer.toExc(args: [role.nickname]);
 
     /// 设置击杀情况
     var player = detail.getForRole(role);
@@ -69,7 +69,7 @@ class _WhiteWolfKingDayRoleGenerator extends RoleDayRoundGenerator<WhiteWolfKing
   @override
   final DayFactory dayFactory;
 
-  _WhiteWolfKingDayRoleGenerator(this.dayFactory) : super(roundFactory: dayFactory, role: Role.WHITE_WOLF_KING);
+  _WhiteWolfKingDayRoleGenerator(this.dayFactory) : super(roundFactory: dayFactory, role: Role.whiteWolfKing);
 
   @override
   JsonEntityData<WhiteWolfKingDayAction> actionJsonConvertor() {

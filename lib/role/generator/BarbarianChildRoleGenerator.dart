@@ -45,7 +45,7 @@ class BarbarianChildNightAction extends RoleAction {
   @override
   void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {
     super.setToPlayerDetail(detail, states);
-    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.name]);
+    if (!isYes) throw AppError.roleActionNotYes.toExc(args: [role.nickname]);
 
     if (selectPlayer != null) {
       states.set(selectPlayer!, PlayerStateType.barbarianChildExample);

@@ -247,7 +247,7 @@ class PlayerDetail extends NoSqlDataEntity<PlayerDetail> {
   List<int> getCitizenNumber() {
     List<int> numbers = [];
     for (var value in players) {
-      if (value.role == Role.CITIZEN) numbers.add(value.number);
+      if (value.role == Role.citizen) numbers.add(value.number);
     }
     return numbers;
   }
@@ -256,8 +256,8 @@ class PlayerDetail extends NoSqlDataEntity<PlayerDetail> {
   Map<Role, int> getHasPowerRoleNumber() {
     Map<Role, int> map = {};
     for (var value in players) {
-      if (value.role == Role.CITIZEN) continue;
-      if (value.role == Role.WOLF) continue;
+      if (value.role == Role.citizen) continue;
+      if (value.role == Role.wolf) continue;
       map[value.role] = value.number;
     }
     return map;
@@ -385,7 +385,7 @@ class Player {
     // 默认好身份
     this.identity = true,
     // 默认橘色为村名
-    this.role = Role.CITIZEN,
+    this.role = Role.citizen,
     // 默认存活
     this.live = true,
     this.isInit = false,
@@ -820,7 +820,7 @@ class TemplateRoleConfig {
     // list.addAll(thirds);
     // list.addAll(citizen);
 
-    List<Role> list = [...all, Role.WOLF];
+    List<Role> list = [...all, Role.wolf];
     list.removeWhere((element) => !element.inNightSingleAction);
 
     /// 排序
@@ -926,16 +926,16 @@ class TempExtraRule with ToJsonInvoke {
   }
 
   SheriffExtraConfig getSheriffConfig() {
-    return SheriffExtraConfig.fromJson(ruleMaps[Role.SHERIFF] ?? {});
+    return SheriffExtraConfig.fromJson(ruleMaps[Role.sheriff] ?? {});
   }
 
   void setSheriffConfig(SheriffRace config) {
-    ruleMaps[Role.SHERIFF] = (getSheriffConfig()..sheriffRace = config).toJson();
+    ruleMaps[Role.sheriff] = (getSheriffConfig()..sheriffRace = config).toJson();
   }
 
   /// 初始化警长配置
   void initSheriff() {
-    ruleMaps[Role.SHERIFF] = SheriffExtraConfig().toJson();
+    ruleMaps[Role.sheriff] = SheriffExtraConfig().toJson();
   }
 
   T get<T>(Role role, RoleTempConfig<T> jed) {

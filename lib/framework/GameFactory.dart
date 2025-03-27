@@ -291,7 +291,7 @@ class PlayerFactory {
   /// 将缓存内的数据转换到玩家数据中
   void transitionCacheToPlayerIdentity() {
     for (var wolf in cache.wolfNumbers) {
-      details.get(wolf).updateRole(Role.WOLF, RoleType.WOLF);
+      details.get(wolf).updateRole(Role.wolf, RoleType.WOLF);
     }
 
     // 通过配置的模板，去设置玩家的阵营类型
@@ -351,12 +351,12 @@ class PlayerFactory {
       cache.setRolePlayerRecordFinish(roles[i]);
     }
     for (int j = roles.length; j < (roles.length + wolfs); j++) {
-      details.players[j].role = Role.WOLF;
-      details.players[j].roleType = Role.WOLF.type;
-      details.players[j].identity = Role.WOLF.defaultIdentity;
+      details.players[j].role = Role.wolf;
+      details.players[j].roleType = Role.wolf.type;
+      details.players[j].identity = Role.wolf.defaultIdentity;
     }
 
-    cache.setRolePlayerRecordFinish(Role.WOLF);
+    cache.setRolePlayerRecordFinish(Role.wolf);
     cache.setWolfsNumber(details.getWolfNumbers());
   }
 }
