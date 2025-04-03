@@ -921,6 +921,16 @@ class TempExtraRule with ToJsonInvoke {
 
   List<Role> get keys => ruleMaps.keys.toList(growable: false);
 
+  List<Role> get useConfigRoles {
+    List<Role> list = [];
+    for (var value in keys) {
+      if (value.id > 0) {
+        list.add(value);
+      }
+    }
+    return list;
+  }
+
   void add(Role role, ToJsonInvoke rule) {
     ruleMaps[role] = rule.toJson();
   }

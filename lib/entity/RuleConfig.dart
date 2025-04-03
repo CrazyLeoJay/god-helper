@@ -62,11 +62,12 @@ enum WinRule {
   static RadioGroup<WinRule> createSelectView({
     required Function(WinRule value) callback,
     WinRule? defaultValue,
+    double gridChildAspectRatio = 5 / 2,
   }) {
     return RadioGroup(
       config: RadioConfig<WinRule>.grid(
         defaultValue: defaultValue,
-        gridChildAspectRatio: 5 / 2,
+        gridChildAspectRatio: gridChildAspectRatio,
         selectItem: WinRule.values,
         showText: (value) => value.desc,
         callback: (value) => callback,

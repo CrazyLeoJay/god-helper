@@ -860,6 +860,7 @@ abstract class TempExtraGenerator<T extends RoleTempConfig<T>> {
 
   TempExtraGenerator(this.factory, this.role) {
     config = factory.extraRule.get(role, initExtraConfigEntity());
+    saveConfig();
   }
 
   /// 模板视图

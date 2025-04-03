@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -496,7 +495,7 @@ class _PlayerMultiSelectButtonState extends State<PlayerMultiSelectButton> {
 
   void _showDialog() async {
     var state = GamePlayersMultiSelectDialogContentWidget.newState();
-    state.selectList.addAll(selectList);
+    state._selectList.addAll(selectList);
     await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -517,7 +516,7 @@ class _PlayerMultiSelectButtonState extends State<PlayerMultiSelectButton> {
               ),
               TextButton(
                 onPressed: () {
-                  var list = state.selectList;
+                  var list = state._selectList;
                   selectList.clear();
                   if (list.isNotEmpty) selectList.addAll(list);
                   selectList.sort();
@@ -574,22 +573,25 @@ class GamePlayersMultiSelectDialogContentWidget extends StatefulWidget {
 }
 
 class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersMultiSelectDialogContentWidget> {
-  List<int> get selectableList => widget.selectableList;
-  final List<int> selectList = List<int>.empty(growable: true);
+  List<int> get _selectableList => widget.selectableList;
+  final List<int> _selectList = List<int>.empty(growable: true);
 
-  get isLimit => widget.selectMax > 0;
+  bool get _isLimit => widget.selectMax > 0;
 
   @override
   Widget build(BuildContext context) {
-    return _checkHasMaxSelectConfigWidget(
-      ConstrainedBox(
-        constraints: const BoxConstraints(
-          minHeight: 120,
-          maxWidth: double.maxFinite,
-        ),
-        // min: 300,
-        // width: double.maxFinite,
-        child: (GridView.count(
+    return Container(
+      width: 250,
+      // height: 600,
+      constraints: const BoxConstraints(
+        // minHeight: 120,
+        minWidth: 100,
+        maxWidth: 400,
+      ),
+      // min: 300,
+      // width: double.maxFinite,
+      child: _checkHasMaxSelectConfigWidget(
+        GridView.count(
           shrinkWrap: true,
           crossAxisCount: 5,
           // 主轴间距
@@ -597,13 +599,13 @@ class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersM
           // 交叉轴间距
           crossAxisSpacing: 8.0,
           // 子项边界的内边距
-          children: selectableList
+          children: _selectableList
               .map(
                 (e) => Material(
                   elevation: 4,
                   borderRadius: BorderRadius.circular(60),
                   child: CircleButton(
-                    color: selectList.contains(e) ? Colors.deepOrange : Colors.white,
+                    color: _selectList.contains(e) ? Colors.deepOrange : Colors.white,
                     size: 50,
                     onTap: () => _selectItem(e),
                     child: Text('P$e'),
@@ -611,7 +613,7 @@ class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersM
                 ),
               )
               .toList(growable: false),
-        )),
+        ),
       ),
     );
   }
@@ -622,12 +624,12 @@ class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersM
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("最多选择：(${selectList.length}/${widget.selectMax})"),
+          Text("最多选择：(${_selectList.length}/${widget.selectMax})"),
           child,
-          if (isLimit) const SizedBox(height: 8 * 2),
-          if (isLimit)
+          if (_isLimit) const SizedBox(height: 8 * 2),
+          if (_isLimit)
             Text(
-              selectList.length == widget.selectMax ? "已达到最大选择数量!" : "",
+              _selectList.length == widget.selectMax ? "已达到最大选择数量!" : "",
               style: App.of(context).font.base.copyWith(color: Colors.red),
             ),
         ],
@@ -641,10 +643,10 @@ class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersM
     int playerId = value;
     // 处理按钮点击事件
     // Navigator.of(context).pop(playerId.toString());
-    if (selectList.contains(playerId)) {
-      selectList.remove(playerId);
+    if (_selectList.contains(playerId)) {
+      _selectList.remove(playerId);
     } else {
-      if (widget.selectMax > 0 && selectList.length >= widget.selectMax) {
+      if (widget.selectMax > 0 && _selectList.length >= widget.selectMax) {
         // var snackBar = SnackBar(
         //   content: const Text("已达到人数选择上限，无法继续选择。"),
         //   action: SnackBarAction(label: "知道了", onPressed: () {}),
@@ -652,13 +654,13 @@ class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersM
         // ScaffoldMessenger.of(context).showSnackBar(snackBar);
         return;
       }
-      selectList.add(playerId);
+      _selectList.add(playerId);
     }
     setState(() {});
   }
 
   void clear() {
-    selectList.clear();
+    _selectList.clear();
     setState(() {});
   }
 }
@@ -1477,6 +1479,9 @@ class AutoGridView<T> extends StatelessWidget {
   final Widget Function(T t) itemBuilder;
   final double padding;
 
+  final bool absSize;
+  final bool autoCenter;
+
   const AutoGridView({
     super.key,
     required this.data,
@@ -1484,27 +1489,70 @@ class AutoGridView<T> extends StatelessWidget {
     this.circleSize = 45,
     this.childAspectRatio = 1,
     this.padding = 0.0,
+    this.absSize = false,
+    this.autoCenter = false,
   });
+
+  static AutoGridView<int> gen({
+    required List<Widget> children,
+    required double circleSize,
+    double childAspectRatio = 1,
+    double padding = 0.0,
+    bool absSize = false,
+    bool autoCenter = false,
+  }) {
+    List<int> indexs = List.generate(children.length, (index) => index);
+    return AutoGridView(
+      data: indexs,
+      itemBuilder: (t) => children[t],
+      circleSize: circleSize,
+      childAspectRatio: childAspectRatio,
+      padding: padding,
+      absSize: absSize,
+      autoCenter: autoCenter,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        int row = (constraints.maxWidth / (circleSize + padding)).toInt();
-        print("width constraints.maxWidth= ${constraints.maxWidth} row=${row}");
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: row,
-            crossAxisSpacing: padding,
-            mainAxisSpacing: padding,
-            childAspectRatio: childAspectRatio,
-          ),
-          itemBuilder: (context, index) => Center(child: itemBuilder(data[index])),
-          itemCount: data.length,
-        );
+        int col = (constraints.maxWidth / (circleSize + padding)).toInt();
+        if (absSize) {
+          var width = col * (circleSize + padding);
+          var length = data.length;
+          /// 如果数量不足一行，是否居中
+          if (autoCenter && length <= col) {
+            width = length * (circleSize + padding);
+            col = length;
+          }
+          int row = (length / col).toInt() + (length % col == 0 ? 0 : 1);
+          double height = row * ((circleSize / childAspectRatio) + padding);
+          return SizedBox(
+            width: width,
+            height: height,
+            child: _buildGradView(col),
+          );
+        } else {
+          return _buildGradView(col);
+        }
       },
+    );
+  }
+
+  Widget _buildGradView(int row) {
+    // if (kDebugMode) print("width constraints.maxWidth= ${constraints.maxWidth} row=${row}");
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: row,
+        crossAxisSpacing: padding,
+        mainAxisSpacing: padding,
+        childAspectRatio: childAspectRatio,
+      ),
+      itemBuilder: (context, index) => Center(child: itemBuilder(data[index])),
+      itemCount: data.length,
     );
   }
 }
@@ -1520,7 +1568,7 @@ class MultiIcon extends StatelessWidget {
 
   const MultiIcon({
     super.key,
-    required this.defaultIcon,
+    this.defaultIcon = const Icon(Icons.warning),
     required this.resList,
     this.color,
     this.size,
@@ -1563,9 +1611,25 @@ class MultiIcon extends StatelessWidget {
     if (res.isEmpty) {
       return Icon(defaultIcon.icon, color: color, size: size);
     }
-    if (kDebugMode) {
-      print("loadIcon: res=$res");
-    }
+    // if (kDebugMode) {
+    //   print("loadIcon: res=$res");
+    // }
     return SvgPicture.asset(res, color: color, width: size, height: size);
+  }
+}
+
+class EmptyWidget extends StatelessWidget {
+  final String text;
+
+  const EmptyWidget({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        text,
+        style: context.app.baseFont.copyWith(fontSize: 24),
+      ),
+    );
   }
 }

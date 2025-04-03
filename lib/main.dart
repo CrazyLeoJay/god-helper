@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:god_helper/res/app.dart';
-import 'package:god_helper/view/AppHome.dart';
+import 'package:god_helper/view/ui2/AppHome.dart';
+import 'package:god_helper/view/ui_pad/AppPadHome.dart';
 
 void main() {
   // debugPaintSizeEnabled = false;
@@ -37,7 +38,13 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: AppHome(),
+        // home: AppHome(),
+        // home: AppPadHome(),
+        home: LayoutBuilder(
+          builder: (context, constraints) {
+            return constraints.maxWidth > 600 ? AppPadHome() : AppHome();
+          },
+        ),
         // routes: {
         // 会和 home 属性冲突
         //   '/': (context) => AppHome(),

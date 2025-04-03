@@ -5,6 +5,7 @@ import 'package:god_helper/exceptions.dart';
 import 'package:god_helper/framework/AppFactory.dart';
 import 'package:god_helper/res/app.dart';
 import 'package:god_helper/tools/AppData.dart';
+import 'package:god_helper/view/ui_pad/UiPadRouteFactory.dart';
 
 Map<K, V> listToMap<T, K, V>(List<T> list, K Function(T element) keyExtractor, V Function(T element) valueExtractor) {
   Map<K, V> map = {};
@@ -36,6 +37,7 @@ extension AppState<T extends StatefulWidget> on State<T> {
   AppData get data => context.data;
 
   AppRoute get route => context.route;
+  UiPadRouteFactory get padRoute => context.padRoute;
 
   TextStyle get defaultFont => app.font.base;
 
@@ -59,6 +61,7 @@ extension AppBuildContextExtends on BuildContext {
   TextStyle get defaultFont => app.font.base;
 
   AppRoute get route => AppFactory().getRoute(this);
+  UiPadRouteFactory get padRoute => AppFactory.single().getPadRoute(this);
 
   void showSnackBar(SnackBar sb, {required IsShowState isShow}) {
     if (isShow.isShow) return;
@@ -126,4 +129,8 @@ Future<bool> assetsExists(String assetName) async {
     // 如果抛出异常，则文件不存在
     return false;
   }
+}
+
+Future<ByteData> loadAssets(String assets) {
+  return rootBundle.load(assets);
 }

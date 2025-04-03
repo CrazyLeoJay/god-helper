@@ -72,15 +72,19 @@ class GameTemplateConfigEntity {
   @JsonKey(includeFromJson: false, includeToJson: false)
   bool isDefaultConfig = false;
 
+// 定义一个名为 GameTemplateConfigEntity 的类，用于表示游戏模板配置实体
   GameTemplateConfigEntity({
-    required this.id,
-    required this.name,
-    required this.playerCount,
-    required this.roleConfig,
-    required this.extraRule,
-    this.weight = 1,
-    this.createTime,
-    this.isDefaultConfig = false,
+
+    // 使用 required 关键字标记以下属性为必需字段，构造实例时必须提供这些值
+    required this.id, // 游戏模板的唯一标识符
+    required this.name, // 游戏模板的名称
+    required this.playerCount, // 游戏模板所需玩家数量
+    required this.roleConfig, // 游戏模板的角色配置信息
+    required this.extraRule, // 游戏模板的额外规则信息
+    // 以下属性为可选字段，提供默认值，构造实例时可以不提供这些值
+    this.weight = 1, // 游戏模板的权重，默认值为1
+    this.createTime, // 游戏模板的创建时间，默认为 null
+    this.isDefaultConfig = false, // 是否为默认配置，默认值为 false
   });
 
   GameTemplateConfigEntity.forDB(

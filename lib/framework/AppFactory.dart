@@ -7,6 +7,7 @@ import 'package:god_helper/entity/Role.dart';
 import 'package:god_helper/framework/GameFactory.dart';
 import 'package:god_helper/framework/impl/FrameworkEntity.dart';
 import 'package:god_helper/view/ui2/phone/Ui2RouteFactory.dart';
+import 'package:god_helper/view/ui_pad/UiPadRouteFactory.dart';
 
 class AppFactory {
   static final AppFactory _instance = AppFactory._private();
@@ -22,6 +23,8 @@ class AppFactory {
   final AppDatabase _db = AppDatabase();
 
   AppRoute getRoute(BuildContext context) => Ui2RouteFactory(context);
+
+  UiPadRouteFactory getPadRoute(BuildContext context) => UiPadRouteFactory(context);
 
   /// 获取默认模板
   GameFactory temp() => GameFactory.create(GameDetailEntity.generateForTemp(

@@ -242,7 +242,7 @@ enum Role implements Comparable<Role> {
   static const _RES_PATH = "assets/theme/die-notes/role/icons";
 
   Widget icon({
-    Color? color,
+    Color? color = Colors.black,
     double? size,
   }) {
     var defaultResName = name.toLowerCase();
