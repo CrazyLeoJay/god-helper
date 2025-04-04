@@ -37,6 +37,7 @@ extension AppState<T extends StatefulWidget> on State<T> {
   AppData get data => context.data;
 
   AppRoute get route => context.route;
+
   UiPadRouteFactory get padRoute => context.padRoute;
 
   TextStyle get defaultFont => app.font.base;
@@ -61,6 +62,7 @@ extension AppBuildContextExtends on BuildContext {
   TextStyle get defaultFont => app.font.base;
 
   AppRoute get route => AppFactory().getRoute(this);
+
   UiPadRouteFactory get padRoute => AppFactory.single().getPadRoute(this);
 
   void showSnackBar(SnackBar sb, {required IsShowState isShow}) {

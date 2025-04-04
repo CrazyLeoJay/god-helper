@@ -85,13 +85,14 @@ class _WitchTempExtraGenerator extends TempExtraGenerator<WitchExtraConfig> {
   List<String> configResultMessage() => ["女巫自救规则：${config.witchRule.desc}"];
 
   @override
-  Widget tempView({bool isPreview = false}) {
+  Widget tempView({bool isPreview = false, Function()? updateCallback}) {
     return WitchExtraRuleView(
       defaultValue: config.witchRule,
       isPreview: isPreview,
       onChange: (witchRule) {
         config.witchRule = witchRule;
         saveConfig();
+        updateCallback?.call();
       },
     );
   }

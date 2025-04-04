@@ -123,7 +123,7 @@ class _GameTemplateListViewState extends State<GameTemplateListView> with Single
 
   /// 创建一个新模板
   void _makeNewTemp(BuildContext context, GameTemplateConfigEntity temp) {
-    AppFactory().getRoute(context).selectTempToCreateNewTemp(temp).push().then((value) {
+    AppFactory().getRoute(context).toCreateNewTemp(temp: temp).push().then((value) {
       if (value != null) _loadData();
     });
   }

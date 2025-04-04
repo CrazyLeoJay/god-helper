@@ -100,11 +100,10 @@ abstract class AppRoute {
   /// 选择模板创建游戏，进入新游戏配置界面
   RouteHelper selectTempToCreateNewGameConfigView(GameTemplateConfigEntity temp, bool isSystemConfig);
 
-  /// 选择模板，以此模板为依据，创建新模板
-  RouteHelper selectTempToCreateNewTemp(GameTemplateConfigEntity temp);
-
   /// 创建一个空的新模板
-  RouteHelper toCreateNewTemp();
+  ///
+  /// 或者通过temp初始化
+  RouteHelper toCreateNewTemp({GameTemplateConfigEntity? temp});
 
   /// 游戏配置完成后，会有一个确认界面，这里对界面进行核对
   RouteHelper createNewGameToPreView(GameFactory factory);

@@ -74,7 +74,6 @@ class GameTemplateConfigEntity {
 
 // 定义一个名为 GameTemplateConfigEntity 的类，用于表示游戏模板配置实体
   GameTemplateConfigEntity({
-
     // 使用 required 关键字标记以下属性为必需字段，构造实例时必须提供这些值
     required this.id, // 游戏模板的唯一标识符
     required this.name, // 游戏模板的名称

@@ -3,7 +3,6 @@ import 'package:god_helper/entity/Entity.dart';
 import 'package:god_helper/framework/AppFactory.dart';
 import 'package:god_helper/framework/GameFactory.dart';
 import 'package:god_helper/framework/impl/FrameworkEntity.dart';
-import 'package:god_helper/view/ui2/phone/CreateNewTempView.dart';
 import 'package:god_helper/view/ui2/phone/GaemTempPreview.dart';
 import 'package:god_helper/view/ui2/phone/GameConfigPreview.dart';
 import 'package:god_helper/view/ui2/phone/GameConfigView.dart';
@@ -16,6 +15,7 @@ import 'package:god_helper/view/ui2/phone/RoleDetailsView.dart';
 import 'package:god_helper/view/ui_pad/GameListView.dart';
 import 'package:god_helper/view/ui_pad/MakeNewGameBeginView.dart';
 import 'package:god_helper/view/ui_pad/MakeNewGameSelectTempView.dart';
+import 'package:god_helper/view/ui_pad/MakeNewTempView.dart';
 
 class UiPadRouteFactory extends AppRoute {
   UiPadRouteFactory(super.context);
@@ -70,13 +70,10 @@ class UiPadRouteFactory extends AppRoute {
   }
 
   @override
-  RouteHelper selectTempToCreateNewTemp(GameTemplateConfigEntity temp) {
-    return toHelper(CreateNewTempView(defaultValue: temp));
-  }
-
-  @override
-  RouteHelper toCreateNewTemp() {
-    return toHelper(const CreateNewTempView());
+  RouteHelper toCreateNewTemp({GameTemplateConfigEntity? temp}) {
+    return toHelper(MakeNewTempView(
+      temp: temp,
+    ));
   }
 
   @override

@@ -447,7 +447,6 @@ class _NewGamePreviewDialog extends StatelessWidget {
             row("警长配置", Text(_factory.entity.extraRule.sheriffRace.desc)),
             Row(children: [Text("其他规则", style: titleStyle)]),
             for (var v in _factory.entity.extraRule.useConfigRoles) _buildRoleExtraConfigWidget(context, v),
-
             const SizedBox(height: 16),
             Row(children: [Text("保护配置(${_factory.entity.tempConfig.playerCount})", style: titleStyle)]),
             row("首刀保护", _buildSafeNumberRow(_factory.entity.saveRule.firstKillSavePlayers)),

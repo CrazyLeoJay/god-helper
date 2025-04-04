@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:god_helper/component/component.dart';
+import 'package:god_helper/db/DB.dart';
 import 'package:god_helper/db/DbEntity.dart';
 import 'package:god_helper/entity/Entity.dart';
 import 'package:god_helper/entity/Role.dart';
@@ -25,7 +26,11 @@ class MakeNewGameSelectTempView extends StatefulWidget {
 class _MakeNewGameSelectTempViewState extends State<MakeNewGameSelectTempView> {
   _TempItemData? data;
 
+  final ValueNotifier<List<_TempItemData>> _tempNotifier = ValueNotifier(List<_TempItemData>.empty());
+
   final IsShowState _isShow = IsShowState();
+
+  final GlobalKey<_TempListState> _keyTempList = GlobalKey();
 
   @override
   void initState() {
@@ -33,6 +38,18 @@ class _MakeNewGameSelectTempViewState extends State<MakeNewGameSelectTempView> {
     if (null != widget.data) {
       data = _TempItemData(widget.data!);
     }
+    _loadTempData();
+  }
+
+  Future<void> _loadTempData() async {
+    _tempNotifier.value = await AppFactory().service.gameTemps().then((value) {
+      return value.map((GameTemplateConfigEntity e) => _TempItemData(e)).toList();
+    });
+
+    if (kDebugMode) {
+      print("加载${_tempNotifier.value.length} 个数据");
+    }
+    // setState(() {});
   }
 
   @override
@@ -45,20 +62,32 @@ class _MakeNewGameSelectTempViewState extends State<MakeNewGameSelectTempView> {
         builder: (context, constraints) => Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Container(
-              width: constraints.maxWidth / 3,
-              // height: constraints.maxHeight,
-              constraints: const BoxConstraints(
-                minWidth: 400,
-                maxWidth: 500,
-              ),
-              child: _TempList(
-                defaultData: data,
-                selectItem: (data) {
-                  setState(() {
-                    this.data = data;
-                  });
-                },
+            Material(
+              elevation: 15,
+              child: Container(
+                width: constraints.maxWidth / 3,
+                // height: constraints.maxHeight,
+                constraints: const BoxConstraints(
+                  minWidth: 400,
+                  maxWidth: 500,
+                ),
+                child: ValueListenableBuilder(
+                  valueListenable: _tempNotifier,
+                  builder: (context, value, child) {
+                    return _TempList(
+                      key: _keyTempList,
+                      temps: _tempNotifier.value,
+                      defaultData: data,
+                      initialIndex: (data?.temp.isDefaultConfig ?? true) ? 0 : 1,
+                      selectItem: (data) {
+                        setState(() => this.data = data);
+                      },
+                      loadTempData: _loadTempData,
+                      toCreateNewTempInvoke: () => _buildToMakeNewTem(),
+                      toRemoveTemp: _toRemoveTemp,
+                    );
+                  },
+                ),
               ),
             ),
             Expanded(
@@ -72,7 +101,11 @@ class _MakeNewGameSelectTempViewState extends State<MakeNewGameSelectTempView> {
                       elevation: 2,
                       child: TextButton(
                         onPressed: () {
-                          /// todo 复制模板创建新模板
+                          if (null == data) {
+                            showSnackBarMessage("还未选择模板", isShow: _isShow);
+                            return;
+                          }
+                          _buildToMakeNewTem(temp: data?.entity);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -100,6 +133,29 @@ class _MakeNewGameSelectTempViewState extends State<MakeNewGameSelectTempView> {
         ),
       ),
     );
+  }
+
+  void _buildToMakeNewTem({GameTemplateConfigEntity? temp}) {
+    padRoute.toCreateNewTemp(temp: temp).push().then(
+      (value) {
+        if (value is GameTemplateConfigEntity) {
+          data = _TempItemData(value);
+          _loadTempData();
+          setState(() {});
+          _keyTempList.currentState?.switchTab((data?.temp.isDefaultConfig ?? true) ? 0 : 1);
+        }
+      },
+    );
+  }
+
+  _toRemoveTemp(_TempItemData temp) async {
+    await AppFactory().service.removeTemp(temp.temp.id);
+    _loadTempData();
+    if (data?.temp.id == temp.temp.id) {
+      setState(() {
+        data = null;
+      });
+    }
   }
 }
 
@@ -170,15 +226,18 @@ class _TempItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          color: (isSelect ? Colors.red : Colors.black).withOpacity(0.4), // 阴影颜色
-          spreadRadius: 0, // 阴影扩散半径
-          blurRadius: 4, // 阴影模糊半径
-          // offset: const Offset(0, 2), // 阴影偏移量
-        )
-      ]),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: (isSelect ? Colors.red : Colors.black).withOpacity(0.6), // 阴影颜色
+            spreadRadius: 0, // 阴影扩散半径
+            blurRadius: 4, // 阴影模糊半径
+            offset: const Offset(0, 4), // 阴影偏移量
+          )
+        ],
+      ),
       child: Column(
         children: [
           Container(
@@ -215,46 +274,45 @@ class _TempItem extends StatelessWidget {
 
 /// 模板列表
 class _TempList extends StatefulWidget {
+  final int initialIndex;
   final _TempItemData? defaultData;
+  final List<_TempItemData> temps;
   final Function(_TempItemData? data)? selectItem;
 
-  const _TempList({this.defaultData, this.selectItem});
+  final Function()? loadTempData;
+
+  final Function()? toCreateNewTempInvoke;
+  final Function(_TempItemData temp) toRemoveTemp;
+
+  const _TempList({
+    super.key,
+    required this.temps,
+    required this.toRemoveTemp,
+    this.defaultData,
+    this.selectItem,
+    this.initialIndex = 0,
+    this.loadTempData,
+    this.toCreateNewTempInvoke,
+  });
 
   @override
   State<_TempList> createState() => _TempListState();
 }
 
 class _TempListState extends State<_TempList> with SingleTickerProviderStateMixin {
-  List<_TempItemData> _temps = List.empty();
-
   TabController? _tabController;
   final _systemTemps = defaultGameTemplate.map((e) => _TempItemData(e)).toList();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    // _tabController!.addListener(() {
-    //   // widget.selectItem?.call(null);
-    // });
-    loadTempData();
+    _tabController = TabController(initialIndex: widget.initialIndex, length: 2, vsync: this);
   }
 
   @override
   void dispose() {
     _tabController?.dispose();
     super.dispose();
-  }
-
-  Future<void> loadTempData() async {
-    _temps = await AppFactory().service.gameTemps().then((value) {
-      return value.map((GameTemplateConfigEntity e) => _TempItemData(e)).toList();
-    });
-
-    if (kDebugMode) {
-      print("加载${_temps.length} 个数据");
-    }
-    setState(() {});
   }
 
   @override
@@ -275,7 +333,12 @@ class _TempListState extends State<_TempList> with SingleTickerProviderStateMixi
                       "游戏板子",
                       style: context.app.baseFont.copyWith(fontSize: 22),
                     ),
-                    IconButton(onPressed: loadTempData, icon: const Icon(Icons.refresh))
+                    Row(
+                      children: [
+                        IconButton(onPressed: () => widget.toCreateNewTempInvoke?.call(), icon: const Icon(Icons.add)),
+                        IconButton(onPressed: () => widget.loadTempData?.call(), icon: const Icon(Icons.refresh)),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -291,12 +354,12 @@ class _TempListState extends State<_TempList> with SingleTickerProviderStateMixi
         ),
         Expanded(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
             child: TabBarView(
               controller: _tabController,
               children: [
                 _buildListView(_systemTemps),
-                _buildListView(_temps),
+                _buildListView(widget.temps),
               ],
             ),
           ),
@@ -322,18 +385,43 @@ class _TempListState extends State<_TempList> with SingleTickerProviderStateMixi
           }
         }
       }
-      return ListView.separated(
-        itemBuilder: (context, index) => InkWell(
-          child: _TempItem(temps[index], isSelect: selectIndex == index),
+
+      /// 单个item的实现
+      /// 还有模板点击事件
+      Widget itemView(_TempItemData data, int index) {
+        return InkWell(
+          child: _TempItem(data, isSelect: selectIndex == index),
           onTap: () {
             setState(() => selectIndex = index);
-            widget.selectItem?.call(temps[index]);
+            widget.selectItem?.call(data);
           },
-        ),
+        );
+      }
+
+      return ListView.separated(
+        itemBuilder: (context, index) => temps[index].temp.isDefaultConfig
+            ? itemView(temps[index], index)
+            : LeftSlideRowWidget(
+                child: itemView(temps[index], index),
+                sideWidget: (isSidleListener) {
+                  var style = context.app.baseFont.copyWith(color: Colors.white);
+                  return isSidleListener
+                      ? Text("放手\n创建新模板", style: style, textAlign: TextAlign.right)
+                      : Text("左滑\n创建新模板", style: style, textAlign: TextAlign.right);
+                },
+                onLeftSlideListener: () {
+                  widget.toRemoveTemp(temps[index]);
+                },
+              ),
         separatorBuilder: (context, index) => const SizedBox(height: 8),
         itemCount: temps.length,
       );
     }
+  }
+
+  void switchTab(int index) {
+    if (kDebugMode) print("switch tab to $index");
+    _tabController!.animateTo(index);
   }
 }
 

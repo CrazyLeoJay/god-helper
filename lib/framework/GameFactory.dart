@@ -866,7 +866,7 @@ abstract class TempExtraGenerator<T extends RoleTempConfig<T>> {
   /// 模板视图
   ///
   /// @param isPreview 是否是预览界面
-  Widget tempView({bool isPreview = false});
+  Widget tempView({bool isPreview = false, Function()? updateCallback});
 
   /// 配置的结果展示
   /// 用文本描述，当前的配置结果

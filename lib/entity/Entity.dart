@@ -936,7 +936,8 @@ class TempExtraRule with ToJsonInvoke {
   }
 
   SheriffExtraConfig getSheriffConfig() {
-    return SheriffExtraConfig.fromJson(ruleMaps[Role.sheriff] ?? {});
+    var config = SheriffExtraConfig.fromJson(ruleMaps[Role.sheriff] ?? {});
+    return config;
   }
 
   void setSheriffConfig(SheriffRace config) {

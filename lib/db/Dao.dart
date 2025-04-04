@@ -74,4 +74,8 @@ class GameDao extends DatabaseAccessor<AppDatabase> {
     return await (db.update(db.gameData)..where((tbl) => tbl.id.equals(id)))
         .write(GameDataCompanion(isFinish: Value(isFinish)));
   }
+
+  Future<int> removeTemp(int id) async {
+    return await (db.delete(db.gameTemplateConfig)..where((tbl) => tbl.id.equals(id))).go();
+  }
 }

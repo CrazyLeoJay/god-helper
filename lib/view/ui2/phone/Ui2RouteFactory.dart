@@ -67,12 +67,7 @@ class Ui2RouteFactory extends AppRoute {
   }
 
   @override
-  RouteHelper selectTempToCreateNewTemp(GameTemplateConfigEntity temp) {
-    return toHelper(CreateNewTempView(defaultValue: temp));
-  }
-
-  @override
-  RouteHelper toCreateNewTemp() {
+  RouteHelper toCreateNewTemp({GameTemplateConfigEntity? temp}) {
     return toHelper(const CreateNewTempView());
   }
 

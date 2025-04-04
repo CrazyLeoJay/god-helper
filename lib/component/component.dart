@@ -1042,9 +1042,7 @@ class DefaultMultiSelectViewConfig<T> extends MultiSelectViewConfig<T> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
-                        Center(
-                          child: Circle(child: itemBuilder(item, false)),
-                        ),
+                        Center(child: Circle(child: itemBuilder(item, false))),
                         if (_isDesc) const SizedBox(height: 4),
                         if (_isDesc)
                           Center(
@@ -1134,17 +1132,18 @@ class _MultiSelectDialogWidgetState<T> extends State<_MultiSelectDialogWidget<T>
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("选择玩家"),
-      content: ListView(
-        shrinkWrap: true,
-        children: [
-          ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: 120,
-              maxWidth: double.maxFinite,
-            ),
-            // min: 300,
-            // width: double.maxFinite,
-            child: (GridView.count(
+      content: Container(
+        width: 300,
+        constraints: const BoxConstraints(
+          // minWidth: 200,
+          // maxWidth: 600,
+          minHeight: 120,
+          // maxWidth: double.maxFinite,
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            GridView.count(
               shrinkWrap: true,
               // 主轴间距
               crossAxisCount: 5,
@@ -1181,9 +1180,9 @@ class _MultiSelectDialogWidgetState<T> extends State<_MultiSelectDialogWidget<T>
                   ],
                 );
               }).toList(growable: false),
-            )),
-          )
-        ],
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -1521,6 +1520,7 @@ class AutoGridView<T> extends StatelessWidget {
         if (absSize) {
           var width = col * (circleSize + padding);
           var length = data.length;
+
           /// 如果数量不足一行，是否居中
           if (autoCenter && length <= col) {
             width = length * (circleSize + padding);

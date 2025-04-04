@@ -75,4 +75,8 @@ class AppService {
       print("更新玩家结束状态: ${entity.id} is finish  select verify: entity.isFinish=${future.isFinish}");
     }
   }
+
+  Future<int> removeTemp(int id) {
+    return _dao.removeTemp(id);
+  }
 }
