@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:god_helper/entity/Role.dart';
@@ -34,7 +32,8 @@ class _AppPadHomeState extends State<AppPadHome> {
             name: "(debug) print",
             invoke: (route) async {
               if (kDebugMode) print("application SupportDirectory: ${(await getApplicationSupportDirectory()).path}");
-              if (kDebugMode) print("application DocumentsDirectory: ${(await getApplicationDocumentsDirectory()).path}");
+              if (kDebugMode)
+                print("application DocumentsDirectory: ${(await getApplicationDocumentsDirectory()).path}");
               if (kDebugMode) print("application CacheDirectory: ${(await getApplicationCacheDirectory()).path}");
               if (kDebugMode) print("application TemporaryDirectory: ${(await getTemporaryDirectory()).path}");
               if (kDebugMode) print("application DownloadsDirectory: ${(await getDownloadsDirectory())?.path}");

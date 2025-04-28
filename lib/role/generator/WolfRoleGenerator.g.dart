@@ -42,8 +42,7 @@ WolfAction _$WolfActionFromJson(Map<String, dynamic> json) => WolfAction()
   ..killPlayer = (json['killPlayer'] as num).toInt()
   ..noKill = json['noKill'] as bool;
 
-Map<String, dynamic> _$WolfActionToJson(WolfAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WolfActionToJson(WolfAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,
@@ -77,8 +76,7 @@ const _$RoleEnumMap = {
   Role.witcher: 'witcher',
 };
 
-WolfDayAction _$WolfDayActionFromJson(Map<String, dynamic> json) =>
-    WolfDayAction(
+WolfDayAction _$WolfDayActionFromJson(Map<String, dynamic> json) => WolfDayAction(
       isBomb: json['isBomb'] as bool? ?? false,
     )
       ..role = $enumDecode(_$RoleEnumMap, json['role'])
@@ -87,8 +85,7 @@ WolfDayAction _$WolfDayActionFromJson(Map<String, dynamic> json) =>
       ..wolfBombPlayer = (json['wolfBombPlayer'] as num?)?.toInt()
       ..isYes = json['isYes'] as bool;
 
-Map<String, dynamic> _$WolfDayActionToJson(WolfDayAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WolfDayActionToJson(WolfDayAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'sealing': instance.sealing,

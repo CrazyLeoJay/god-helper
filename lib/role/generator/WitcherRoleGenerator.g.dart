@@ -22,17 +22,15 @@ class WitcherNightActionJsonData extends JsonEntityData<WitcherNightAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-WitcherNightAction _$WitcherNightActionFromJson(Map<String, dynamic> json) =>
-    WitcherNightAction()
-      ..role = $enumDecode(_$RoleEnumMap, json['role'])
-      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-      ..isYes = json['isYes'] as bool
-      ..sealing = json['sealing'] as bool
-      ..selectPlayer = (json['selectPlayer'] as num?)?.toInt()
-      ..isAbandon = json['isAbandon'] as bool;
+WitcherNightAction _$WitcherNightActionFromJson(Map<String, dynamic> json) => WitcherNightAction()
+  ..role = $enumDecode(_$RoleEnumMap, json['role'])
+  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+  ..isYes = json['isYes'] as bool
+  ..sealing = json['sealing'] as bool
+  ..selectPlayer = (json['selectPlayer'] as num?)?.toInt()
+  ..isAbandon = json['isAbandon'] as bool;
 
-Map<String, dynamic> _$WitcherNightActionToJson(WitcherNightAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WitcherNightActionToJson(WitcherNightAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

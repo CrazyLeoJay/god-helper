@@ -6,8 +6,7 @@ part of 'WhiteWolfRoleGenerator.dart';
 // AppCodeGenerator
 // **************************************************************************
 
-class WhiteWolfKingDayActionJsonData
-    extends JsonEntityData<WhiteWolfKingDayAction> {
+class WhiteWolfKingDayActionJsonData extends JsonEntityData<WhiteWolfKingDayAction> {
   @override
   WhiteWolfKingDayAction createForMap(Map<String, dynamic> map) {
     return WhiteWolfKingDayAction.fromJson(map);
@@ -23,19 +22,15 @@ class WhiteWolfKingDayActionJsonData
 // JsonSerializableGenerator
 // **************************************************************************
 
-WhiteWolfKingDayAction _$WhiteWolfKingDayActionFromJson(
-        Map<String, dynamic> json) =>
-    WhiteWolfKingDayAction()
-      ..role = $enumDecode(_$RoleEnumMap, json['role'])
-      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-      ..isYes = json['isYes'] as bool
-      ..sealing = json['sealing'] as bool
-      ..killPlayer = (json['killPlayer'] as num?)?.toInt()
-      ..isAbandonSkill = json['isAbandonSkill'] as bool;
+WhiteWolfKingDayAction _$WhiteWolfKingDayActionFromJson(Map<String, dynamic> json) => WhiteWolfKingDayAction()
+  ..role = $enumDecode(_$RoleEnumMap, json['role'])
+  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+  ..isYes = json['isYes'] as bool
+  ..sealing = json['sealing'] as bool
+  ..killPlayer = (json['killPlayer'] as num?)?.toInt()
+  ..isAbandonSkill = json['isAbandonSkill'] as bool;
 
-Map<String, dynamic> _$WhiteWolfKingDayActionToJson(
-        WhiteWolfKingDayAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$WhiteWolfKingDayActionToJson(WhiteWolfKingDayAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

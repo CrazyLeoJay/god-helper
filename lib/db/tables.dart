@@ -59,5 +59,4 @@ class GameTemplateConfig extends Table {
   DateTimeColumn get createTime => dateTime().withDefault(Constant(DateTime.now()))();
 
   BoolColumn get delete => boolean().withDefault(const Constant(false))();
-
 }

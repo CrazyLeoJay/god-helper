@@ -22,21 +22,17 @@ class FoxNightActionJsonData extends JsonEntityData<FoxNightAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FoxNightAction _$FoxNightActionFromJson(Map<String, dynamic> json) =>
-    FoxNightAction()
-      ..role = $enumDecode(_$RoleEnumMap, json['role'])
-      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-      ..isYes = json['isYes'] as bool
-      ..sealing = json['sealing'] as bool
-      ..selectPlayer = (json['selectPlayer'] as num?)?.toInt()
-      ..selectPlayers = (json['selectPlayers'] as List<dynamic>?)
-          ?.map((e) => (e as num).toInt())
-          .toList()
-      ..isWolf = json['isWolf'] as bool?
-      ..isAbandon = json['isAbandon'] as bool;
+FoxNightAction _$FoxNightActionFromJson(Map<String, dynamic> json) => FoxNightAction()
+  ..role = $enumDecode(_$RoleEnumMap, json['role'])
+  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+  ..isYes = json['isYes'] as bool
+  ..sealing = json['sealing'] as bool
+  ..selectPlayer = (json['selectPlayer'] as num?)?.toInt()
+  ..selectPlayers = (json['selectPlayers'] as List<dynamic>?)?.map((e) => (e as num).toInt()).toList()
+  ..isWolf = json['isWolf'] as bool?
+  ..isAbandon = json['isAbandon'] as bool;
 
-Map<String, dynamic> _$FoxNightActionToJson(FoxNightAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$FoxNightActionToJson(FoxNightAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

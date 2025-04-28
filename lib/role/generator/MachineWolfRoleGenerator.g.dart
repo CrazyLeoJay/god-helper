@@ -6,8 +6,7 @@ part of 'MachineWolfRoleGenerator.dart';
 // AppCodeGenerator
 // **************************************************************************
 
-class MachineWolfNightActionJsonData
-    extends JsonEntityData<MachineWolfNightAction> {
+class MachineWolfNightActionJsonData extends JsonEntityData<MachineWolfNightAction> {
   @override
   MachineWolfNightAction createForMap(Map<String, dynamic> map) {
     return MachineWolfNightAction.fromJson(map);
@@ -23,17 +22,13 @@ class MachineWolfNightActionJsonData
 // JsonSerializableGenerator
 // **************************************************************************
 
-MachineWolfNightAction _$MachineWolfNightActionFromJson(
-        Map<String, dynamic> json) =>
-    MachineWolfNightAction()
-      ..role = $enumDecode(_$RoleEnumMap, json['role'])
-      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-      ..isYes = json['isYes'] as bool
-      ..sealing = json['sealing'] as bool;
+MachineWolfNightAction _$MachineWolfNightActionFromJson(Map<String, dynamic> json) => MachineWolfNightAction()
+  ..role = $enumDecode(_$RoleEnumMap, json['role'])
+  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+  ..isYes = json['isYes'] as bool
+  ..sealing = json['sealing'] as bool;
 
-Map<String, dynamic> _$MachineWolfNightActionToJson(
-        MachineWolfNightAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$MachineWolfNightActionToJson(MachineWolfNightAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

@@ -22,17 +22,15 @@ class KnightDayActionJsonData extends JsonEntityData<KnightDayAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-KnightDayAction _$KnightDayActionFromJson(Map<String, dynamic> json) =>
-    KnightDayAction()
-      ..role = $enumDecode(_$RoleEnumMap, json['role'])
-      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-      ..isYes = json['isYes'] as bool
-      ..sealing = json['sealing'] as bool
-      ..targetPlayer = (json['targetPlayer'] as num?)?.toInt()
-      ..targetPlayerIdentity = json['targetPlayerIdentity'] as bool?;
+KnightDayAction _$KnightDayActionFromJson(Map<String, dynamic> json) => KnightDayAction()
+  ..role = $enumDecode(_$RoleEnumMap, json['role'])
+  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+  ..isYes = json['isYes'] as bool
+  ..sealing = json['sealing'] as bool
+  ..targetPlayer = (json['targetPlayer'] as num?)?.toInt()
+  ..targetPlayerIdentity = json['targetPlayerIdentity'] as bool?;
 
-Map<String, dynamic> _$KnightDayActionToJson(KnightDayAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$KnightDayActionToJson(KnightDayAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

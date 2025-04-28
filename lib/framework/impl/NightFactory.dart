@@ -142,7 +142,7 @@ class NightFactory extends RoundFactory {
     } else {
       if (role == Role.wolf) {
         var players = super.factory.players.details.getWolfTypeLivePlayers();
-        if(players.isEmpty){
+        if (players.isEmpty) {
           return true;
         }
       } else {

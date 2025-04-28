@@ -57,7 +57,6 @@ class AppFactory {
       isSystemConfig: isSystemConfig,
     ));
   }
-
 }
 
 /// 模板，用于保存角色的默认配置

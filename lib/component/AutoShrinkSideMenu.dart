@@ -54,7 +54,7 @@ class _AutoShrinkSideMenuState extends State<AutoShrinkSideMenu> {
 
   List<ShrinkMenuItemData> get _menuItems => widget.menuItems;
 
-  Color get _selectColor => widget.selectItemColor??Colors.deepOrangeAccent;
+  Color get _selectColor => widget.selectItemColor ?? Colors.deepOrangeAccent;
 
   @override
   void initState() {

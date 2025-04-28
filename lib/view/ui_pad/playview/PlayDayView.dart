@@ -750,7 +750,7 @@ class _PlayerDayDieSkillFlow extends StatelessWidget {
           child: Center(
             child: Text("结束本回合", style: context.theme.contentStyle),
           ),
-
+        ),
       );
     }
   }

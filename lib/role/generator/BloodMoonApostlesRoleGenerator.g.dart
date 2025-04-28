@@ -6,8 +6,7 @@ part of 'BloodMoonApostlesRoleGenerator.dart';
 // AppCodeGenerator
 // **************************************************************************
 
-class BloodMoonApostlesDayActionJsonData
-    extends JsonEntityData<BloodMoonApostlesDayAction> {
+class BloodMoonApostlesDayActionJsonData extends JsonEntityData<BloodMoonApostlesDayAction> {
   @override
   BloodMoonApostlesDayAction createForMap(Map<String, dynamic> map) {
     return BloodMoonApostlesDayAction.fromJson(map);
@@ -23,8 +22,7 @@ class BloodMoonApostlesDayActionJsonData
 // JsonSerializableGenerator
 // **************************************************************************
 
-BloodMoonApostlesDayAction _$BloodMoonApostlesDayActionFromJson(
-        Map<String, dynamic> json) =>
+BloodMoonApostlesDayAction _$BloodMoonApostlesDayActionFromJson(Map<String, dynamic> json) =>
     BloodMoonApostlesDayAction()
       ..role = $enumDecode(_$RoleEnumMap, json['role'])
       ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
@@ -32,9 +30,7 @@ BloodMoonApostlesDayAction _$BloodMoonApostlesDayActionFromJson(
       ..sealing = json['sealing'] as bool
       ..isBomb = json['isBomb'] as bool;
 
-Map<String, dynamic> _$BloodMoonApostlesDayActionToJson(
-        BloodMoonApostlesDayAction instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$BloodMoonApostlesDayActionToJson(BloodMoonApostlesDayAction instance) => <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

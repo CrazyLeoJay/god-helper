@@ -11,17 +11,14 @@ RoundActions _$RoundActionsFromJson(Map<String, dynamic> json) => RoundActions(
       (json['round'] as num).toInt(),
     )
       ..roleActionMap = (json['roleActionMap'] as Map<String, dynamic>).map(
-        (k, e) =>
-            MapEntry($enumDecode(_$RoleEnumMap, k), e as Map<String, dynamic>),
+        (k, e) => MapEntry($enumDecode(_$RoleEnumMap, k), e as Map<String, dynamic>),
       )
       ..isYes = json['isYes'] as bool;
 
-Map<String, dynamic> _$RoundActionsToJson(RoundActions instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RoundActionsToJson(RoundActions instance) => <String, dynamic>{
       'gameId': instance.gameId,
       'round': instance.round,
-      'roleActionMap':
-          instance.roleActionMap.map((k, e) => MapEntry(_$RoleEnumMap[k]!, e)),
+      'roleActionMap': instance.roleActionMap.map((k, e) => MapEntry(_$RoleEnumMap[k]!, e)),
       'isYes': instance.isYes,
     };
 
@@ -54,20 +51,18 @@ RoundProcess _$RoundProcessFromJson(Map<String, dynamic> json) => RoundProcess(
       (json['gameId'] as num).toInt(),
       (json['round'] as num).toInt(),
     )
-      ..playerStateMap = PlayerStateMap.fromJson(
-          json['playerStateMap'] as Map<String, dynamic>)
-      ..outPlayerNumbers = (json['outPlayerNumbers'] as List<dynamic>)
-          .map((e) => (e as num).toInt())
-          .toList()
-      ..isFinish = json['isFinish'] as bool;
+      ..playerStateMap = PlayerStateMap.fromJson(json['playerStateMap'] as Map<String, dynamic>)
+      ..outPlayerNumbers = (json['outPlayerNumbers'] as List<dynamic>).map((e) => (e as num).toInt()).toList()
+      ..isFinish = json['isFinish'] as bool
+      ..sheriffPlayer = (json['sheriffPlayer'] as num?)?.toInt();
 
-Map<String, dynamic> _$RoundProcessToJson(RoundProcess instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RoundProcessToJson(RoundProcess instance) => <String, dynamic>{
       'gameId': instance.gameId,
       'round': instance.round,
       'playerStateMap': instance.playerStateMap,
       'outPlayerNumbers': instance.outPlayerNumbers,
       'isFinish': instance.isFinish,
+      'sheriffPlayer': instance.sheriffPlayer,
     };
 
 DayAction _$DayActionFromJson(Map<String, dynamic> json) => DayAction(
@@ -75,10 +70,10 @@ DayAction _$DayActionFromJson(Map<String, dynamic> json) => DayAction(
       (json['round'] as num).toInt(),
     )
       ..isYesVotePlayer = json['isYesVotePlayer'] as bool
-      ..playerStateMap = PlayerStateMap.fromJson(
-          json['playerStateMap'] as Map<String, dynamic>)
+      ..playerStateMap = PlayerStateMap.fromJson(json['playerStateMap'] as Map<String, dynamic>)
       ..isYesLastStateFlow = json['isYesLastStateFlow'] as bool
-      ..isYesFreeTalkFlow = json['isYesFreeTalkFlow'] as bool;
+      ..isYesFreeTalkFlow = json['isYesFreeTalkFlow'] as bool
+      ..isYesVoteFlow = json['isYesVoteFlow'] as bool;
 
 Map<String, dynamic> _$DayActionToJson(DayAction instance) => <String, dynamic>{
       'gameId': instance.gameId,
@@ -87,38 +82,27 @@ Map<String, dynamic> _$DayActionToJson(DayAction instance) => <String, dynamic>{
       'playerStateMap': instance.playerStateMap,
       'isYesLastStateFlow': instance.isYesLastStateFlow,
       'isYesFreeTalkFlow': instance.isYesFreeTalkFlow,
+      'isYesVoteFlow': instance.isYesVoteFlow,
     };
 
-PlayerIdentityCache _$PlayerIdentityCacheFromJson(Map<String, dynamic> json) =>
-    PlayerIdentityCache(
+PlayerIdentityCache _$PlayerIdentityCacheFromJson(Map<String, dynamic> json) => PlayerIdentityCache(
       (json['gameId'] as num).toInt(),
     )
-      ..wolfNumbers = (json['wolfNumbers'] as List<dynamic>)
-          .map((e) => (e as num).toInt())
-          .toList()
-      ..rolePlayerNumberMap =
-          (json['rolePlayerNumberMap'] as Map<String, dynamic>).map(
+      ..wolfNumbers = (json['wolfNumbers'] as List<dynamic>).map((e) => (e as num).toInt()).toList()
+      ..rolePlayerNumberMap = (json['rolePlayerNumberMap'] as Map<String, dynamic>).map(
         (k, e) => MapEntry($enumDecode(_$RoleEnumMap, k), (e as num).toInt()),
       )
-      ..isRoleRecordFinish =
-          (json['isRoleRecordFinish'] as Map<String, dynamic>).map(
+      ..isRoleRecordFinish = (json['isRoleRecordFinish'] as Map<String, dynamic>).map(
         (k, e) => MapEntry($enumDecode(_$RoleEnumMap, k), e as bool),
       );
 
-Map<String, dynamic> _$PlayerIdentityCacheToJson(
-        PlayerIdentityCache instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$PlayerIdentityCacheToJson(PlayerIdentityCache instance) => <String, dynamic>{
       'gameId': instance.gameId,
       'wolfNumbers': instance.wolfNumbers,
-      'rolePlayerNumberMap': instance.rolePlayerNumberMap
-          .map((k, e) => MapEntry(_$RoleEnumMap[k]!, e)),
-      'isRoleRecordFinish': instance.isRoleRecordFinish
-          .map((k, e) => MapEntry(_$RoleEnumMap[k]!, e)),
+      'rolePlayerNumberMap': instance.rolePlayerNumberMap.map((k, e) => MapEntry(_$RoleEnumMap[k]!, e)),
+      'isRoleRecordFinish': instance.isRoleRecordFinish.map((k, e) => MapEntry(_$RoleEnumMap[k]!, e)),
     };
 
-EmptyRoleTempConfig _$EmptyRoleTempConfigFromJson(Map<String, dynamic> json) =>
-    EmptyRoleTempConfig();
+EmptyRoleTempConfig _$EmptyRoleTempConfigFromJson(Map<String, dynamic> json) => EmptyRoleTempConfig();
 
-Map<String, dynamic> _$EmptyRoleTempConfigToJson(
-        EmptyRoleTempConfig instance) =>
-    <String, dynamic>{};
+Map<String, dynamic> _$EmptyRoleTempConfigToJson(EmptyRoleTempConfig instance) => <String, dynamic>{};
