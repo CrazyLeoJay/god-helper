@@ -49,7 +49,10 @@ class _GameListViewState extends State<GameListView> {
         ),
         actions: [IconButton(onPressed: loadData, icon: const Icon(Icons.refresh))],
       ),
-      body: _GameListWidget(_listData),
+      body: _GameListWidget(
+        _listData,
+        loadDataCallback: loadData,
+      ),
     );
   }
 }
@@ -57,7 +60,9 @@ class _GameListViewState extends State<GameListView> {
 class _GameListWidget extends StatelessWidget {
   final List<GameDetailEntity> _listData;
 
-  const _GameListWidget(this._listData);
+  final Function()? loadDataCallback;
+
+  const _GameListWidget(this._listData, {this.loadDataCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +72,12 @@ class _GameListWidget extends StatelessWidget {
         return LeftSlideRowWidget(
           child: GestureDetector(
             onTap: () {
-              // UiPadRouteFactory(context).beginGameToView(data).push();
+              context.padRoute.toPlayGameForEntity(data).push();
             },
             child: _GameDetailItemView(detail: data),
             // child: Text("data"),
           ),
-          onLeftSlideListener: () async {
-            // showDeleteDialog(data);
-          },
+          onLeftSlideListener: () async => showDeleteDialog(context, data),
           sideWidget: (isSidleListener) {
             var style = context.app.baseFont.copyWith(color: Colors.white);
             return isSidleListener
@@ -91,33 +94,33 @@ class _GameListWidget extends StatelessWidget {
     );
   }
 
-// Future<void> showDeleteDialog(GameDetailEntity data) async {
-//   await showDialog(
-//       context: context,
-//       builder: (context) => AlertDialog(
-//             title: const Text("确认删除操作"),
-//             content: Expanded(
-//               child: Text(
-//                 "确认删除该游戏？\n(id:${data.id})${data.name}",
-//                 textAlign: TextAlign.center,
-//               ),
-//             ),
-//             actions: [
-//               TextButton(
-//                 onPressed: () => Navigator.of(context).pop(),
-//                 child: const Text("取消"),
-//               ),
-//               TextButton(
-//                 onPressed: () async {
-//                   Navigator.of(context).pop();
-//                   await AppFactory().service.deleteGame(data.id);
-//                   loadData();
-//                 },
-//                 child: const Text("确认"),
-//               )
-//             ],
-//           ));
-// }
+  Future<void> showDeleteDialog(BuildContext context, GameDetailEntity data) async {
+    await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("确认删除操作"),
+              content: Expanded(
+                child: Text(
+                  "确认删除该游戏？\n(id:${data.id})${data.name}",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("取消"),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await AppFactory().service.deleteGame(data.id);
+                    loadDataCallback?.call();
+                  },
+                  child: const Text("确认"),
+                )
+              ],
+            ));
+  }
 }
 
 /// 开始游戏列表的单项

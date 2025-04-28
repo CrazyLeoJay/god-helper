@@ -22,7 +22,8 @@ class SeerActionJsonData extends JsonEntityData<SeerAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SeerAction _$SeerActionFromJson(Map<String, dynamic> json) => SeerAction.createJson(
+SeerAction _$SeerActionFromJson(Map<String, dynamic> json) =>
+    SeerAction.createJson(
       checkPlayer: (json['checkPlayer'] as num?)?.toInt() ?? 0,
       identity: json['identity'] as bool? ?? true,
     )
@@ -31,7 +32,8 @@ SeerAction _$SeerActionFromJson(Map<String, dynamic> json) => SeerAction.createJ
       ..isYes = json['isYes'] as bool
       ..sealing = json['sealing'] as bool;
 
-Map<String, dynamic> _$SeerActionToJson(SeerAction instance) => <String, dynamic>{
+Map<String, dynamic> _$SeerActionToJson(SeerAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

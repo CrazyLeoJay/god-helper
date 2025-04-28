@@ -17,9 +17,10 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 class MakeNewTempView extends StatefulWidget {
   final GameTemplateConfigEntity? temp;
 
-  const MakeNewTempView({this.temp});
+  const MakeNewTempView({super.key, this.temp});
 
   @override
+  // 重写父类的方法。这里重写的是StatefulWidget的createState方法。
   State<MakeNewTempView> createState() => _MakeNewTempViewState();
 }
 

@@ -32,6 +32,6 @@ class GameConfigPreview extends StatelessWidget {
     // 创建新游戏
     GameFactory f = await AppFactory().service.createNewGame(factory);
     // 导航到游戏配置界面，并且移除之前的所有历史导航
-    AppFactory().getRoute(context).beginGameToViewFromFactory(f).pushAndRemoveUntil("/");
+    AppFactory().getRoute(context).toPlay(f).pushAndRemoveUntil("/");
   }
 }

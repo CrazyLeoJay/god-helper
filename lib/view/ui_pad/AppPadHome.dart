@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:god_helper/entity/Role.dart';
+import 'package:god_helper/extend.dart';
 import 'package:god_helper/view/ui_pad/GameListView.dart';
 import 'package:god_helper/view/ui_pad/UiPadRouteFactory.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// Pad UI 界面
 class AppPadHome extends StatefulWidget {
@@ -24,6 +28,23 @@ class _AppPadHomeState extends State<AppPadHome> {
           MenuItem(
             name: "(debug) 查看资源",
             invoke: (route) => route.toAssetsResourceView().push(),
+          ),
+        if (kDebugMode)
+          MenuItem(
+            name: "(debug) print",
+            invoke: (route) async {
+              if (kDebugMode) print("application SupportDirectory: ${(await getApplicationSupportDirectory()).path}");
+              if (kDebugMode) print("application DocumentsDirectory: ${(await getApplicationDocumentsDirectory()).path}");
+              if (kDebugMode) print("application CacheDirectory: ${(await getApplicationCacheDirectory()).path}");
+              if (kDebugMode) print("application TemporaryDirectory: ${(await getTemporaryDirectory()).path}");
+              if (kDebugMode) print("application DownloadsDirectory: ${(await getDownloadsDirectory())?.path}");
+              // if (kDebugMode) print("application LibraryDirectory: ${(await getLibraryDirectory()).path}");
+              // if (kDebugMode) print("application ExternalStorageDirectory: ${(await getExternalStorageDirectory())?.path}");
+              if (kDebugMode) print("\n");
+              if (kDebugMode) print("application appDir: ${(await appDir()).path}");
+              if (kDebugMode) print("application cacheDir: ${(await cacheDir()).path}");
+              if (kDebugMode) print("application tempDir: ${(await tempDir()).path}");
+            },
           ),
       ];
 

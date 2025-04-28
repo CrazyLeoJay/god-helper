@@ -6,7 +6,8 @@ part of 'BarbarianChildRoleGenerator.dart';
 // AppCodeGenerator
 // **************************************************************************
 
-class BarbarianChildNightActionJsonData extends JsonEntityData<BarbarianChildNightAction> {
+class BarbarianChildNightActionJsonData
+    extends JsonEntityData<BarbarianChildNightAction> {
   @override
   BarbarianChildNightAction createForMap(Map<String, dynamic> map) {
     return BarbarianChildNightAction.fromJson(map);
@@ -22,14 +23,18 @@ class BarbarianChildNightActionJsonData extends JsonEntityData<BarbarianChildNig
 // JsonSerializableGenerator
 // **************************************************************************
 
-BarbarianChildNightAction _$BarbarianChildNightActionFromJson(Map<String, dynamic> json) => BarbarianChildNightAction()
-  ..role = $enumDecode(_$RoleEnumMap, json['role'])
-  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-  ..isYes = json['isYes'] as bool
-  ..sealing = json['sealing'] as bool
-  ..selectPlayer = (json['selectPlayer'] as num?)?.toInt();
+BarbarianChildNightAction _$BarbarianChildNightActionFromJson(
+        Map<String, dynamic> json) =>
+    BarbarianChildNightAction()
+      ..role = $enumDecode(_$RoleEnumMap, json['role'])
+      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+      ..isYes = json['isYes'] as bool
+      ..sealing = json['sealing'] as bool
+      ..selectPlayer = (json['selectPlayer'] as num?)?.toInt();
 
-Map<String, dynamic> _$BarbarianChildNightActionToJson(BarbarianChildNightAction instance) => <String, dynamic>{
+Map<String, dynamic> _$BarbarianChildNightActionToJson(
+        BarbarianChildNightAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

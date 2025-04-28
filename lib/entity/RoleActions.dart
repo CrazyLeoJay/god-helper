@@ -1,3 +1,4 @@
+import 'package:god_helper/extend.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'RoleActions.g.dart';
@@ -12,9 +13,12 @@ class SheriffTools {
   /// 是否确认选择警长玩家
   bool isYesSheriffPlayer = false;
 
+  /// 确认警徽流的是哪个回合
+  int yesSheriffRound = 0;
+
   SheriffTools();
 
-  SheriffTools.forJson(this.list, {this.isYesSheriffPlayer = false});
+  SheriffTools.forJson(this.list, {this.isYesSheriffPlayer = false, this.yesSheriffRound = 0});
 
   factory SheriffTools.fromJson(Map<String, dynamic> json) => _$SheriffToolsFromJson(json);
 
@@ -67,7 +71,10 @@ class SheriffTools {
 
   void remove(SheriffAction action) => list.remove(action);
 
-  void clear() => list.clear();
+  void clear() {
+    isYesSheriffPlayer = false;
+    list.clear();
+  }
 
   void addAll(List<SheriffAction> actions) => list.addAll(actions);
 
@@ -101,6 +108,16 @@ class SheriffTools {
     /// 如果都死光了，则可能是销毁了警徽，直接返回最后一个
     return list.last;
   }
+
+  Map<int, SheriffAction> toMapKeyPlayerNumber() {
+    if (!isYesSheriffPlayer) return {};
+    return list.toMap(key: (element) => element.sheriffPlayer!, value: (element) => element);
+  }
+
+  Map<int, SheriffAction> toMapKeyRound() {
+    if (!isYesSheriffPlayer) return {};
+    return list.toMap(key: (element) => element.settingRound!, value: (element) => element);
+  }
 }
 
 /// 警徽行为
@@ -112,14 +129,20 @@ class SheriffAction {
 
   /// 警长玩家是否存活
   bool isLive = true;
+
+  /// 设置的回合，这个值默认没，但后面必须填写
+  int? settingRound;
+
   bool isTransferSheriff = false;
   bool isDestroySheriff = false;
   int? transferSheriffPlayer;
 
-  SheriffAction({this.sheriffPlayer});
+  SheriffAction({this.sheriffPlayer, this.settingRound});
 
   SheriffAction.forJson(
     this.sheriffPlayer,
+    this.isLive,
+    this.settingRound,
     this.isTransferSheriff,
     this.isDestroySheriff,
     this.transferSheriffPlayer,
@@ -128,4 +151,10 @@ class SheriffAction {
   factory SheriffAction.fromJson(Map<String, dynamic> json) => _$SheriffActionFromJson(json);
 
   Map<String, dynamic> toJson() => _$SheriffActionToJson(this);
+
+  void init(int selectPlayer, int round, {required bool isLive}) {
+    sheriffPlayer = selectPlayer;
+    settingRound = round;
+    this.isLive = isLive;
+  }
 }

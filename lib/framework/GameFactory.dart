@@ -407,6 +407,10 @@ abstract class RoundFactory {
     return factory.getRoundFactory(round - 1);
   }
 
+  RoundFactory getRoundFactory(int round) {
+    return factory.getRoundFactory(round);
+  }
+
   AbstractRoleRoundGenerator<RoleAction>? getRoleGenerator(Role role);
 
   SecondSkillCheck? _getSummarySecondSkillCheck(Role role) {
@@ -462,7 +466,13 @@ abstract class RoundFactory {
   /// 保存当前回合数据，并且跳转去下一回合
   ///
   /// @param states 玩家状态，一般在白天传入，因为白天行为在事件发生时就写入状态，不需要最后统一总结状态。
-  Future<void> recordThisRoundAndToNext(BuildContext context) async {
+  Future<void> recordThisRoundAndToNext(
+    BuildContext context, {
+    // 转到下一回合回调
+    Function(int nextRound)? finishToNextRoundCallback,
+    // 游戏结束回调
+    Function()? finishToSummaryGameCallback,
+  }) async {
     checkFinish();
 
     var process = RoundProcess(factory.entity.id, round).loadDb();
@@ -526,7 +536,11 @@ abstract class RoundFactory {
                     onPressed: () {
                       Navigator.of(context).pop(); // 关闭 dialog
                       // Navigator.of(context).pop(); // 关闭 dialog
-                      AppFactory().getRoute(context).toGameRoundView(factory, round + 1).pushReplace();
+                      if (finishToNextRoundCallback == null) {
+                        AppFactory().getRoute(context).toPlayForRound(factory, round + 1).pushReplace();
+                      } else {
+                        finishToNextRoundCallback(round + 1);
+                      }
                     },
                     child: const Text("好的"),
                   )
@@ -536,7 +550,11 @@ abstract class RoundFactory {
 
                       /// 检查一下是否真的结束，如果有问题会抛出异常
                       factory.finishSummary();
-                      AppFactory().getRoute(context).toGameSummaryView(factory).pushReplace();
+                      if (finishToSummaryGameCallback == null) {
+                        AppFactory().getRoute(context).toGameSummaryView(factory).pushReplace();
+                      } else {
+                        finishToSummaryGameCallback();
+                      }
                     },
                     child: Text("结束游戏 ${summary.result()}"),
                   ),
@@ -845,9 +863,14 @@ abstract class RoleAction {
   /// 设置玩家详情
   void setToPlayerDetail(PlayerDetail detail, PlayerStateMap states) {}
 
+  /// 检查玩家是否存活
   void checkLive(RoundFactory factory) {
     if (factory.round <= 1) return;
-    isKillNotUseSkill = !factory.playerDetails.getForRole(role).live;
+    if (role != Role.wolf) {
+      isKillNotUseSkill = !factory.playerDetails.getForRole(role).live;
+    } else {
+      isKillNotUseSkill = factory.playerDetails.getWolfTypeLivePlayers().isEmpty;
+    }
   }
 }
 
@@ -898,6 +921,8 @@ class RoundHelper {
   bool get isNight => round == 0 || round % 2 > 0;
 
   String get dayStr => round == 0 ? "(还未开始)" : "${_dayStrNumber(day)} ${isNight ? "天晚上" : "天天亮"}";
+
+  String get dayMenuStr => round == 0 ? "(还未开始)" : "第 ${_dayStrNumber(day)} ${isNight ? "晚" : "天"}";
 }
 
 /// 将天数转换为中文数字

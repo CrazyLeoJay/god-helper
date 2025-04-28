@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:god_helper/component/component.dart';
-import 'package:god_helper/db/DB.dart';
 import 'package:god_helper/db/DbEntity.dart';
 import 'package:god_helper/entity/Entity.dart';
 import 'package:god_helper/entity/Role.dart';

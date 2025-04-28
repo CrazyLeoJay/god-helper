@@ -253,7 +253,7 @@ class _sheriffRaceWidgetState extends State<_sheriffRaceWidget> {
   DayFactory get _dayFactory => widget.state._dayFactory;
 
   /// 警徽流处理
-  Sheriff get _sheriff => _dayFactory.sheriff;
+  SheriffHelper get _sheriff => _dayFactory.sheriff;
 
   PlayerDetail get _playerDetail => widget.state._whiteDayEntity.playerDetail;
 
@@ -331,8 +331,10 @@ class _sheriffRaceWidgetState extends State<_sheriffRaceWidget> {
                       var playerState = process.playerStateMap.get(_sheriff.firstSheriffPlayer!);
                       // 设置玩家存活状态
                       _sheriff.first.isLive = !playerState.isDead;
+                      // _sheriff.first.
                       // 已经设置结束标志
-                      _sheriff.isYesSheriffPlayer = true;
+                      // _sheriff.isYesSheriffPlayer = true;
+                      _sheriff.setYesSheriffPlayer(_dayFactory.round);
                       // 保存这个结果
                       _sheriff.save();
                       // 跟新这个组件并通知
@@ -598,7 +600,7 @@ class _sheriffKillWidget extends StatefulWidget {
 }
 
 class _sheriffKillWidgetState extends State<_sheriffKillWidget> {
-  Sheriff get _sheriff => widget._dayFactory.sheriff;
+  SheriffHelper get _sheriff => widget._dayFactory.sheriff;
 
   SheriffAction get _sheriffPlayer => widget.sheriffAction ?? _sheriff.last;
 

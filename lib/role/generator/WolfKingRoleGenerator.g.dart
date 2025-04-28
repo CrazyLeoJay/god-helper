@@ -22,7 +22,8 @@ class WolfKingDayActionJsonData extends JsonEntityData<WolfKingDayAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-WolfKingDayAction _$WolfKingDayActionFromJson(Map<String, dynamic> json) => WolfKingDayAction(
+WolfKingDayAction _$WolfKingDayActionFromJson(Map<String, dynamic> json) =>
+    WolfKingDayAction(
       isAbandon: json['isAbandon'] as bool? ?? false,
       canShut: json['canShut'] as bool? ?? true,
     )
@@ -32,7 +33,8 @@ WolfKingDayAction _$WolfKingDayActionFromJson(Map<String, dynamic> json) => Wolf
       ..sealing = json['sealing'] as bool
       ..shutPlayerId = (json['shutPlayerId'] as num?)?.toInt();
 
-Map<String, dynamic> _$WolfKingDayActionToJson(WolfKingDayAction instance) => <String, dynamic>{
+Map<String, dynamic> _$WolfKingDayActionToJson(WolfKingDayAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

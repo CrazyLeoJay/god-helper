@@ -355,6 +355,15 @@ class PlayerDetail extends NoSqlDataEntity<PlayerDetail> {
     }
     return list;
   }
+
+  /// 获取还存活的狼人阵营玩家
+  List<Player> getWolfTypeLivePlayers() {
+    List<Player> list = [];
+    for (var value in players) {
+      if (value.roleType == RoleType.WOLF && value.live) list.add(value);
+    }
+    return list;
+  }
 }
 
 /// 单个玩家

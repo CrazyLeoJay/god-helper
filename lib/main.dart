@@ -1,11 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:god_helper/res/app.dart';
 import 'package:god_helper/view/ui2/AppHome.dart';
 import 'package:god_helper/view/ui_pad/AppPadHome.dart';
 
 void main() {
-  // debugPaintSizeEnabled = false;
-  // debugPaintLayerBordersEnabled = false;
+  // if (kDebugMode) debugPaintSizeEnabled = true; // 组件尺寸标注
+  // if (kDebugMode) debugPaintLayerBordersEnabled = false;
+
   runApp(const MyApp());
 }
 

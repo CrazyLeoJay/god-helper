@@ -86,6 +86,9 @@ class RoundProcess extends NoSqlDataEntity<RoundProcess> {
   /// 该回合是否已经结束
   bool isFinish = false;
 
+  /// 回合结束时，警长的id
+  int? sheriffPlayer = null;
+
   RoundProcess(super.gameId, this.round);
 
   factory RoundProcess.fromJson(Map<String, dynamic> json) => _$RoundProcessFromJson(json);
@@ -150,6 +153,15 @@ class DayAction extends NoSqlDataEntity<DayAction> {
   set isYesVotePlayer(bool value) => _isYesVotePlayer = value;
 
   PlayerStateMap playerStateMap = PlayerStateMap();
+
+  bool isYesLastStateFlow = false;
+  bool isYesFreeTalkFlow = false;
+
+  /// 投票环节后，需要通过这个实体判断投票结束，并且投票玩家的技能，或者或者被投出警长的警徽已经结束。这里才为true
+  bool isYesVoteFlow = false;
+
+  /// 当前界面完成的流程
+  // List<DayFlow> flow = [];
 
   DayAction(super.gameId, this.round);
 
@@ -246,7 +258,7 @@ class PlayerIdentityCache extends NoSqlDataEntity<PlayerIdentityCache> {
     isRoleRecordFinish[role] = true;
   }
 
-  bool isRecordFinish(Role wolf) => isRoleRecordFinish[wolf] ?? false;
+  bool isRecordFinish(Role role) => isRoleRecordFinish[role] ?? false;
 
   /// 设置狼人
   void setWolfsNumber(List<int> numbers) {
@@ -278,14 +290,14 @@ class PlayerIdentityCache extends NoSqlDataEntity<PlayerIdentityCache> {
   }
 }
 
-class Sheriff {
+class SheriffHelper {
   DayFactory factory;
-  int number;
+  int round;
 
   /// 如果狼人连续自爆，会将警徽冲毁
   bool isAutoDestroy = false;
 
-  Sheriff(this.factory, this.number);
+  SheriffHelper(this.factory, this.round);
 
   /// 警徽变化记录
   SheriffTools get sheriffTools => factory.factory.other.sheriffTools;
@@ -308,9 +320,19 @@ class Sheriff {
 
   bool get isYesSheriffPlayer => sheriffTools.isYesSheriffPlayer;
 
+  int get yesSheriffRound => sheriffTools.yesSheriffRound;
+
   SheriffAction get last => sheriffTools.last;
 
-  set isYesSheriffPlayer(value) => sheriffTools.isYesSheriffPlayer = value;
+  SheriffRace get rule => factory.entity.extraRule.sheriffRace;
+
+  // set isYesSheriffPlayer(value) => sheriffTools.isYesSheriffPlayer = value;
+  /// 确认已经设置警徽归属
+  /// 确认已投票
+  setYesSheriffPlayer(int round) {
+    sheriffTools.yesSheriffRound = round;
+    sheriffTools.isYesSheriffPlayer = true;
+  }
 
   /// 检查所有的警徽处理
   /// 奖结果写入 process.playerStateMap
@@ -411,6 +433,65 @@ class Sheriff {
       }
     }
   }
+
+  /// 是否展示警长选择
+  bool isShowSheriffSelect() {
+    bool isSheriff = false;
+    SheriffRace sheriffRace = factory.sheriff.rule;
+    var roundHelper = RoundHelper(round);
+    switch (sheriffRace) {
+      case SheriffRace.none:
+        isSheriff = false;
+        break;
+      case SheriffRace.onlyFirstDay:
+        isSheriff = roundHelper.day == 1;
+        break;
+      case SheriffRace.notForSecond:
+        // 判断警长是否已经选过
+        // 且不是本回合确认的
+        var isSelectSheriff = (factory.sheriff.first.sheriffPlayer != null && factory.sheriff.isYesSheriffPlayer);
+        // 如果第一天没有配置警徽，则第二天继续
+        if (roundHelper.day == 1) {
+          isSheriff = true;
+        } else if (roundHelper.day == 2 && (!isSelectSheriff || factory.sheriff.yesSheriffRound <= 2)) {
+          // 如果第二回合，且还未选择过
+          isSheriff = true;
+        }
+        break;
+    }
+    return isSheriff;
+  }
+
+  /// 警长是否于昨晚 阵亡
+  ///  昨晚情况里用于判断警长是否出局判断
+  bool sheriffIsDieForLastDay() {
+    var sheriffAction = factory.getLastDaySheriff();
+    if (null == sheriffAction) return false;
+
+    var player = sheriffAction.sheriffPlayer!;
+
+    // 如果警长存在，且警长被出局了，则需要展示
+    if (factory.lastNight().process.outPlayerNumbers.contains(player)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /// 获取当前回合在投票后，警长实体
+  SheriffAction? getSheriffForAfterVote() {
+    SheriffAction? sa = factory.getLastDaySheriff();
+    if (sa == null) return null;
+
+    // 判断上局警长是否阵亡过
+    if (!sheriffIsDieForLastDay()) {
+      // 如果还未出局，则直接返回
+      return sa;
+    }
+    // 如果已经出局，则获取出局后警长实体
+    int nextPlayer = sa.transferSheriffPlayer!;
+    return factory.sheriff.sheriffTools.toMapKeyPlayerNumber()[nextPlayer];
+  }
 }
 
 @JsonSerializable()
@@ -487,9 +568,7 @@ class WidgetFactory {
     generator.preAction();
 
     /// 阵亡操作没有封印一说，直接去获取界面
-    return generator.outWidget(() {
-      if (null != updateCallback) updateCallback();
-    });
+    return generator.outWidget(() => updateCallback?.call());
   }
 
   /// 主动技能界面

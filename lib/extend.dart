@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +8,16 @@ import 'package:god_helper/framework/AppFactory.dart';
 import 'package:god_helper/res/app.dart';
 import 'package:god_helper/tools/AppData.dart';
 import 'package:god_helper/view/ui_pad/UiPadRouteFactory.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+const String appName = "God_helper_data";
+
+Future<Directory> appDir() async => Directory(p.join((await getApplicationSupportDirectory()).path, appName));
+
+Future<Directory> cacheDir() async => Directory(p.join((await getApplicationCacheDirectory()).path, appName));
+
+Future<Directory> tempDir() async => Directory(p.join((await getTemporaryDirectory()).path, appName));
 
 Map<K, V> listToMap<T, K, V>(List<T> list, K Function(T element) keyExtractor, V Function(T element) valueExtractor) {
   Map<K, V> map = {};

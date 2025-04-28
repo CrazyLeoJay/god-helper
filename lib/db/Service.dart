@@ -76,7 +76,7 @@ class AppService {
     }
   }
 
-  Future<int> removeTemp(int id) {
-    return _dao.removeTemp(id);
+  removeTemp(int id) async {
+    await _dao.removeTemp(id);
   }
 }

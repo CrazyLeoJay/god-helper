@@ -14,9 +14,15 @@ part 'DefaultFactoryConfig.g.dart';
 class DefaultPlayerIdentityGenerator extends PlayerIdentityGenerator {
   DefaultPlayerIdentityGenerator(super.factory, super.role);
 
+  /// 这里设置key， 一方面可以操作state 一方面防止复用导致的数据错乱
+  // final _key = GlobalKey<_RolePlayerNumberCommentRecordWidgetState>();
+  /// 添加key 防止State复用导致数据错乱
+  final UniqueKey _key = UniqueKey();
+
   @override
   Widget widget() {
     return RolePlayerNumberCommentRecordWidget(
+      key: _key,
       factory: super.factory,
       role: role,
       defaultValue: cache.getRoleNumber(role),
@@ -110,7 +116,7 @@ class _RolePlayerNumberCommentRecordWidgetState extends State<RolePlayerNumberCo
               const TextSpan(text: "(上帝记录)"),
               const WidgetSpan(child: SizedBox(width: 4)),
               TextSpan(
-                text: widget.role.desc.name,
+                text: widget.role.roleName,
                 style: app.baseFont.copyWith(color: Colors.red),
               ),
               const WidgetSpan(child: SizedBox(width: 4)),

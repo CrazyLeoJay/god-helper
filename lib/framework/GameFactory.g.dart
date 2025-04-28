@@ -44,7 +44,9 @@ extension GameFactoryRoleGeneratorExtends on GameFactory {
   ) {
     Map<Role, JsonEntityData<RoleAction>> map = {};
     for (var value in _$Generators) {
-      var action = value.getNightRoundGenerator(NightFactory(0, factory))?.actionJsonConvertor();
+      var action = value
+          .getNightRoundGenerator(NightFactory(0, factory))
+          ?.actionJsonConvertor();
       if (action == null) continue;
       map[value.role] = action;
     }
@@ -56,7 +58,9 @@ extension GameFactoryRoleGeneratorExtends on GameFactory {
   ) {
     Map<Role, JsonEntityData<RoleAction>> map = {};
     for (var value in _$Generators) {
-      var action = value.getDayRoundGenerator(DayFactory(0, factory))?.actionJsonConvertor();
+      var action = value
+          .getDayRoundGenerator(DayFactory(0, factory))
+          ?.actionJsonConvertor();
       if (action == null) continue;
       map[value.role] = action;
     }
@@ -73,9 +77,11 @@ OtherFactory _$OtherFactoryFromJson(Map<String, dynamic> json) => OtherFactory(
       gameOver: json['gameOver'] as bool? ?? false,
     )
       ..maxRound = (json['maxRound'] as num).toInt()
-      ..sheriffTools = SheriffTools.fromJson(json['sheriffTools'] as Map<String, dynamic>);
+      ..sheriffTools =
+          SheriffTools.fromJson(json['sheriffTools'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$OtherFactoryToJson(OtherFactory instance) => <String, dynamic>{
+Map<String, dynamic> _$OtherFactoryToJson(OtherFactory instance) =>
+    <String, dynamic>{
       'gameId': instance.gameId,
       'maxRound': instance.maxRound,
       'sheriffTools': instance.sheriffTools,

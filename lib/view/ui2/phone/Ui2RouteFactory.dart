@@ -18,13 +18,13 @@ class Ui2RouteFactory extends AppRoute {
   Ui2RouteFactory(super.context);
 
   @override
-  RouteHelper beginGameToView(GameDetailEntity entity) {
+  RouteHelper toPlayGameForEntity(GameDetailEntity entity) {
     var factory = GameFactory.create(entity);
-    return beginGameToViewFromFactory(factory);
+    return toPlay(factory);
   }
 
   @override
-  RouteHelper beginGameToViewFromFactory(GameFactory factory) {
+  RouteHelper toPlay(GameFactory factory) {
     var entity = factory.entity;
     if (!entity.isBeginGame) {
       return toHelper(GameConfigView(factory: factory));
@@ -36,7 +36,7 @@ class Ui2RouteFactory extends AppRoute {
       return toGameSummaryView(factory);
     }
     var round = factory.getRound();
-    return toGameRoundView(factory, round);
+    return toPlayForRound(factory, round);
   }
 
   @override
@@ -45,7 +45,7 @@ class Ui2RouteFactory extends AppRoute {
   }
 
   @override
-  RouteHelper toGameRoundView(GameFactory factory, int round) {
+  RouteHelper toPlayForRound(GameFactory factory, int round) {
     var rh = RoundHelper(round);
     // 如果游戏已经开始，则判断当前回合是白天还是黑夜，直接进入游戏对应界面
     if (rh.isNight) {

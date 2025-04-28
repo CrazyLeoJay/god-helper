@@ -140,10 +140,17 @@ class NightFactory extends RoundFactory {
         return false;
       }
     } else {
-      var player = super.factory.players.details.getForRole(role);
-      if (!player.live) {
-        /// 如果玩家已经阵亡，则可以继续下一个玩家行为
-        return true;
+      if (role == Role.wolf) {
+        var players = super.factory.players.details.getWolfTypeLivePlayers();
+        if(players.isEmpty){
+          return true;
+        }
+      } else {
+        var player = super.factory.players.details.getForRole(role);
+        if (!player.live) {
+          /// 如果玩家已经阵亡，则可以继续下一个玩家行为
+          return true;
+        }
       }
     }
 

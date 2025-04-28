@@ -58,9 +58,6 @@ class AppFactory {
     ));
   }
 
-  ss() {
-    // Assets.image.icon1.load();
-  }
 }
 
 /// 模板，用于保存角色的默认配置
@@ -82,17 +79,25 @@ abstract class AppRoute {
     return RouteHelper(context: context, target: target);
   }
 
-  /// 开始游戏，根据游戏状态进入不同的界面
-  RouteHelper beginGameToView(GameDetailEntity entity);
+  /// 开始游戏，
+  /// 根据游戏状态进入不同的界面
+  /// 调用 toPlay，由于dart没有重载，所以这里需要多个不同明明的方法
+  RouteHelper toPlayGameForEntity(GameDetailEntity entity);
 
-  RouteHelper beginGameToViewFromFactory(GameFactory factory);
+  /// 开始游戏
+  ///
+  /// 会根据游戏状态跳转到
+  /// - 游戏界面（回合操作）
+  /// - 结算界面
+  /// - 游戏配置（一般是游戏创建了，还未开始，则需要进行预配置，这个过程新设计的流程可能会没有，游戏创建后会直接开始）
+  RouteHelper toPlay(GameFactory factory);
 
   /// 进入游戏结算界面，
   /// 游戏没有结束也可以进入，显示的界面效果不同
   RouteHelper toGameSummaryView(GameFactory factory);
 
   /// 进入游戏指定回合的界面
-  RouteHelper toGameRoundView(GameFactory factory, int round);
+  RouteHelper toPlayForRound(GameFactory factory, int round);
 
   /// 进入模板选择界面
   RouteHelper toTemplateSelectView();

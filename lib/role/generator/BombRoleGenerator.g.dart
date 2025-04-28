@@ -22,14 +22,18 @@ class BombDayActionJsonData extends JsonEntityData<BombDayAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-BombDayAction _$BombDayActionFromJson(Map<String, dynamic> json) => BombDayAction()
-  ..role = $enumDecode(_$RoleEnumMap, json['role'])
-  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-  ..isYes = json['isYes'] as bool
-  ..sealing = json['sealing'] as bool
-  ..votePlayer = (json['votePlayer'] as List<dynamic>).map((e) => (e as num).toInt()).toList();
+BombDayAction _$BombDayActionFromJson(Map<String, dynamic> json) =>
+    BombDayAction()
+      ..role = $enumDecode(_$RoleEnumMap, json['role'])
+      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+      ..isYes = json['isYes'] as bool
+      ..sealing = json['sealing'] as bool
+      ..votePlayer = (json['votePlayer'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toList();
 
-Map<String, dynamic> _$BombDayActionToJson(BombDayAction instance) => <String, dynamic>{
+Map<String, dynamic> _$BombDayActionToJson(BombDayAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

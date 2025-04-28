@@ -73,7 +73,12 @@ class _HunterDayRoleRoundGenerator extends RoleDayRoundGenerator<HunterDayAction
   }
 
   @override
-  Widget actionWidget(Function() updateCallback) {
+  JsonEntityData<HunterDayAction> actionJsonConvertor() {
+    return HunterDayActionJsonData();
+  }
+
+  @override
+  Widget? outWidget(Function() updateCallback) {
     return _HunterDayActionWidget(
       super.factory,
       dayFactory,
@@ -98,11 +103,6 @@ class _HunterDayRoleRoundGenerator extends RoleDayRoundGenerator<HunterDayAction
         callYesFinish();
       },
     );
-  }
-
-  @override
-  JsonEntityData<HunterDayAction> actionJsonConvertor() {
-    return HunterDayActionJsonData();
   }
 }
 

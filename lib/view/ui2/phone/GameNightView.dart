@@ -299,7 +299,9 @@ class _GameRoleProcessListWidgetState extends State<_GameRoleProcessListWidget> 
   void showExpandForRole(Role r) {
     for (int i = 0; i < _roleList.length; i++) {
       var role = _roleList[i];
-      print("Test 排序： ${role}");
+      if (kDebugMode) {
+        print("Test 排序： ${role}");
+      }
       if (role == r) {
         _expandIndex = i;
         break;

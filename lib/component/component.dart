@@ -268,9 +268,10 @@ class SelectButtonUiUpdateNotify extends Notification {
 class PlayerSingleSelectButton extends StatefulWidget {
   final SelectConfig<int> selectConfig;
 
-  PlayerSingleSelectButton({super.key, required this.selectConfig});
+  const PlayerSingleSelectButton({super.key, required this.selectConfig});
 
   factory PlayerSingleSelectButton.forPlayerCount({
+    Key? key,
     required int count,
     required Callback<int> callback,
     double circleSize = 40,
@@ -278,6 +279,7 @@ class PlayerSingleSelectButton extends StatefulWidget {
     int defaultSelect = 0,
   }) {
     return PlayerSingleSelectButton(
+      key: key,
       selectConfig: SelectConfig<int>(
         selectableList: List.generate(count, (index) => index + 1),
         callback: callback,
@@ -289,15 +291,14 @@ class PlayerSingleSelectButton extends StatefulWidget {
   }
 
   factory PlayerSingleSelectButton.initConfig({
+    Key? key,
     required SelectConfig<int> config,
   }) {
-    return PlayerSingleSelectButton(selectConfig: config);
+    return PlayerSingleSelectButton(key: key, selectConfig: config);
   }
 
-  final state = PlayerSingleSelectButtonState();
-
   @override
-  State<PlayerSingleSelectButton> createState() => state;
+  State<PlayerSingleSelectButton> createState() => PlayerSingleSelectButtonState();
 }
 
 class PlayerSingleSelectButtonState extends State<PlayerSingleSelectButton> {
@@ -350,21 +351,21 @@ class PlayerSingleSelectButtonState extends State<PlayerSingleSelectButton> {
       );
       return;
     }
-    var state = GamePlayersSingleSelectDialogContentWidgetState();
+    var stateKey = GlobalKey<GamePlayersSingleSelectDialogContentWidgetState>();
     var index = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("选择玩家"),
         content: GamePlayersSingleSelectDialogContentWidget(
+          key: stateKey,
           playerCount: 10,
-          state: state,
           defaultSelectIndex: selectIndex,
           selectList: _selectableList,
         ),
         actions: [
           TextButton(
             onPressed: () {
-              state.clear();
+              stateKey.currentState!.clear();
               // Navigator.of(context).pop(true);
             },
             child: const Text("清空配置"),
@@ -375,7 +376,7 @@ class PlayerSingleSelectButtonState extends State<PlayerSingleSelectButton> {
               //   print("返回：${state.selectIndex}");
               // }
               // 关闭选择框
-              Navigator.of(context).pop(state.selectIndex);
+              Navigator.of(context).pop(stateKey.currentState!.selectIndex);
             },
             child: const Text("确认配置"),
           ),
@@ -494,29 +495,29 @@ class _PlayerMultiSelectButtonState extends State<PlayerMultiSelectButton> {
   }
 
   void _showDialog() async {
-    var state = GamePlayersMultiSelectDialogContentWidget.newState();
-    state._selectList.addAll(selectList);
+    var sk = GlobalKey<_GamePlayersMultiSelectDialogContentWidgetState>();
     await showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text("选择玩家"),
             content: GamePlayersMultiSelectDialogContentWidget(
+              key: sk,
               playerCount: 10,
-              state: state,
               selectableList: selectableList,
               selectMax: maxSelect,
+              alreadySelectList: selectList,
             ),
             actions: [
               TextButton(
                 onPressed: () {
-                  state.clear();
+                  sk.currentState!.clear();
                   // Navigator.of(context).pop(true);
                 },
                 child: const Text("清空配置"),
               ),
               TextButton(
                 onPressed: () {
-                  var list = state._selectList;
+                  var list = sk.currentState!._selectList;
                   selectList.clear();
                   if (list.isNotEmpty) selectList.addAll(list);
                   selectList.sort();
@@ -551,25 +552,22 @@ class _PlayerMultiSelectButtonState extends State<PlayerMultiSelectButton> {
 /// 多选
 class GamePlayersMultiSelectDialogContentWidget extends StatefulWidget {
   final int playerCount;
-  final _GamePlayersMultiSelectDialogContentWidgetState state;
 
   /// 选择上限，如果值小于等于0，则表示没有限制
   final int selectMax;
   final List<int> selectableList;
+  final List<int>? alreadySelectList;
 
   const GamePlayersMultiSelectDialogContentWidget({
     super.key,
     required this.playerCount,
-    required this.state,
     required this.selectableList,
+    this.alreadySelectList,
     this.selectMax = -1,
   });
 
   @override
-  State<GamePlayersMultiSelectDialogContentWidget> createState() => state;
-
-  static _GamePlayersMultiSelectDialogContentWidgetState newState() =>
-      _GamePlayersMultiSelectDialogContentWidgetState();
+  State<GamePlayersMultiSelectDialogContentWidget> createState() => _GamePlayersMultiSelectDialogContentWidgetState();
 }
 
 class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersMultiSelectDialogContentWidget> {
@@ -577,42 +575,58 @@ class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersM
   final List<int> _selectList = List<int>.empty(growable: true);
 
   bool get _isLimit => widget.selectMax > 0;
+  final int columnCount = 5;
+  final double size = 50;
+
+  @override
+  void initState() {
+    super.initState();
+    if (null != widget.alreadySelectList) {
+      _selectList.addAll(widget.alreadySelectList!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 250,
+      width: 10,
       // height: 600,
-      constraints: const BoxConstraints(
+      constraints: BoxConstraints(
         // minHeight: 120,
-        minWidth: 100,
-        maxWidth: 400,
+        // minWidth: 100,
+        minWidth: (columnCount * size),
       ),
       // min: 300,
       // width: double.maxFinite,
       child: _checkHasMaxSelectConfigWidget(
-        GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 5,
-          // 主轴间距
-          mainAxisSpacing: 8.0,
-          // 交叉轴间距
-          crossAxisSpacing: 8.0,
-          // 子项边界的内边距
-          children: _selectableList
-              .map(
-                (e) => Material(
-                  elevation: 4,
-                  borderRadius: BorderRadius.circular(60),
-                  child: CircleButton(
-                    color: _selectList.contains(e) ? Colors.deepOrange : Colors.white,
-                    size: 50,
-                    onTap: () => _selectItem(e),
-                    child: Text('P$e'),
+        SizedBox(
+          width: columnCount * size,
+          child: GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: 5,
+            // 主轴间距
+            mainAxisSpacing: 8.0,
+            // 交叉轴间距
+            crossAxisSpacing: 8.0,
+            // 子项边界的内边距
+            children: _selectableList
+                .map(
+                  (e) => Material(
+                    elevation: 4,
+                    borderRadius: BorderRadius.circular(60),
+                    child: CircleButton(
+                      color: _selectList.contains(e) ? Colors.deepOrange : Colors.white,
+                      size: 50,
+                      onTap: () => _selectItem(e),
+                      child: Text(
+                        'P$e',
+                        style: TextStyle(color: _selectList.contains(e) ? Colors.white : Colors.black),
+                      ),
+                    ),
                   ),
-                ),
-              )
-              .toList(growable: false),
+                )
+                .toList(growable: false),
+          ),
         ),
       ),
     );
@@ -669,20 +683,18 @@ class _GamePlayersMultiSelectDialogContentWidgetState extends State<GamePlayersM
 /// 多选
 class GamePlayersSingleSelectDialogContentWidget extends StatefulWidget {
   final int playerCount;
-  final GamePlayersSingleSelectDialogContentWidgetState state;
   final List<int> selectList;
   final int defaultSelectIndex;
 
   const GamePlayersSingleSelectDialogContentWidget({
     super.key,
     required this.playerCount,
-    required this.state,
     required this.selectList,
     this.defaultSelectIndex = 0,
   });
 
   @override
-  State<GamePlayersSingleSelectDialogContentWidget> createState() => state;
+  State<GamePlayersSingleSelectDialogContentWidget> createState() => GamePlayersSingleSelectDialogContentWidgetState();
 }
 
 class GamePlayersSingleSelectDialogContentWidgetState extends State<GamePlayersSingleSelectDialogContentWidget> {
@@ -700,16 +712,13 @@ class GamePlayersSingleSelectDialogContentWidgetState extends State<GamePlayersS
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        minHeight: 120,
-        maxWidth: double.maxFinite,
-      ),
-      // min: 300,
-      // width: double.maxFinite,
+    int num = 5;
+    double size = 50;
+    return Container(
+      width: num * size,
       child: GridView.count(
         shrinkWrap: true,
-        crossAxisCount: 5,
+        crossAxisCount: num,
         // 主轴间距
         mainAxisSpacing: 8.0,
         // 交叉轴间距
@@ -721,7 +730,7 @@ class GamePlayersSingleSelectDialogContentWidgetState extends State<GamePlayersS
                   borderRadius: BorderRadius.circular(60),
                   child: CircleButton(
                     color: selectIndex == e ? Colors.deepOrange : Colors.white,
-                    size: 50,
+                    size: size,
                     onTap: () => _selectItem(e),
                     child: Text(
                       'P$e',
@@ -1526,7 +1535,7 @@ class AutoGridView<T> extends StatelessWidget {
             width = length * (circleSize + padding);
             col = length;
           }
-          int row = (length / col).toInt() + (length % col == 0 ? 0 : 1);
+          int row = length ~/ col + (length % col == 0 ? 0 : 1);
           double height = row * ((circleSize / childAspectRatio) + padding);
           return SizedBox(
             width: width,
@@ -1551,7 +1560,7 @@ class AutoGridView<T> extends StatelessWidget {
         mainAxisSpacing: padding,
         childAspectRatio: childAspectRatio,
       ),
-      itemBuilder: (context, index) => Center(child: itemBuilder(data[index])),
+      itemBuilder: (context, index) => itemBuilder(data[index]),
       itemCount: data.length,
     );
   }

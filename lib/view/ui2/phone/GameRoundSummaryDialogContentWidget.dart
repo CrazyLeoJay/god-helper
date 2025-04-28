@@ -35,29 +35,47 @@ class AppGameRoundSummaryDialogContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        // _playerDetailMessageWidget(context),
-        _playerSimpleMessageWidget(context),
-        const SizedBox(height: 8 * 2),
-        Text("当前回合判定：${resultSummary.result()}"),
-        const SizedBox(height: 8),
-        Container(
-          width: double.maxFinite,
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "本回合",
-            style: context.app.baseFont.copyWith(fontSize: 18),
-          ),
+    // 在 BuildContext 可用时（如 build 方法中）：
+    double screenWidth = MediaQuery.of(context).size.width; // 屏幕宽度（dp）
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Container(
+      width: 300,
+      height: screenHeight * 0.5,
+      constraints: BoxConstraints(
+        maxWidth: screenWidth * 0.8,
+        maxHeight: screenHeight * 0.8,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // _playerDetailMessageWidget(context),
+            _playerSimpleMessageWidget(context),
+            const SizedBox(height: 8 * 2),
+            Text("当前回合判定：${resultSummary.result()}"),
+            const SizedBox(height: 8),
+            Container(
+              // width: double.maxFinite,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "本回合",
+                style: context.app.baseFont.copyWith(fontSize: 18),
+              ),
+            ),
+            const SizedBox(height: 8),
+            _roleLineShowWidget("阵亡", _killPlayer),
+            const SizedBox(height: 8),
+            Row(children: [
+              Text(
+                "角色情况",
+                style: context.app.baseFont.copyWith(fontSize: 18),
+              )
+            ]),
+            _playerActionWidget(),
+            const SizedBox(height: 8),
+            const SizedBox(height: 8),
+          ],
         ),
-        const SizedBox(height: 8),
-        _roleLineShowWidget("阵亡", _killPlayer),
-        const SizedBox(height: 8),
-        _playerActionWidget(),
-        const SizedBox(height: 8),
-        // const SizedBox(height: 8),
-      ],
+      ),
     );
   }
 
@@ -81,24 +99,24 @@ class AppGameRoundSummaryDialogContentWidget extends StatelessWidget {
       );
 
   Widget _playerSimpleMessageWidget(BuildContext context) {
-    var _circleSize = this._circleSize + 5;
+    var circleSize = _circleSize + 5;
     var players = playerDetail.players;
-    return GridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 4,
-      children: List.generate(
-        players.length,
-        (index) {
-          var player = players[index];
-          // if (kDebugMode) {
-          //   print(" ${jsonEncode(player)}");
-          // }
+    int crossAxisCount = 5;
+    int rowCount = players.length ~/ crossAxisCount + ((players.length % crossAxisCount) > 0 ? 1 : 0).toInt();
+    return SizedBox(
+      width: crossAxisCount * (circleSize + 4),
+      height: rowCount * (circleSize + 4),
+      child: AutoGridView(
+        data: players,
+        padding: 4,
+        itemBuilder: (player) {
           var textColor = player.live ? Colors.black : Colors.white;
           return Center(
             child: Circle(
-              circleSize: _circleSize,
+              circleSize: circleSize,
               color: player.live ? null : Colors.red,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Expanded(flex: 1, child: SizedBox()),
                   Expanded(
@@ -107,7 +125,7 @@ class AppGameRoundSummaryDialogContentWidget extends StatelessWidget {
                       child: Text(
                         "P${player.number}",
                         style: context.app.baseFont.copyWith(
-                          fontSize: _circleSize / 3.5,
+                          fontSize: circleSize / 3.5,
                           color: textColor,
                         ),
                       ),
@@ -118,7 +136,7 @@ class AppGameRoundSummaryDialogContentWidget extends StatelessWidget {
                     child: Text(
                       player.role.desc.name,
                       style: context.app.baseFont.copyWith(
-                        fontSize: _circleSize / 6,
+                        fontSize: circleSize / 6,
                         color: textColor,
                       ),
                     ),
@@ -133,28 +151,32 @@ class AppGameRoundSummaryDialogContentWidget extends StatelessWidget {
   }
 
   Widget _roleLineShowWidget(String name, List<int> values) => SizedBox(
-        height: _circleSize,
+        height: _circleSize * 1,
+        // width: _circleSize * values.length,
+        width: double.maxFinite,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(flex: 0, child: Text("$name : ")),
+            Text("$name : "),
             Expanded(
-              flex: 1,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemBuilder: (context, index) => _circleWidget(
-                  Text(
-                    "P${values[index]}",
-                    style: context.app.baseFont.copyWith(
-                      color: _killPlayer.contains(values[index]) ? Colors.red : Colors.black,
-                      fontSize: _circleSize / 2.75,
+              child: values.isEmpty
+                  ? const Text("本对局没有玩家出局")
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => _circleWidget(
+                        Text(
+                          "P${values[index]}",
+                          style: context.app.baseFont.copyWith(
+                            color: _killPlayer.contains(values[index]) ? Colors.red : Colors.black,
+                            fontSize: _circleSize / 2.75,
+                          ),
+                        ),
+                      ),
+                      separatorBuilder: (context, index) => const SizedBox(width: 8),
+                      itemCount: values.length,
                     ),
-                  ),
-                ),
-                separatorBuilder: (context, index) => const SizedBox(width: 8),
-                itemCount: values.length,
-              ),
-            )
+            ),
           ],
         ),
       );

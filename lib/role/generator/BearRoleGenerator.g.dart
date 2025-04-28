@@ -22,13 +22,15 @@ class BearNightActionJsonData extends JsonEntityData<BearNightAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-BearNightAction _$BearNightActionFromJson(Map<String, dynamic> json) => BearNightAction()
-  ..role = $enumDecode(_$RoleEnumMap, json['role'])
-  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-  ..isYes = json['isYes'] as bool
-  ..sealing = json['sealing'] as bool;
+BearNightAction _$BearNightActionFromJson(Map<String, dynamic> json) =>
+    BearNightAction()
+      ..role = $enumDecode(_$RoleEnumMap, json['role'])
+      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+      ..isYes = json['isYes'] as bool
+      ..sealing = json['sealing'] as bool;
 
-Map<String, dynamic> _$BearNightActionToJson(BearNightAction instance) => <String, dynamic>{
+Map<String, dynamic> _$BearNightActionToJson(BearNightAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

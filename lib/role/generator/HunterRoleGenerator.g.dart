@@ -41,7 +41,8 @@ HunterAction _$HunterActionFromJson(Map<String, dynamic> json) => HunterAction()
   ..sealing = json['sealing'] as bool
   ..isCanBiubiubiu = json['isCanBiubiubiu'] as bool;
 
-Map<String, dynamic> _$HunterActionToJson(HunterAction instance) => <String, dynamic>{
+Map<String, dynamic> _$HunterActionToJson(HunterAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,
@@ -74,7 +75,8 @@ const _$RoleEnumMap = {
   Role.witcher: 'witcher',
 };
 
-HunterDayAction _$HunterDayActionFromJson(Map<String, dynamic> json) => HunterDayAction(
+HunterDayAction _$HunterDayActionFromJson(Map<String, dynamic> json) =>
+    HunterDayAction(
       isAbandon: json['isAbandon'] as bool? ?? false,
       canShut: json['canShut'] as bool? ?? true,
     )
@@ -84,7 +86,8 @@ HunterDayAction _$HunterDayActionFromJson(Map<String, dynamic> json) => HunterDa
       ..sealing = json['sealing'] as bool
       ..shutPlayerId = (json['shutPlayerId'] as num?)?.toInt();
 
-Map<String, dynamic> _$HunterDayActionToJson(HunterDayAction instance) => <String, dynamic>{
+Map<String, dynamic> _$HunterDayActionToJson(HunterDayAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

@@ -6,6 +6,7 @@ import 'package:drift/native.dart';
 import 'package:god_helper/db/Dao.dart';
 import 'package:god_helper/db/DbEntity.dart';
 import 'package:god_helper/db/tables.dart';
+import 'package:god_helper/extend.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
@@ -20,7 +21,8 @@ LazyDatabase _appOpenConnection() {
   return LazyDatabase(() async {
     // put the database file, called db.sqlite here, into the documents folder
     // for your app.
-    final Directory dbFolder = await getApplicationDocumentsDirectory();
+    // final Directory dbFolder = await getApplicationDocumentsDirectory();
+    final Directory dbFolder = await appDir();
     // 打印目录文件
     // if (kDebugMode) {
     //   var list = dbFolder.listSync();
@@ -40,7 +42,7 @@ LazyDatabase _appOpenConnection() {
     // one from the system may be inaccessible due to sandboxing.
     // 特定于Android的解决方法是必要的，因为sqlite3尝试使用/tmp在类unix系统上存储私有数据，这在Android上是禁止的。
     // 我们也利用这个机会来解决一些旧的Android设备通过dart:ffi加载自定义库的问题。
-    final cachebase = (await getTemporaryDirectory()).path;
+    final cachebase = (await tempDir()).path;
     // We can't access /tmp on Android, which sqlite3 would try by default.
     // Explicitly tell it about the correct temporary directory.
     sqlite3.tempDirectory = cachebase;
@@ -57,7 +59,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   static QueryExecutor _openConnection() {
     // driftDatabase from package:drift_flutter stores the database in
@@ -80,7 +82,10 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(gameData, gameData.isBeginGame);
         } else if (from == 2 && to == 3) {
           await m.addColumn(gameData, gameData.isBeginGame);
-        } else if (from == 3 && to == 4) {}
+        } else if (from == 3 && to == 4) {
+        } else if (from == 4 && to == 5) {
+          await m.addColumn(gameTemplateConfig, gameTemplateConfig.delete);
+        }
       },
     );
   }

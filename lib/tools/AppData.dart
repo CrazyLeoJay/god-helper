@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:god_helper/extend.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,7 +63,8 @@ class _NoSql {
 
   Future<void> init() async {
     await Hive.initFlutter();
-    Hive.openBox(dbName);
+    var path = (await appDir()).path;
+    Hive.openBox(dbName, path: path);
     _init = true;
   }
 

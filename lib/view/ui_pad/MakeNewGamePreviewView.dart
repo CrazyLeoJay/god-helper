@@ -13,20 +13,20 @@ import 'package:god_helper/view/ui2/phone/GameTemplateListView.dart';
 
 /// 游戏开始界面-游戏界面
 /// 已经选择好模板，开始游戏
-class MakeNewGameBeginView extends StatefulWidget {
+class MakeNewGamePreviewView extends StatefulWidget {
   final GameFactory _factory;
 
-  const MakeNewGameBeginView(this._factory, {super.key});
+  const MakeNewGamePreviewView(this._factory, {super.key});
 
-  factory MakeNewGameBeginView.make(GameTemplateConfigEntity temp, {bool? isSystemConfig}) {
-    return MakeNewGameBeginView(AppFactory().makeNewGamePreFactory(temp, isSystemConfig ?? temp.isDefaultConfig));
+  factory MakeNewGamePreviewView.make(GameTemplateConfigEntity temp, {bool? isSystemConfig}) {
+    return MakeNewGamePreviewView(AppFactory().makeNewGamePreFactory(temp, isSystemConfig ?? temp.isDefaultConfig));
   }
 
   @override
-  State<MakeNewGameBeginView> createState() => _MakeNewGameBeginViewState();
+  State<MakeNewGamePreviewView> createState() => _MakeNewGamePreviewViewState();
 }
 
-class _MakeNewGameBeginViewState extends State<MakeNewGameBeginView> {
+class _MakeNewGamePreviewViewState extends State<MakeNewGamePreviewView> {
   GameTemplateConfigEntity get _entity => widget._factory.entity.tempConfig;
 
   bool get _isSystemConfig => widget._factory.entity.isSystemConfig;
@@ -174,7 +174,7 @@ class _MakeNewGameBeginViewState extends State<MakeNewGameBeginView> {
                     GameFactory f = await AppFactory().service.createNewGame(widget._factory);
                     // 导航到游戏配置界面，并且移除之前的所有历史导航
                     // padRoute.beginGameToViewFromFactory(f).pushAndRemoveUntil("/");
-                    padRoute.beginGameToViewFromFactory(f).pushReplace();
+                    padRoute.toPlay(f).pushReplace();
                   },
                 );
               },

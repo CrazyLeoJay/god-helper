@@ -28,7 +28,8 @@ EmptyAction _$EmptyActionFromJson(Map<String, dynamic> json) => EmptyAction()
   ..isYes = json['isYes'] as bool
   ..sealing = json['sealing'] as bool;
 
-Map<String, dynamic> _$EmptyActionToJson(EmptyAction instance) => <String, dynamic>{
+Map<String, dynamic> _$EmptyActionToJson(EmptyAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

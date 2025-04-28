@@ -22,13 +22,15 @@ class RobbersNightActionJsonData extends JsonEntityData<RobbersNightAction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-RobbersNightAction _$RobbersNightActionFromJson(Map<String, dynamic> json) => RobbersNightAction()
-  ..role = $enumDecode(_$RoleEnumMap, json['role'])
-  ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
-  ..isYes = json['isYes'] as bool
-  ..sealing = json['sealing'] as bool;
+RobbersNightAction _$RobbersNightActionFromJson(Map<String, dynamic> json) =>
+    RobbersNightAction()
+      ..role = $enumDecode(_$RoleEnumMap, json['role'])
+      ..isKillNotUseSkill = json['isKillNotUseSkill'] as bool
+      ..isYes = json['isYes'] as bool
+      ..sealing = json['sealing'] as bool;
 
-Map<String, dynamic> _$RobbersNightActionToJson(RobbersNightAction instance) => <String, dynamic>{
+Map<String, dynamic> _$RobbersNightActionToJson(RobbersNightAction instance) =>
+    <String, dynamic>{
       'role': _$RoleEnumMap[instance.role]!,
       'isKillNotUseSkill': instance.isKillNotUseSkill,
       'isYes': instance.isYes,

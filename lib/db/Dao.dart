@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:god_helper/db/DB.dart';
 import 'package:god_helper/db/DbEntity.dart';
 import 'package:god_helper/db/tables.dart';
@@ -24,7 +25,12 @@ class GameDao extends DatabaseAccessor<AppDatabase> {
   }
 
   Future<List<GameTemplateConfigEntity>> gameTemps() async {
-    return await db.managers.gameTemplateConfig.orderBy((o) => o.id.desc()).get();
+    return await db.managers.gameTemplateConfig
+        .filter(
+          (f) => f.delete.equals(false) | f.delete.isNull(),
+        )
+        .orderBy((o) => o.id.desc())
+        .get();
   }
 
   Future<GameTemplateConfigEntity> getTempForId(int configTemplateId) async {
@@ -75,7 +81,12 @@ class GameDao extends DatabaseAccessor<AppDatabase> {
         .write(GameDataCompanion(isFinish: Value(isFinish)));
   }
 
-  Future<int> removeTemp(int id) async {
-    return await (db.delete(db.gameTemplateConfig)..where((tbl) => tbl.id.equals(id))).go();
+  removeTemp(int id) async {
+    int removeId = await db.managers.gameTemplateConfig.filter((f) {
+      return f.id.equals(id);
+    }).update((o) {
+      return o(delete: const Value(true));
+    });
+    if (kDebugMode) print("delete temp $id db $removeId");
   }
 }

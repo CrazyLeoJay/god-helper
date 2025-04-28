@@ -57,4 +57,7 @@ class GameTemplateConfig extends Table {
   IntColumn get weight => integer()();
 
   DateTimeColumn get createTime => dateTime().withDefault(Constant(DateTime.now()))();
+
+  BoolColumn get delete => boolean().withDefault(const Constant(false))();
+
 }

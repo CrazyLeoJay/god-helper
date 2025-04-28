@@ -107,7 +107,7 @@ class _BeginViewGameListState extends State<_BeginViewGameList> {
         return LeftSlideRowWidget(
           child: GestureDetector(
             onTap: () {
-              AppFactory().getRoute(context).beginGameToView(data).push();
+              AppFactory().getRoute(context).toPlayGameForEntity(data).push();
             },
             child: _GameDetailItemView(detail: data),
           ),
