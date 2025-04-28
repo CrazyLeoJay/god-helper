@@ -2,9 +2,8 @@ name: flutter build
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    tags:
+      - 'v*'
 
 jobs:
   apk-build:
@@ -54,29 +53,6 @@ jobs:
           name: release.apk
           path: build/app/outputs/flutter-apk/app-github_actions-release.apk
           compression-level: 0
-
-          # ios-build:
-          #   runs-on: macos-latest
-          #   steps:
-          #     - name: Clone repository
-          #       uses: actions/checkout@v4
-          #     - name: Set up Flutter
-          #       uses: subosito/flutter-action@v2
-          #       with:
-          #         channel: stable
-          #     - run: flutter pub get
-          #     - name: Build iOS App
-          #       run: flutter build ios --release --no-codesign
-          #     # - name: Archive the build
-          #     #   run: |
-          #     #     cd build/ios/iphoneos
-          #     #     zip -r app.ipa Payload
-          #     - name: Upload artifact
-          #       uses: actions/upload-artifact@v4
-          #       with:
-          #         name: ios-app.ipa
-          #         path: build/ios/iphoneos/app.ipa
-          #         compression-level: 0
 
 
 
